@@ -1,19 +1,22 @@
 package org.keyin;
 
-
-
-import org.keyin.memberships.MembershipService;
+import org.keyin.membership.Membership;
+import org.keyin.membership.MembershipService;
+import org.keyin.membership.MembershipDAOImpl;
+import org.keyin.user.User;
 import org.keyin.user.UserService;
 import org.keyin.workoutclasses.WorkoutClassService;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 
 public class GymApp {
     public static void main(String[] args) throws SQLException {
-        // Initialize services
+        // Initialize services with DAO injection
         UserService userService = new UserService();
-        MembershipService membershipService = new MembershipService();
+        MembershipService membershipService = new MembershipService(new MembershipDAOImpl());
         WorkoutClassService workoutService = new WorkoutClassService();
 
         // Scanner for user input
@@ -54,7 +57,8 @@ public class GymApp {
         scanner.close();
     }
 
-    private static void logInAsUser(Scanner scanner, UserService userService, MembershipService membershipService, WorkoutService workoutService) {
+    // Handles user login and redirects to the appropriate menu based on role
+    private static void logInAsUser(Scanner scanner, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
         System.out.print("Enter password: ");
@@ -69,13 +73,13 @@ public class GymApp {
                         showAdminMenu(scanner, user, userService, membershipService, workoutService);
                         break;
                     case "trainer":
-                        // show menu for trainer
+                        showTrainerMenu(scanner, user, userService, workoutService);
                         break;
                     case "member":
-                        // show menu for member
+                        showMemberMenu(scanner, user, membershipService);
                         break;
                     default:
-
+                        System.out.println("Unknown role.");
                         break;
                 }
             } else {
@@ -87,18 +91,78 @@ public class GymApp {
         }
     }
 
-    // Placeholder for Member menu
-    private static void showMemberMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService) {
-        System.out.println("Member menu under construction.");
+    // Member menu
+    private static void showMemberMenu(Scanner scanner, User user, MembershipService membershipService) {
+        boolean running = true;
+
+        while (running) {
+            System.out.println("\n=== Member Menu ===");
+            System.out.println("1. Buy Membership");
+            System.out.println("2. View My Memberships");
+            System.out.println("3. Check My Expenses");
+            System.out.println("0. Back to Main Menu");
+            System.out.print("Choose an option: ");
+            String choice = scanner.nextLine();
+
+            switch (choice) {
+                case "1":
+                    try {
+                        System.out.print("Enter membership type: ");
+                        String type = scanner.nextLine();
+                        System.out.print("Enter description: ");
+                        String desc = scanner.nextLine();
+                        System.out.print("Enter cost: ");
+                        double cost = Double.parseDouble(scanner.nextLine());
+                        LocalDate start = LocalDate.now();
+                        LocalDate end = start.plusMonths(1); // default 1 month
+
+                        Membership membership = new Membership(type, desc, cost, user.getUserId(), start, end);
+                        membershipService.buyMembership(membership);
+                        System.out.println("✅ Membership purchased successfully.");
+                    } catch (Exception e) {
+                        System.out.println("❌ Error: " + e.getMessage());
+                    }
+                    break;
+
+                case "2":
+                    try {
+                        List<Membership> memberships = membershipService.getMembershipsByUserId(user.getUserId());
+                        System.out.println("\n📄 Your Memberships:");
+                        for (Membership m : memberships) {
+                            System.out.println(m);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("❌ Error: " + e.getMessage());
+                    }
+                    break;
+
+                case "3":
+                    try {
+                        List<Membership> memberships = membershipService.getMembershipsByUserId(user.getUserId());
+                        double total = memberships.stream().mapToDouble(Membership::getMembershipCost).sum();
+                        System.out.println("💰 Total spent on memberships: $" + total);
+                    } catch (Exception e) {
+                        System.out.println("❌ Error: " + e.getMessage());
+                    }
+                    break;
+
+                case "0":
+                    running = false;
+                    break;
+
+                default:
+                    System.out.println("Invalid option. Try again.");
+            }
+        }
     }
 
     // Placeholder for Trainer menu
-    private static void showTrainerMenu(Scanner scanner, User user, UserService userService, WorkoutService workoutService) {
+    private static void showTrainerMenu(Scanner scanner, User user, UserService userService, WorkoutClassService workoutService) {
         System.out.println("Trainer menu under construction.");
     }
 
     // Admin menu with minimal implementation
-    private static void showAdminMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutService workoutService) {
+    private static void showAdminMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
         System.out.println("Admin menu under construction.");
     }
 
@@ -117,13 +181,6 @@ public class GymApp {
             System.out.println("User added successfully!");
         } catch (SQLException e) {
             System.out.println("Error adding user: " + e.getMessage());
-        }
-    }
-    private static void main(String[] args) {
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            System.out.println("Database connection established successfully.");
-        } catch (SQLException e) {
-            System.out.println("❌ Connection failed: " + e.getMessage());
         }
     }
 }
