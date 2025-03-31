@@ -73,7 +73,7 @@ public class GymApp {
                         showAdminMenu(scanner, user, userService, membershipService, workoutService);
                         break;
                     case "trainer":
-                        showTrainerMenu(scanner, user, userService, workoutService);
+                        showTrainerMenu(scanner, user, membershipService, workoutService);
                         break;
                     case "member":
                         showMemberMenu(scanner, user, membershipService);
@@ -156,14 +156,107 @@ public class GymApp {
         }
     }
 
-    // Placeholder for Trainer menu
-    private static void showTrainerMenu(Scanner scanner, User user, UserService userService, WorkoutClassService workoutService) {
-        System.out.println("Trainer menu under construction.");
+    // Trainer menu with membership purchase and view assigned classes
+    private static void showTrainerMenu(Scanner scanner, User user, MembershipService membershipService, WorkoutClassService workoutService) {
+        boolean running = true;
+
+        while (running) {
+            System.out.println("\n=== Trainer Menu ===");
+            System.out.println("1. Buy Membership");
+            System.out.println("2. View Assigned Classes (Coming Soon)");
+            System.out.println("0. Back to Main Menu");
+            System.out.print("Choose an option: ");
+            String choice = scanner.nextLine();
+
+            switch (choice) {
+                case "1":
+                    try {
+                        System.out.print("Enter membership type: ");
+                        String type = scanner.nextLine();
+                        System.out.print("Enter description: ");
+                        String desc = scanner.nextLine();
+                        System.out.print("Enter cost: ");
+                        double cost = Double.parseDouble(scanner.nextLine());
+                        LocalDate start = LocalDate.now();
+                        LocalDate end = start.plusMonths(1); // default 1 month
+
+                        Membership membership = new Membership(type, desc, cost, user.getUserId(), start, end);
+                        membershipService.buyMembership(membership);
+                        System.out.println("✅ Membership purchased successfully.");
+                    } catch (Exception e) {
+                        System.out.println("❌ Error: " + e.getMessage());
+                    }
+                    break;
+
+                case "2":
+                    System.out.println("📋 Feature coming soon: View assigned classes.");
+                    break;
+
+                case "0":
+                    running = false;
+                    break;
+
+                default:
+                    System.out.println("Invalid option. Try again.");
+            }
+        }
     }
 
-    // Admin menu with minimal implementation
+    // Admin menu for managing users and viewing stats
     private static void showAdminMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
-        System.out.println("Admin menu under construction.");
+        boolean running = true;
+
+        while (running) {
+            System.out.println("\n=== Admin Menu ===");
+            System.out.println("1. View all users");
+            System.out.println("2. View all memberships");
+            System.out.println("3. View total membership revenue");
+            System.out.println("0. Back to Main Menu");
+            System.out.print("Choose an option: ");
+            String choice = scanner.nextLine();
+
+            switch (choice) {
+                case "1":
+                    try {
+                        List<User> users = userService.getAllUsers();
+                        System.out.println("\n📋 Registered Users:");
+                        for (User u : users) {
+                            System.out.println(u);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("❌ Failed to load users: " + e.getMessage());
+                    }
+                    break;
+
+                case "2":
+                    try {
+                        List<Membership> memberships = membershipService.getAllMemberships();
+                        System.out.println("\n📋 All Memberships:");
+                        for (Membership m : memberships) {
+                            System.out.println(m);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("❌ Failed to load memberships: " + e.getMessage());
+                    }
+                    break;
+
+                case "3":
+                    try {
+                        double revenue = membershipService.getTotalRevenue();
+                        System.out.println("💰 Total revenue from memberships: $" + revenue);
+                    } catch (Exception e) {
+                        System.out.println("❌ Failed to calculate revenue: " + e.getMessage());
+                    }
+                    break;
+
+                case "0":
+                    running = false;
+                    break;
+
+                default:
+                    System.out.println("Invalid option. Try again.");
+            }
+        }
     }
 
     // Minimal implementation of adding a new user
