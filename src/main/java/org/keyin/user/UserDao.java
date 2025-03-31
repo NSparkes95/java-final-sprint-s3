@@ -1,10 +1,10 @@
 package org.keyin.user;
 
+import java.sql.SQLException;
 import java.util.List;
-java.util.SQLException;
 
 public interface UserDao {
-    User getUserByUsername(String username) throws SqlException;
+    User getUserByUsername(String username) throws SQLException;
     void insertUser(User user) throws SQLException;
     List<User> getAllUsers() throws SQLException;
     void deleteUser(int userId) throws SQLException;

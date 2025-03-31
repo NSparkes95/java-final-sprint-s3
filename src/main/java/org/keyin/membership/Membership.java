@@ -1,4 +1,4 @@
-package org.keyin.memberships;
+package org.keyin.membership;
 import java.time.LocalDate;
 
 /**
