@@ -48,6 +48,8 @@ INSERT INTO memberships (
     is_on_hold
 )
 VALUES
-('Monthly', 'Standard monthly gym access', 49.99, 1, '2025-04-01', '2025-04-30', FALSE),
-('Annual', '12 months unlimited access + 1 free month', 499.99, 2, '2025-01-01', '2025-12-31', FALSE),
-('Student Pass', 'Discounted access for students', 29.99, 3, '2025-03-15', '2025-06-15', TRUE);
+('Monthly', 'Monthly pass for Emily', 49.99, 4, '2025-04-01', '2025-04-30', FALSE),
+('Annual', 'Noah’s annual premium access', 499.99, 5, '2025-01-01', '2025-12-31', FALSE),
+('Student', 'Emily’s discounted student rate', 29.99, 4, '2025-03-01', '2025-06-01', TRUE),
+('Summer Pass', 'Noah’s seasonal deal', 89.99, 5, '2025-06-01', '2025-08-31', FALSE),
+('Trial', 'Emily’s 7-day trial', 0.00, 4, '2025-04-15', '2025-04-22', FALSE);

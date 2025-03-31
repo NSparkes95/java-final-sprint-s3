@@ -119,4 +119,11 @@ public class GymApp {
             System.out.println("Error adding user: " + e.getMessage());
         }
     }
+    private static void main(String[] args) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            System.out.println("Database connection established successfully.");
+        } catch (SQLException e) {
+            System.out.println("❌ Connection failed: " + e.getMessage());
+        }
+    }
 }
