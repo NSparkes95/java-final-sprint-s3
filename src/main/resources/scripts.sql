@@ -1,43 +1,53 @@
+-- Create users table (if not already done)
 CREATE TABLE users (
-                       user_id SERIAL PRIMARY KEY,
-                       username VARCHAR(50) NOT NULL,
-                       email VARCHAR(100) NOT NULL UNIQUE,
-                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    user_id SERIAL PRIMARY KEY,
+    user_name VARCHAR(100) NOT NULL,
+    user_password VARCHAR(255) NOT NULL,
+    user_email VARCHAR(100),
+    user_phone VARCHAR(20),
+    user_address TEXT,
+    user_role VARCHAR(20) NOT NULL
 );
 
-CREATE TABLE cars (
-                      car_id SERIAL PRIMARY KEY,
-                      make VARCHAR(50) NOT NULL,
-                      model VARCHAR(50) NOT NULL,
-                      year INT NOT NULL,
-                      price DECIMAL(10, 2) NOT NULL,
-                      seller_id INT NOT NULL,
-                      FOREIGN KEY (seller_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
-
-
-CREATE TABLE IF NOT EXISTS public.space_fleet_memberships
-(
+-- Create memberships table
+CREATE TABLE memberships (
     membership_id SERIAL PRIMARY KEY,
-    membership_tier VARCHAR(50) NOT NULL,
-    membership_credits INTEGER NOT NULL,
-    membership_log TEXT,
-    date_registered DATE DEFAULT CURRENT_DATE,
-    astronaut_id INTEGER NOT NULL,
-    CONSTRAINT space_fleet_memberships_astronaut_fkey FOREIGN KEY (astronaut_id)
-    REFERENCES public.astronauts (astronaut_id)
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE
-    );
+    membership_type VARCHAR(50) NOT NULL,
+    membership_description TEXT,
+    membership_cost DECIMAL(10, 2) NOT NULL,
+    member_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    is_on_hold BOOLEAN DEFAULT FALSE
+);
 
-TABLESPACE pg_default;
+-- ==== INSERT USERS ====
+INSERT INTO users (
+    user_name, 
+    user_password, 
+    user_email, 
+    user_phone, 
+    user_address, 
+    user_role)
+VALUES
+('Samantha Bennet', '$2b$12$Qato2z3nbHFiPriCaswIDOireBF4Y3dRos2HZQWATYa40maIORSlq', 'sabennet@gmail.com', '123-456-7890', '123 Admin St', 'Admin'),
+('Leo Jordan', '$2b$12$6rwSPkq2AMSuNRE5Q/poBeTP.GOaI/vyrUxNqEGu06yx3DsBfQOv.', 'leojordanr@yahoo.com', '555-111-2222', '10 Fit Lane', 'Trainer'),
+('Jordan Mercer', '$2b$12$km6/SffzCZjTZmkMheIv1..s7zR9kT34Lfm68nVKbI0ZsXZmcLwLu', 'jordanm@hotmail.com', '555-333-4444', '20 Pump Rd', 'Trainer'),
+('Emily Turner', '$2b$12$VE5vb9Ufhu1NZfBlGke07uRsWY99dm.jSBzoTix2esFq30JTYPMY.', 'eturner@homtmail.com', '777-888-9999', '5 Jog Ave', 'Member'),
+('Noah Diaz', '$2b$12$0xcZ2gQXtjokevRLHRWO.e5Dr.IKsLTSocCPKs0BQlfwWLgwkeF9y', 'noahdiaz@gmail.com', '222-333-4444', '6 Spin Blvd', 'Member');
 
+-- ==== INSERT MEMBERSHIPS ====
 
--- Getting sum for sumberships by month example
-SELECT
-    TO_CHAR(date_purchased, 'YYYY-MM') AS month,
-    SUM(membership_price) AS total_revenue
-FROM public.memberships
-GROUP BY month
-ORDER BY month;
+INSERT INTO memberships (
+    membership_type,
+    membership_description,
+    membership_cost,
+    member_id,
+    start_date,
+    end_date,
+    is_on_hold
+)
+VALUES
+('Monthly', 'Standard monthly gym access', 49.99, 1, '2025-04-01', '2025-04-30', FALSE),
+('Annual', '12 months unlimited access + 1 free month', 499.99, 2, '2025-01-01', '2025-12-31', FALSE),
+('Student Pass', 'Discounted access for students', 29.99, 3, '2025-03-15', '2025-06-15', TRUE);
