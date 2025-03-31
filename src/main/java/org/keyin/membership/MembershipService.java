@@ -39,6 +39,15 @@ public class MembershipService {
     }
 
     /**
+    * Get all memberships in the system (for admin use).
+    *
+    * @return List of all memberships.
+    */
+    public List<Membership> getAllMemberships() throws SQLException {
+       return membershipDAO.getAllMemberships();
+    }
+
+    /**
      * Get the total revenue generated from all memberships.
      *
      * @return The total revenue value.
