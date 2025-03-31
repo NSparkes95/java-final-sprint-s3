@@ -61,6 +61,15 @@ public class UserService {
         }
     }
 
+    public void updateUser(User user) {
+        try {
+            userDao.updateUser(user);
+            System.out.println("User updated successfully: " + user.getUsername());
+        } catch (Exception e) {
+            System.out.println("Error updating user: " + e.getMessage());
+        }
+    }
+
     // Delete user by ID (for admin)
     public void deleteUserById(int userId) {
         User user = userDao.getUserById(userId);
