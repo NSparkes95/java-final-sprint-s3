@@ -88,7 +88,7 @@ public class UserDaoImpl implements UserDao {
             stmt.setString(4, user.getPhone());
             stmt.setString(5, user.getAddress());
             stmt.setString(6, user.getRole());
-            stmt.setInt(7, user.getUserID());
+            stmt.setInt(7, user.getUserId());
 
             stmt.executeUpdate();
         }

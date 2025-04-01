@@ -1,9 +1,16 @@
 package org.keyin.user;
 
+import org.keyin.user.childclasses.Admin;
+import org.keyin.user.childclasses.Member;
+import org.keyin.user.childclasses.Trainer;
 import org.keyin.utils.PasswordUtils;
-import org.keyin.user.User;
-import org.keyin.user.UserDao;
 
+import java.sql.SQLException;
+import java.util.List;
+
+/**
+ * Service class for handling user-related operations such as registration, login, update, and deletion.
+ */
 public class UserService {
     private UserDao userDao;
 
@@ -13,7 +20,7 @@ public class UserService {
     }
 
     // Method to register a new user
-    public void registerUser(String username, String plainPassword, String email, String phone, String address, String role) {
+    public void registerUser(String username, String plainPassword, String email, String phone, String address, String role) throws SQLException {
         String hashedPassword = PasswordUtils.hashPassword(plainPassword);
 
         User user;
@@ -31,32 +38,31 @@ public class UserService {
                 break;
             default:
                 throw new IllegalArgumentException("Invalid role: " + role);
-                return;
         }
 
         // Save the user to the database
         userDao.insertUser(user);
-        System.out.println("User registered successfully: " + user.getUsername());
+        System.out.println("✅ User registered successfully: " + user.getUserName());
     }
 
     // Login method
-    public User Login(String username, String plainPassword) {
+    public User login(String username, String plainPassword) throws SQLException {
         User user = userDao.getUserByUsername(username);
 
         // Check if the user exists and verify the password
-        if (user != null && PasswordUtils.verifyPassword(plainPassword, user.getPassword())) {
-            System.out.println("Login successful for user: " + username);
+        if (user != null && PasswordUtils.checkPassword(plainPassword, user.getPassword())) {
+            System.out.println("✅ Login successful for user: " + username);
             return user;
         } else {
-            System.out.println("Invalid username or password.");
+            System.out.println("❌ Invalid username or password.");
             return null;
         }
     }
 
     // View all users (for admin)
-    public void viewAllUsers() {
+    public void viewAllUsers() throws SQLException {
         List<User> users = userDao.getAllUsers();
-        for (User user : userDao.getAllUsers()) {
+        for (User user : users) {
             System.out.println(user);
         }
     }
@@ -64,20 +70,29 @@ public class UserService {
     public void updateUser(User user) {
         try {
             userDao.updateUser(user);
-            System.out.println("User updated successfully: " + user.getUsername());
+            System.out.println("✅ User updated successfully: " + user.getUserName());
         } catch (Exception e) {
-            System.out.println("Error updating user: " + e.getMessage());
+            System.out.println("❌ Error updating user: " + e.getMessage());
         }
     }
 
     // Delete user by ID (for admin)
     public void deleteUserById(int userId) {
-        User user = userDao.getUserById(userId);
-        if (user != null) {
-            userDao.deleteUser(userId);
-            System.out.println("User deleted successfully: " + user.getUsername());
-        } else {
-            System.out.println("User not found with ID: " + userId);
+        try {
+            User user = userDao.getAllUsers()
+                .stream()
+                .filter(u -> u.getUserId() == userId)
+                .findFirst()
+                .orElse(null);
+
+            if (user != null) {
+                userDao.deleteUser(userId);
+                System.out.println("✅ User deleted successfully: " + user.getUserName());
+            } else {
+                System.out.println("❌ User not found with ID: " + userId);
+            }
+        } catch (Exception e) {
+            System.out.println("❌ Error deleting user: " + e.getMessage());
         }
     }
 }
