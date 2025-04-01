@@ -6,7 +6,18 @@ import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Implements the UserDao interface and handles database operations using JDBC.
+ * This class interacts with the users table in the database to perform CRUD operations on users.
+ */
 public class UserDaoImpl implements UserDao {
+
+    /**
+     * Inserts a new user into the database.
+     * 
+     * @param user The User object to insert into the database.
+     * @throws SQLException If a database access error occurs.
+     */
     @Override
     public void insertUser(User user) throws SQLException {
         String sql = "INSERT INTO users (user_name, user_password, user_email, user_phone, user_address, user_role) VALUES (?, ?, ?, ?, ?, ?)";
@@ -23,6 +34,14 @@ public class UserDaoImpl implements UserDao {
             stmt.executeUpdate();
         }
     }
+
+    /**
+     * Retrieves a user by their username from the database.
+     * 
+     * @param username The username of the user to retrieve.
+     * @return The User object corresponding to the username, or null if no such user exists.
+     * @throws SQLException If a database access error occurs.
+     */
     @Override
     public User getUserByUsername(String username) throws SQLException {
         String sql = "SELECT * FROM users WHERE user_name = ?";
@@ -42,7 +61,6 @@ public class UserDaoImpl implements UserDao {
                             rs.getString("user_phone"),
                             rs.getString("user_address"),
                             rs.getString("user_role")
-
                     );
                 }
             }
@@ -50,6 +68,13 @@ public class UserDaoImpl implements UserDao {
 
         return null; // User not found
     }
+
+    /**
+     * Retrieves all users in the system from the database.
+     * 
+     * @return A list of all User objects.
+     * @throws SQLException If a database access error occurs.
+     */
     @Override
     public List<User> getAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
@@ -75,6 +100,13 @@ public class UserDaoImpl implements UserDao {
 
         return users;
     }
+
+    /**
+     * Updates an existing user's information in the database.
+     * 
+     * @param user The User object containing updated information.
+     * @throws SQLException If a database access error occurs.
+     */
     @Override
     public void updateUser(User user) throws SQLException {
         String sql = "UPDATE users SET user_name = ?, user_password = ?, user_email = ?, user_phone = ?, user_address = ?, user_role = ? WHERE user_id = ?";
@@ -93,13 +125,20 @@ public class UserDaoImpl implements UserDao {
             stmt.executeUpdate();
         }
     }
+
+    /**
+     * Deletes a user from the database by their ID.
+     * 
+     * @param userId The ID of the user to delete.
+     * @throws SQLException If a database access error occurs.
+     */
     @Override
-    public void deleteUser(int userID) throws SQLException {
-        String sql = "Delete FROM users WHERE user_id = ?";
+    public void deleteUser(int userId) throws SQLException {
+        String sql = "DELETE FROM users WHERE user_id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, userID);
+            stmt.setInt(1, userId);
             stmt.executeUpdate();
         }
     }

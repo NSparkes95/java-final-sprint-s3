@@ -3,6 +3,7 @@ package org.keyin.user;
 /**
  * This is the parent class for all users.
  * There are 3 types of users: Trainer, Member, and Admin.
+ * It contains user details like ID, name, password, email, phone, address, and role.
  */
 public class User {
     private int userId;
@@ -13,7 +14,17 @@ public class User {
     private String address;
     private String role;
 
-    // Full constructor (used by DAO when reading from DB)
+    /**
+     * Full constructor (used by DAO when reading from the database).
+     * 
+     * @param userId    The unique ID of the user.
+     * @param userName  The user's name.
+     * @param password  The user's password (hashed).
+     * @param email     The user's email address.
+     * @param phone     The user's phone number.
+     * @param address   The user's address.
+     * @param role      The role of the user (Admin, Member, Trainer).
+     */
     public User(int userId, String userName, String password, String email, String phone, String address, String role) {
         this.userId = userId;
         this.userName = userName;
@@ -24,12 +35,27 @@ public class User {
         this.role = role;
     }
 
-    // Constructor used for registering new users (ID auto-generated)
+    /**
+     * Constructor used for registering new users (ID auto-generated).
+     * 
+     * @param userName  The user's name.
+     * @param password  The user's password (plain text, to be hashed).
+     * @param email     The user's email address.
+     * @param phone     The user's phone number.
+     * @param address   The user's address.
+     * @param role      The role of the user (Admin, Member, Trainer).
+     */
     public User(String userName, String password, String email, String phone, String address, String role) {
         this(-1, userName, password, email, phone, address, role);
     }
 
     // Getters and setters
+
+    /**
+     * Gets the user ID.
+     * 
+     * @return The unique user ID.
+     */
     public int getUserId() {
         return userId;
     }
@@ -38,6 +64,11 @@ public class User {
         this.userId = userId;
     }
 
+    /**
+     * Gets the user's name.
+     * 
+     * @return The user's name.
+     */
     public String getUserName() {
         return userName;
     }
@@ -46,6 +77,11 @@ public class User {
         this.userName = userName;
     }
 
+    /**
+     * Gets the user's password.
+     * 
+     * @return The user's password (hashed).
+     */
     public String getPassword() {
         return password;
     }
@@ -54,6 +90,11 @@ public class User {
         this.password = password;
     }
 
+    /**
+     * Gets the user's email.
+     * 
+     * @return The user's email address.
+     */
     public String getEmail() {
         return email;
     }
@@ -62,6 +103,11 @@ public class User {
         this.email = email;
     }
 
+    /**
+     * Gets the user's phone number.
+     * 
+     * @return The user's phone number.
+     */
     public String getPhone() {
         return phone;
     }
@@ -70,6 +116,11 @@ public class User {
         this.phone = phone;
     }
 
+    /**
+     * Gets the user's address.
+     * 
+     * @return The user's address.
+     */
     public String getAddress() {
         return address;
     }
@@ -78,6 +129,11 @@ public class User {
         this.address = address;
     }
 
+    /**
+     * Gets the user's role.
+     * 
+     * @return The role of the user (Admin, Member, Trainer).
+     */
     public String getRole() {
         return role;
     }
@@ -86,7 +142,11 @@ public class User {
         this.role = role;
     }
 
-    // Optional: override toString for display
+    /**
+     * Provides a string representation of the User object.
+     * 
+     * @return A string containing the user's ID, name, role, and email.
+     */
     @Override
     public String toString() {
         return "User{" +
@@ -94,6 +154,6 @@ public class User {
                 ", Name='" + userName + '\'' +
                 ", Role='" + role + '\'' +
                 ", Email='" + email + '\'' +
-                '}';
+                '}'; 
     }
 }

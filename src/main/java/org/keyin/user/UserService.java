@@ -10,16 +10,31 @@ import java.util.List;
 
 /**
  * Service class for handling user-related operations such as registration, login, update, and deletion.
+ * This class uses the UserDao to interact with the database and perform CRUD operations on users.
  */
 public class UserService {
     private UserDao userDao;
 
-    // Constructor
+    /**
+     * Constructor to initialize the UserService with a UserDao.
+     * 
+     * @param userDao The UserDao implementation to use for database interactions.
+     */
     public UserService(UserDao userDao) {
         this.userDao = userDao;
     }
 
-    // Method to register a new user
+    /**
+     * Registers a new user by hashing the password and saving the user based on their role.
+     * 
+     * @param username    The username for the new user.
+     * @param plainPassword The plain text password for the new user.
+     * @param email       The email for the new user.
+     * @param phone       The phone number for the new user.
+     * @param address     The address for the new user.
+     * @param role        The role of the new user (Admin, Member, Trainer).
+     * @throws SQLException If a database access error occurs during user registration.
+     */
     public void registerUser(String username, String plainPassword, String email, String phone, String address, String role) throws SQLException {
         String hashedPassword = PasswordUtils.hashPassword(plainPassword);
 
@@ -45,7 +60,14 @@ public class UserService {
         System.out.println("✅ User registered successfully: " + user.getUserName());
     }
 
-    // Login method
+    /**
+     * Logs in a user by verifying their username and password.
+     * 
+     * @param username    The username of the user trying to log in.
+     * @param plainPassword The plain text password provided by the user.
+     * @return The User object if login is successful, null otherwise.
+     * @throws SQLException If a database access error occurs during the login process.
+     */
     public User login(String username, String plainPassword) throws SQLException {
         User user = userDao.getUserByUsername(username);
 
@@ -59,7 +81,11 @@ public class UserService {
         }
     }
 
-    // View all users (for admin)
+    /**
+     * Displays a list of all users for an admin to view.
+     * 
+     * @throws SQLException If a database access error occurs.
+     */
     public void viewAllUsers() throws SQLException {
         List<User> users = userDao.getAllUsers();
         for (User user : users) {
@@ -67,6 +93,11 @@ public class UserService {
         }
     }
 
+    /**
+     * Updates an existing user's details in the database.
+     * 
+     * @param user The user object containing updated information.
+     */
     public void updateUser(User user) {
         try {
             userDao.updateUser(user);
@@ -76,7 +107,11 @@ public class UserService {
         }
     }
 
-    // Delete user by ID (for admin)
+    /**
+     * Deletes a user from the database by their user ID.
+     * 
+     * @param userId The ID of the user to delete.
+     */
     public void deleteUserById(int userId) {
         try {
             User user = userDao.getAllUsers()
