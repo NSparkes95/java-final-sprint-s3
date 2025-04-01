@@ -5,10 +5,12 @@ import org.keyin.membership.MembershipService;
 import org.keyin.membership.MembershipDAOImpl;
 import org.keyin.user.User;
 import org.keyin.user.UserService;
+import org.keyin.workoutclasses.WorkoutClass;
 import org.keyin.workoutclasses.WorkoutClassService;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Scanner;
 
@@ -156,14 +158,15 @@ public class GymApp {
         }
     }
 
-    // Trainer menu
+    // Trainer menu with membership and workout class features
     private static void showTrainerMenu(Scanner scanner, User user, MembershipService membershipService, WorkoutClassService workoutService) {
         boolean running = true;
 
         while (running) {
             System.out.println("\n=== Trainer Menu ===");
             System.out.println("1. Buy Membership");
-            System.out.println("2. View Assigned Classes (Coming Soon)");
+            System.out.println("2. View My Upcoming Classes");
+            System.out.println("3. Add New Class");
             System.out.println("0. Back to Main Menu");
             System.out.print("Choose an option: ");
             String choice = scanner.nextLine();
@@ -188,7 +191,43 @@ public class GymApp {
                     }
                     break;
                 case "2":
-                    System.out.println("📋 Feature coming soon: View assigned classes.");
+                    try {
+                        List<WorkoutClass> upcomingClasses = workoutService.getUpcomingClasses(user.getUserId());
+                        System.out.println("\n📋 Your Upcoming Classes:");
+                        for (WorkoutClass wc : upcomingClasses) {
+                            System.out.println(wc);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("❌ Error retrieving classes: " + e.getMessage());
+                    }
+                    break;
+                case "3":
+                    try {
+                        System.out.print("Enter class name: ");
+                        String name = scanner.nextLine();
+                        System.out.print("Enter class description: ");
+                        String desc = scanner.nextLine();
+                        System.out.print("Enter date (YYYY-MM-DD): ");
+                        LocalDate date = LocalDate.parse(scanner.nextLine());
+                        System.out.print("Enter time (HH:MM): ");
+                        LocalTime time = LocalTime.parse(scanner.nextLine());
+                        System.out.print("Enter duration (in minutes): ");
+                        int duration = Integer.parseInt(scanner.nextLine());
+                        System.out.print("Enter capacity: ");
+                        int capacity = Integer.parseInt(scanner.nextLine());
+                        System.out.print("Enter location: ");
+                        String location = scanner.nextLine();
+                        System.out.print("Enter level (Beginner/Intermediate/Advanced): ");
+                        String level = scanner.nextLine();
+                        System.out.print("Enter equipment needed (or 'None'): ");
+                        String equipment = scanner.nextLine();
+
+                        WorkoutClass wc = new WorkoutClass(0, name, user.getUserId(), level, desc, duration, capacity, date, time, location, equipment);
+                        workoutService.addWorkoutClass(wc);
+                        System.out.println("✅ Class added successfully!");
+                    } catch (Exception e) {
+                        System.out.println("❌ Error adding class: " + e.getMessage());
+                    }
                     break;
                 case "0":
                     running = false;
