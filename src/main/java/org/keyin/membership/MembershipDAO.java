@@ -43,9 +43,10 @@ public interface MembershipDAO {
      * @return list of Memberships
      */
     List<Membership> getMembershipsByMemberId(int memberId) throws SQLException;
-
     /**
-     * Calculates the total revenue from all memberships.
+     * Calculates the total revenue from all active (not on-hold) memberships.
+     * @return Total revenue as a double.
+     * @throws SQLException if database access fails.
      */
     double getTotalMembershipRevenue() throws SQLException;
 }

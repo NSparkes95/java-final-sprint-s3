@@ -179,16 +179,6 @@ public class GymApp {
         }
     }
 
-<<<<<<< HEAD
-    // Placeholder for Trainer menu
-    private static void showTrainerMenu(Scanner scanner, User user, UserService userService, WorkoutClassService workoutService, int trainerId) {
-        System.out.println("\n=== Trainer Menu ===");
-        System.out.println("1. View Assigned Workout Classes");
-        System.out.println("2. Add New Workout Class");
-        System.out.println("3. Delete Workout Class");
-        System.out.println("0. Back to Main Menu");
-        System.out.print("Choose an option: ");
-=======
     // Trainer menu with membership purchase and view assigned classes
     private static void showTrainerMenu(Scanner scanner, User user, MembershipService membershipService, WorkoutClassService workoutService) {
         boolean running = true;
@@ -233,12 +223,10 @@ public class GymApp {
                     System.out.println("Invalid option. Try again.");
             }
         }
->>>>>>> 954c6389c8d7fa095f1a720c286d667e11fcc0c8
     }
 
     // Admin menu for managing users and viewing stats
     private static void showAdminMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
-<<<<<<< HEAD
         int choice;
         do {
             System.out.println("\n=== Admin Menu ===");
@@ -247,6 +235,7 @@ public class GymApp {
             System.out.println("3. View All Workout Classes");
             System.out.println("4. Add New User");
             System.out.println("5. Delete User");
+            System.out.println("6. View Total Membership Revenue ");
             System.out.println("0. Back to Main Menu");
             System.out.print("Choose an option: ");
 
@@ -305,6 +294,14 @@ public class GymApp {
                     userService.deleteUserById(userIdToDelete);
                     System.out.println("User deleted successfully!");
                     break;
+                case 6:
+                    try {
+                        double revenue = membershipService.getTotalRevenue();
+                        System.out.println("💰 Total revenue from memberships: $" + revenue);
+                    } catch (SQLException e) {
+                        System.out.println("❌ Error: " + e.getMessage());
+                    }
+                    break;
 
                 case 0:
                     break;
@@ -314,61 +311,6 @@ public class GymApp {
             }
         } while (choice != 0);
         
-=======
-        boolean running = true;
-
-        while (running) {
-            System.out.println("\n=== Admin Menu ===");
-            System.out.println("1. View all users");
-            System.out.println("2. View all memberships");
-            System.out.println("3. View total membership revenue");
-            System.out.println("0. Back to Main Menu");
-            System.out.print("Choose an option: ");
-            String choice = scanner.nextLine();
-
-            switch (choice) {
-                case "1":
-                    try {
-                        List<User> users = userService.getAllUsers();
-                        System.out.println("\n📋 Registered Users:");
-                        for (User u : users) {
-                            System.out.println(u);
-                        }
-                    } catch (Exception e) {
-                        System.out.println("❌ Failed to load users: " + e.getMessage());
-                    }
-                    break;
-
-                case "2":
-                    try {
-                        List<Membership> memberships = membershipService.getAllMemberships();
-                        System.out.println("\n📋 All Memberships:");
-                        for (Membership m : memberships) {
-                            System.out.println(m);
-                        }
-                    } catch (Exception e) {
-                        System.out.println("❌ Failed to load memberships: " + e.getMessage());
-                    }
-                    break;
-
-                case "3":
-                    try {
-                        double revenue = membershipService.getTotalRevenue();
-                        System.out.println("💰 Total revenue from memberships: $" + revenue);
-                    } catch (Exception e) {
-                        System.out.println("❌ Failed to calculate revenue: " + e.getMessage());
-                    }
-                    break;
-
-                case "0":
-                    running = false;
-                    break;
-
-                default:
-                    System.out.println("Invalid option. Try again.");
-            }
-        }
->>>>>>> 954c6389c8d7fa095f1a720c286d667e11fcc0c8
     }
 
     // Minimal implementation of adding a new user

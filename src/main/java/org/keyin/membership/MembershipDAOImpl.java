@@ -35,7 +35,7 @@ public class MembershipDAOImpl implements MembershipDAO {
         String sql = "SELECT * FROM memberships WHERE membershipid = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, membershipId);
             ResultSet rs = pstmt.executeQuery();
@@ -118,7 +118,7 @@ public class MembershipDAOImpl implements MembershipDAO {
 
     @Override
     public double getTotalMembershipRevenue() throws SQLException {
-        String sql = "SELECT SUM(membershipcost) AS total FROM memberships";
+        String sql = "SELECT (SUM(membership_cost), 0) AS total FROM memberships WHERE is_on_hold = FALSE";
 
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
