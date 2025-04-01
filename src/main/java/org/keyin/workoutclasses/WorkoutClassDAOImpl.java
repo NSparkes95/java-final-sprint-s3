@@ -9,10 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Concrete implementation of WorkoutClassDAO using JDBC
+ * Implements the WorkoutClassDAO interface using JDBC to manage workout class data.
  */
 public class WorkoutClassDAOImpl implements WorkoutClassDAO {
 
+    /**
+     * Fetches all workout classes assigned to a specific trainer.
+     *
+     * @param trainerId The trainer's ID.
+     * @return A list of WorkoutClass objects.
+     * @throws SQLException If there’s an issue accessing the database.
+     */
     @Override
     public List<WorkoutClass> getClassesByTrainerId(int trainerId) throws SQLException {
         List<WorkoutClass> classes = new ArrayList<>();
@@ -32,6 +39,13 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
         return classes;
     }
 
+    /**
+     * Retrieves upcoming classes for a trainer (today or in the future).
+     *
+     * @param trainerId The trainer’s ID.
+     * @return A list of upcoming WorkoutClass objects.
+     * @throws SQLException If a database error occurs.
+     */
     @Override
     public List<WorkoutClass> getUpcomingClasses(int trainerId) throws SQLException {
         List<WorkoutClass> classes = new ArrayList<>();
@@ -51,6 +65,12 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
         return classes;
     }
 
+    /**
+     * Retrieves every workout class in the system.
+     *
+     * @return A list of all WorkoutClass records.
+     * @throws SQLException If something goes wrong with the query.
+     */
     @Override
     public List<WorkoutClass> getAllWorkoutClasses() throws SQLException {
         List<WorkoutClass> classes = new ArrayList<>();
@@ -68,6 +88,12 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
         return classes;
     }
 
+    /**
+     * Adds a new workout class to the database.
+     *
+     * @param wc The workout class to insert.
+     * @throws SQLException If the insert fails.
+     */
     @Override
     public void addWorkoutClass(WorkoutClass wc) throws SQLException {
         String sql = "INSERT INTO workout_classes (class_name, class_description, trainer_id, class_date, class_time, class_duration, class_capacity, class_location, class_level, class_equipment, is_completed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -91,7 +117,13 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
         }
     }
 
-    // Optional (future)
+    /**
+     * Marks a class as completed in the database.
+     * (This is currently optional but can be used later.)
+     *
+     * @param classId ID of the class to mark complete.
+     * @throws SQLException If the update fails.
+     */
     public void markClassAsCompleted(int classId) throws SQLException {
         String sql = "UPDATE workout_classes SET is_completed = TRUE WHERE class_id = ?";
 
@@ -103,6 +135,13 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
         }
     }
 
+    /**
+     * Maps the current row of a ResultSet to a WorkoutClass object.
+     *
+     * @param rs The ResultSet to map.
+     * @return A new WorkoutClass object.
+     * @throws SQLException If column access fails.
+     */
     private WorkoutClass mapResultSetToWorkoutClass(ResultSet rs) throws SQLException {
         return new WorkoutClass(
                 rs.getInt("class_id"),
