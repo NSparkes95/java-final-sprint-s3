@@ -28,11 +28,11 @@ public class MembershipService {
         membershipDAO.insertMembership(membership);
     }
 
-    /**
-     * Get all memberships for a specific user (member/trainer).
+   /**
+     * Get all memberships linked to a specific user.
      *
-     * @param userId The ID of the user.
-     * @return List of memberships for the user.
+     * @param userId The user's ID (member or trainer).
+     * @return List of memberships.
      */
     public List<Membership> getMembershipsByUserId(int userId) throws SQLException {
         return membershipDAO.getMembershipsByMemberId(userId);

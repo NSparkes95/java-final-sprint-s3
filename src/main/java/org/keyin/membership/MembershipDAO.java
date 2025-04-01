@@ -9,7 +9,9 @@ import java.util.List;
 public interface MembershipDAO {
 
     /**
-     * Inserts a new membership into the database.
+     * Inserts a new membership record into the database.
+     * @param membership The membership object to insert.
+     * @throws SQLException if a database error occurs.
      */
     void insertMembership(Membership membership) throws SQLException;
 
@@ -19,7 +21,9 @@ public interface MembershipDAO {
     Membership getMembershipById(int membershipId) throws SQLException;
 
     /**
-     * Returns a list of all memberships.
+     * Retrieves a list of all memberships in the database.
+     * @return List of Membership objects.
+     * @throws SQLException if a database error occurs.
      */
     List<Membership> getAllMemberships() throws SQLException;
 
@@ -34,7 +38,9 @@ public interface MembershipDAO {
     void deleteMembership(int membershipId) throws SQLException;
 
     /**
-     * Returns all memberships for a specific member.
+     * Retrieves all memberships assigned to a specific member.
+     * @param memberId the ID of the member
+     * @return list of Memberships
      */
     List<Membership> getMembershipsByMemberId(int memberId) throws SQLException;
 

@@ -47,6 +47,8 @@ public class GymApp {
                     logInAsUser(scanner, userService, membershipService, workoutService);
                     break;
                 case 3:
+                    viewMembershipsByUserId(scanner, membershipService);
+                case 4:
                     System.out.println("Exiting the program...");
                     break;
                 default:
@@ -63,6 +65,27 @@ public class GymApp {
         String username = scanner.nextLine();
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
+
+        User user = userService.loginUser(username, password);
+        if (user != null) {
+            System.out.println("Login Successful! Welcome " + user.getUserName());
+            switch (user.getUserRole().toLowerCase()) {
+                case "admin":
+                    showAdminMenu(scanner, user, userService, membershipService, workoutService);
+                    break;
+                case "trainer":
+                    showTrainerMenu(scanner, user, userService, workoutService);
+                    break;
+                case "member":
+                    showMemberMenu(scanner, user, membershipService);
+                    break;
+                default:
+                    System.out.println("Unknown role.");
+                    break;
+            }
+        } else {
+            System.out.println("Login Failed! Invalid credentials.");
+        }
 
         try {
             User user = userService.loginForUser(username, password);
@@ -156,6 +179,16 @@ public class GymApp {
         }
     }
 
+<<<<<<< HEAD
+    // Placeholder for Trainer menu
+    private static void showTrainerMenu(Scanner scanner, User user, UserService userService, WorkoutClassService workoutService, int trainerId) {
+        System.out.println("\n=== Trainer Menu ===");
+        System.out.println("1. View Assigned Workout Classes");
+        System.out.println("2. Add New Workout Class");
+        System.out.println("3. Delete Workout Class");
+        System.out.println("0. Back to Main Menu");
+        System.out.print("Choose an option: ");
+=======
     // Trainer menu with membership purchase and view assigned classes
     private static void showTrainerMenu(Scanner scanner, User user, MembershipService membershipService, WorkoutClassService workoutService) {
         boolean running = true;
@@ -200,10 +233,88 @@ public class GymApp {
                     System.out.println("Invalid option. Try again.");
             }
         }
+>>>>>>> 954c6389c8d7fa095f1a720c286d667e11fcc0c8
     }
 
     // Admin menu for managing users and viewing stats
     private static void showAdminMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
+<<<<<<< HEAD
+        int choice;
+        do {
+            System.out.println("\n=== Admin Menu ===");
+            System.out.println("1. View All Users");
+            System.out.println("2. View All Memberships");
+            System.out.println("3. View All Workout Classes");
+            System.out.println("4. Add New User");
+            System.out.println("5. Delete User");
+            System.out.println("0. Back to Main Menu");
+            System.out.print("Choose an option: ");
+
+            while (!scanner.hasNextInt()) {
+                System.out.println("Invalid input! Please enter a number.");
+                scanner.next();
+            }
+            choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    try {
+                        List<User> users = userService.getAllUsers();
+                        System.out.println("\n📋 All Users:");
+                        for (User u : users) {
+                            System.out.println(u);
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("❌ Error: " + e.getMessage());
+                    }
+                    break;
+
+                case 2:
+                    try {
+                        List<Membership> memberships = membershipService.getAllMemberships();
+                        System.out.println("\n📋 All Memberships:");
+                        for (Membership m : memberships) {
+                            System.out.println(m);
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("❌ Error: " + e.getMessage());
+                    }
+                    break;
+
+                case 3:
+                    try {
+                        List<WorkoutClass> classes = workoutService.getAllWorkoutClasses();
+                        System.out.println("\n📋 All Workout Classes:");
+                        for (WorkoutClass wc : classes) {
+                            System.out.println(wc);
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("❌ Error: " + e.getMessage());
+                    }
+                    break;
+
+                case 4:
+                    addNewUser(scanner, userService);
+                    break;
+
+                case 5:
+                    System.out.print("Enter the user ID to delete: ");
+                    int userIdToDelete = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    userService.deleteUserById(userIdToDelete);
+                    System.out.println("User deleted successfully!");
+                    break;
+
+                case 0:
+                    break;
+
+                default:
+                    System.out.println("Invalid option. Try again.");
+            }
+        } while (choice != 0);
+        
+=======
         boolean running = true;
 
         while (running) {
@@ -257,6 +368,7 @@ public class GymApp {
                     System.out.println("Invalid option. Try again.");
             }
         }
+>>>>>>> 954c6389c8d7fa095f1a720c286d667e11fcc0c8
     }
 
     // Minimal implementation of adding a new user
