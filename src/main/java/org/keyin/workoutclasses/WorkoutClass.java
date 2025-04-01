@@ -1,4 +1,4 @@
-package org.keyin.workout_classes;
+package org.keyin.workoutclasses;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

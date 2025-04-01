@@ -7,10 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implements MembershipDAO and handles database operations using JDBC.
+ * MembershipDAOImpl implements the MembershipDAO interface.
+ * Handles database operations for the Membership table using JDBC.
  */
 public class MembershipDAOImpl implements MembershipDAO {
 
+    /**
+     * Inserts a new membership into the database.
+     *
+     * @param membership The membership object to insert.
+     * @throws SQLException If a database access error occurs.
+     */
     @Override
     public void insertMembership(Membership membership) throws SQLException {
         String sql = "INSERT INTO memberships (membershiptype, membershipdescription, membershipcost, memberid, startdate, enddate, isonhold) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -30,12 +37,19 @@ public class MembershipDAOImpl implements MembershipDAO {
         }
     }
 
+    /**
+     * Retrieves a membership by its ID.
+     *
+     * @param membershipId The ID of the membership to retrieve.
+     * @return The matching Membership object, or null if not found.
+     * @throws SQLException If a database access error occurs.
+     */
     @Override
     public Membership getMembershipById(int membershipId) throws SQLException {
         String sql = "SELECT * FROM memberships WHERE membershipid = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, membershipId);
             ResultSet rs = pstmt.executeQuery();
@@ -48,6 +62,12 @@ public class MembershipDAOImpl implements MembershipDAO {
         return null;
     }
 
+    /**
+     * Returns a list of all memberships in the database.
+     *
+     * @return A list of Membership objects.
+     * @throws SQLException If a database access error occurs.
+     */
     @Override
     public List<Membership> getAllMemberships() throws SQLException {
         List<Membership> memberships = new ArrayList<>();
@@ -65,6 +85,12 @@ public class MembershipDAOImpl implements MembershipDAO {
         return memberships;
     }
 
+    /**
+     * Updates an existing membership record.
+     *
+     * @param membership The membership object with updated fields.
+     * @throws SQLException If a database access error occurs.
+     */
     @Override
     public void updateMembership(Membership membership) throws SQLException {
         String sql = "UPDATE memberships SET membershiptype=?, membershipdescription=?, membershipcost=?, memberid=?, startdate=?, enddate=?, isonhold=? WHERE membershipid=?";
@@ -85,6 +111,12 @@ public class MembershipDAOImpl implements MembershipDAO {
         }
     }
 
+    /**
+     * Deletes a membership by its ID.
+     *
+     * @param membershipId The ID of the membership to delete.
+     * @throws SQLException If a database access error occurs.
+     */
     @Override
     public void deleteMembership(int membershipId) throws SQLException {
         String sql = "DELETE FROM memberships WHERE membershipid = ?";
@@ -97,6 +129,13 @@ public class MembershipDAOImpl implements MembershipDAO {
         }
     }
 
+    /**
+     * Returns all memberships assigned to a specific member.
+     *
+     * @param memberId The ID of the user.
+     * @return A list of that user's memberships.
+     * @throws SQLException If a database access error occurs.
+     */
     @Override
     public List<Membership> getMembershipsByMemberId(int memberId) throws SQLException {
         List<Membership> memberships = new ArrayList<>();
@@ -116,9 +155,15 @@ public class MembershipDAOImpl implements MembershipDAO {
         return memberships;
     }
 
+    /**
+     * Calculates the total revenue from all memberships that are not on hold.
+     *
+     * @return Total revenue as a double.
+     * @throws SQLException If a database access error occurs.
+     */
     @Override
     public double getTotalMembershipRevenue() throws SQLException {
-        String sql = "SELECT (SUM(membership_cost), 0) AS total FROM memberships WHERE is_on_hold = FALSE";
+        String sql = "SELECT COALESCE(SUM(membershipcost), 0) AS total FROM memberships WHERE isonhold = FALSE";
 
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -133,7 +178,11 @@ public class MembershipDAOImpl implements MembershipDAO {
     }
 
     /**
-     * Helper method to convert ResultSet row to Membership object.
+     * Helper method to convert a ResultSet row to a Membership object.
+     *
+     * @param rs The result set from the query.
+     * @return A populated Membership object.
+     * @throws SQLException If column mapping fails.
      */
     private Membership mapResultSetToMembership(ResultSet rs) throws SQLException {
         return new Membership(

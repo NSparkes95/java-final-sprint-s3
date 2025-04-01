@@ -1,23 +1,32 @@
 package org.keyin.membership;
+
 import java.time.LocalDate;
 
 /**
  * Represents a gym membership purchased by a Member or Trainer.
- * Stores membership type, description, cost, and linked member ID.
+ * Stores membership details including type, description, cost, and associated user ID.
  */
 public class Membership {
     private int membershipId;
     private String membershipType;
     private String membershipDescription;
     private double membershipCost;
-    private int memberId; // FK for user_id in the User class
+    private int memberId; // Foreign key referencing a user
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean isOnHold;
 
-    
     /**
-     * Full constructor used when reading from the database.
+     * Full constructor for reading a membership from the database.
+     *
+     * @param membershipId ID of the membership
+     * @param membershipType Type of the membership (e.g., Monthly, Annual)
+     * @param membershipDescription Description of the membership
+     * @param membershipCost Cost of the membership
+     * @param memberId ID of the user who owns the membership
+     * @param startDate Start date of the membership
+     * @param endDate End date of the membership
+     * @param isOnHold Whether the membership is currently on hold
      */
     public Membership(int membershipId, String membershipType, String membershipDescription, double membershipCost, int memberId, LocalDate startDate, LocalDate endDate, boolean isOnHold) {
         this.membershipId = membershipId;
@@ -31,13 +40,21 @@ public class Membership {
     }
 
     /**
-     * Constructor used when creating a new membership (inserts).
+     * Constructor used when creating a new membership (typically for inserts).
+     *
+     * @param membershipType Type of the membership
+     * @param membershipDescription Description of the membership
+     * @param membershipCost Cost of the membership
+     * @param memberId ID of the user who is buying the membership
+     * @param startDate Start date of the membership
+     * @param endDate End date of the membership
      */
     public Membership(String membershipType, String membershipDescription, double membershipCost, int memberId, LocalDate startDate, LocalDate endDate) {
         this(-1, membershipType, membershipDescription, membershipCost, memberId, startDate, endDate, false);
     }
 
     // Getters and Setters
+
     public int getMembershipId() { return membershipId; }
     public void setMembershipId(int membershipId) { this.membershipId = membershipId; }
 
@@ -62,6 +79,11 @@ public class Membership {
     public boolean isOnHold() { return isOnHold; }
     public void setOnHold(boolean onHold) { isOnHold = onHold; }
 
+    /**
+     * Returns a string representation of the membership.
+     *
+     * @return A string containing all membership fields.
+     */
     @Override
     public String toString() {
         return "Membership{" +

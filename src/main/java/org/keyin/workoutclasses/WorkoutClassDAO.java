@@ -1,4 +1,4 @@
-package org.keyin.workout_classes;
+package org.keyin.workoutclasses;
 
 import java.sql.SQLException;
 import java.util.List;
