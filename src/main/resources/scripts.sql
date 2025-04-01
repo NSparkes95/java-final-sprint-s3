@@ -37,6 +37,8 @@ CREATE TABLE workout_classes (
     is_completed BOOLEAN DEFAULT FALSE
 );
 
+
+
 -- ==== INSERT USERS ====
 INSERT INTO users (
     user_name, 
@@ -85,8 +87,8 @@ INSERT INTO workout_classes (
     is_completed
 )
 VALUES
-('Yoga Basics', 'A gentle introduction to yoga for beginners.', 2, '2025-04-10', '09:00:00', 1 hour, 20, 'Studio A', 'Beginner', 'Yoga Mat', FALSE),
-('HIIT Blast', 'High-intensity interval training for all levels.', 3, '2025-04-11', '18:00:00', 45 minutes, 15, 'Gym Floor', 'Intermediate', 'Dumbbells', FALSE),
-('Zumba Dance Party', 'Fun and energetic dance workout.', 2, '2025-04-12', '17:00:00', 1 hour,  25, 'Dance Studio', 'All Levels', 'None', FALSE),
-('Pilates Core Strength', 'Focus on core strength and flexibility.', 3, '2025-04-13', '08:30:00', 50 minutes, 15, 'Studio B', 'Intermediate', 'Reformer', FALSE),
-('Spin Class Challenge', 'High-energy cycling class with music.', 2, '2025-04-14', '19:30:00', 45 minutes,  20, 'Cycling Studio', 'All Levels', 'None', FALSE);
+('Yoga Basics', 'A gentle introduction to yoga for beginners.', 2, '2025-04-10', '09:00:00', 60, 20, 'Studio A', 'Beginner', 'Yoga Mat', FALSE),
+('HIIT Blast', 'High-intensity interval training for all levels.', 3, '2025-04-11', '18:00:00', 45, 15, 'Gym Floor', 'Intermediate', 'Dumbbells', FALSE),
+('Zumba Dance Party', 'Fun and energetic dance workout.', 2, '2025-04-12', '17:00:00', 60, 25, 'Dance Studio', 'All Levels', 'None', FALSE),
+('Pilates Core Strength', 'Focus on core strength and flexibility.', 3, '2025-04-13', '08:30:00', 50, 15, 'Studio B', 'Intermediate', 'Reformer', FALSE),
+('Spin Class Challenge', 'High-energy cycling class with music.', 2, '2025-04-14', '19:30:00', 45, 20, 'Cycling Studio', 'All Levels', 'None', FALSE);
