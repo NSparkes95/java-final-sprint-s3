@@ -5,6 +5,7 @@ import org.keyin.membership.MembershipService;
 import org.keyin.membership.MembershipDAOImpl;
 import org.keyin.user.User;
 import org.keyin.user.UserService;
+import org.keyin.user.UserDaoImpl; // Make sure to import the correct implementation
 import org.keyin.workoutclasses.WorkoutClass;
 import org.keyin.workoutclasses.WorkoutClassService;
 
@@ -17,7 +18,7 @@ import java.util.Scanner;
 public class GymApp {
     public static void main(String[] args) throws SQLException {
         // Initialize services with DAO injection
-        UserService userService = new UserService();
+        UserService userService = new UserService(new UserDaoImpl());  // Inject UserDaoImpl into UserService
         MembershipService membershipService = new MembershipService(new MembershipDAOImpl());
         WorkoutClassService workoutService = new WorkoutClassService();
 
@@ -67,10 +68,10 @@ public class GymApp {
         String password = scanner.nextLine();
 
         try {
-            User user = userService.loginForUser(username, password);
+            User user = userService.login(username, password);
             if (user != null) {
                 System.out.println("Login Successful! Welcome " + user.getUserName());
-                switch (user.getUserRole().toLowerCase()) {
+                switch (user.getRole().toLowerCase()) {
                     case "admin":
                         showAdminMenu(scanner, user, userService, membershipService, workoutService);
                         break;
@@ -256,6 +257,7 @@ public class GymApp {
             switch (choice) {
                 case "1":
                     showAdminMenu(scanner, userService);
+                    break;
                 case "2":
                     try {
                         List<Membership> memberships = membershipService.getAllMemberships();
@@ -297,67 +299,10 @@ public class GymApp {
 
         User user = new User(username, password, role);
         try {
-            userService.addUser(user);
+            userService.registerUser(username, password, "email", "phone", "address", role);  // Fix method call
             System.out.println("User added successfully!");
         } catch (SQLException e) {
             System.out.println("Error adding user: " + e.getMessage());
-        }
-    }
-
-    /**
-    * Prompts the user to enter workout class details and adds the new class.
-    *
-    * @param scanner Scanner for user input
-    * @param service WorkoutClassService for DAO access
-    */
-    private static void addNewWorkoutClass(Scanner scanner, WorkoutClassService service) {
-        try {
-            System.out.println("\n=== Add New Workout Class ===");
-
-            System.out.print("Enter class name: ");
-            String name = scanner.nextLine();
-
-            System.out.print("Enter class description: ");
-            String description = scanner.nextLine();
-
-            System.out.print("Trainer ID: ");
-            int trainerId = Integer.parseInt(scanner.nextLine());
-
-            System.out.print("Enter class level (Beginner/Intermediate/Advanced): ");
-            String level = scanner.nextLine();
-
-            System.out.print("Enter class duration (in minutes): ");
-            int duration = Integer.parseInt(scanner.nextLine());
-
-            System.out.print("Enter class capacity: ");
-            int capacity = Integer.parseInt(scanner.nextLine());
-
-            System.out.print("Enter class date (YYYY-MM-DD): ");
-            LocalDate date = LocalDate.parse(scanner.nextLine());
-
-            System.out.print("Enter class time (HH:MM): ");
-            LocalTime time = LocalTime.parse(scanner.nextLine());
-
-            System.out.print("Enter class location: ");
-            String location = scanner.nextLine();
-
-            System.out.print("Enter equipment needed (or 'None'): ");
-            String equipment = scanner.nextLine();
-
-            // By default, newly created classes are not full
-            boolean isFull = false;
-
-            // Create a new WorkoutClass object
-            WorkoutClass workoutClass = new WorkoutClass(
-                0, name, trainerId, level, description, 
-                duration, capacity, date, time, location, equipment
-            );
-
-            service.addWorkoutClass(workoutClass);
-            System.out.println("Workout class added successfully!");
-
-        } catch (Exception e) {
-            System.out.println("Error adding workout class: " + e.getMessage());
         }
     }
 }

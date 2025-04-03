@@ -13,7 +13,7 @@ import java.util.List;
  * This class uses the UserDao to interact with the database and perform CRUD operations on users.
  */
 public class UserService {
-    private UserDao userDao;
+    private final UserDao userDao;
 
     /**
      * Constructor to initialize the UserService with a UserDao.
