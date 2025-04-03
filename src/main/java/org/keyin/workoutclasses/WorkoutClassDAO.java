@@ -46,4 +46,22 @@ public interface WorkoutClassDAO {
      * @throws SQLException If a database access error occurs.
      */
     void addWorkoutClass(WorkoutClass workoutClass) throws SQLException;
+
+    /**
+     * Updates an existing workout class.
+     * This method is used to modify the details of an existing class.
+     *
+     * @param workoutClass The updated workout class object.
+     * @throws SQLException If a database access error occurs.
+     */
+    void updateWorkoutClass(WorkoutClass workoutClass) throws SQLException;
+
+    /**
+     * Deletes a workout class from the system by its ID.
+     * This will remove the specified class from the database.
+     *
+     * @param classId The ID of the class to be deleted.
+     * @throws SQLException If a database access error occurs.
+     */
+    void deleteWorkoutClass(int classId) throws SQLException;
 }

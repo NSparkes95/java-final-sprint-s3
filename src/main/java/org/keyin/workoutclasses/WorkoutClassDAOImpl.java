@@ -1,4 +1,4 @@
-package org.keyin.workout_classes;
+package org.keyin.workoutclasses;
 
 import org.keyin.database.DatabaseConnection;
 
@@ -29,24 +29,10 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, trainerId);
-<<<<<<< HEAD
-            ResultSet rs = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (rs.next()) {
-                classes.add(mapResultSetToWorkoutClass(rs));
-=======
-            var resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int id = resultSet.getInt("class_id");
-                String name = resultSet.getString("class_name");
-                LocalDate date = rs.getDate("class_date").toLocalDate();
-                LocalTime time = rs.getTime("class_time").toLocalTime();
-                int duration = resultSet.getInt("class_duration");
-                String location = resultSet.getString("class_location");
-                int classCapacity = resultSet.getInt("class_capacity");
-
-                classes.add(new WorkoutClass(id, name, date, time, duration, location, capacity, trainerId));
->>>>>>> 1cc488c90583d5f815b702df370e039a356bce26
+                classes.add(mapResultSetToWorkoutClass(resultSet));
             }
         }
 
@@ -69,18 +55,9 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, trainerId);
-            preparedStatement.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
-            var resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int id = resultSet.getInt("class_id");
-                String name = resultSet.getString("class_name");
-                LocalDate date = rs.getDate("class_date").toLocalDate();
-                LocalTime time = rs.getTime("class_time").toLocalTime();
-                int duration = rs.getInt("class_duration");
-                String location = rs.getString("class_location");
-
-            while (rs.next()) {
-                classes.add(mapResultSetToWorkoutClass(rs));
+                classes.add(mapResultSetToWorkoutClass(resultSet));
             }
         }
 
@@ -98,25 +75,12 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
         List<WorkoutClass> classes = new ArrayList<>();
         String sql = "SELECT * FROM workout_classes";
 
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            var preparedStatement = connection.prepareStatement(sql);
-            var resultSet = preparedStatement.executeQuery();
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                int id = rs.getInt("class_id");
-                String name = rs.getString("class_name");
-                String description = resultSet.getString("class_description");
-                int trainerId = rs.getInt("trainer_id");
-                LocalDate date = rs.getDate("class_date").toLocalDate();
-                LocalTime time = rs.getTime("class_time").toLocalTime();
-                int duration = rs.getInt("class_duration");
-                String location = rs.getString("class_location");
-                String level = resultSet.getString("class_level");
-                String equipment = resultSet.getString("class_equipment");
-                boolean completed = resultSet.getBoolean("is_completed");
-
-
-                classes.add(mapResultSetToWorkoutClass(rs));
+                classes.add(mapResultSetToWorkoutClass(resultSet));
             }
         }
 
@@ -126,24 +90,25 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
     /**
      * Adds a new workout class to the database.
      *
-     * @param wc The workout class to insert.
+     * @param workoutClass The workout class to insert.
      * @throws SQLException If the insert fails.
      */
     @Override
-    public void addWorkoutClass(WorkoutClass wc) throws SQLException {
+    public void addWorkoutClass(WorkoutClass workoutClass) throws SQLException {
         String sql = "INSERT INTO workout_classes (class_name, class_description, trainer_id, class_date, class_time, class_duration, class_capacity, class_location, class_level, class_equipment, is_completed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
-        preparedStatement stmt = conn.preparedStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setString(1, workoutClass.getClassName());
-            stmt.setString(2, workoutClass.getDescription());
+            stmt.setString(2, workoutClass.getClassDescription());
             stmt.setInt(3, workoutClass.getTrainerId());
-            stmt.setDate(4, java.sql.Date.valueOf(workoutClass.getDate()));
-            stmt.setTime(5, java.sql.Time.valueOf(workoutClass.getTime()));
-            stmt.setInt(6, workoutClass.getDuration());
+            stmt.setDate(4, java.sql.Date.valueOf(workoutClass.getClassDate()));
+            stmt.setTime(5, java.sql.Time.valueOf(workoutClass.getClassTime()));
+            stmt.setInt(6, workoutClass.getClassDuration());
             stmt.setInt(7, workoutClass.getClassCapacity());
-            stmt.setString(8, workoutClass.getLocation());
-            stmt.setString(9, workoutClass.getLevel());
+            stmt.setString(8, workoutClass.getClassLocation());
+            stmt.setString(9, workoutClass.getClassLevel());
             stmt.setString(10, workoutClass.getClassEquipment());
             stmt.setBoolean(11, workoutClass.isCompleted());
 
@@ -151,23 +116,70 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
         }
     }
 
-    /** 
+    /**
+     * Updates an existing workout class in the database.
+     *
+     * @param workoutClass The workout class to update.
+     * @throws SQLException If a database access error occurs.
+     */
+    @Override
+    public void updateWorkoutClass(WorkoutClass workoutClass) throws SQLException {
+        String sql = "UPDATE workout_classes SET class_name = ?, class_description = ?, trainer_id = ?, class_date = ?, class_time = ?, class_duration = ?, class_capacity = ?, class_location = ?, class_level = ?, class_equipment = ?, is_completed = ? WHERE class_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, workoutClass.getClassName());
+            stmt.setString(2, workoutClass.getClassDescription());
+            stmt.setInt(3, workoutClass.getTrainerId());
+            stmt.setDate(4, java.sql.Date.valueOf(workoutClass.getClassDate()));
+            stmt.setTime(5, java.sql.Time.valueOf(workoutClass.getClassTime()));
+            stmt.setInt(6, workoutClass.getClassDuration());
+            stmt.setInt(7, workoutClass.getClassCapacity());
+            stmt.setString(8, workoutClass.getClassLocation());
+            stmt.setString(9, workoutClass.getClassLevel());
+            stmt.setString(10, workoutClass.getClassEquipment());
+            stmt.setBoolean(11, workoutClass.isCompleted());
+            stmt.setInt(12, workoutClass.getClassId());
+
+            stmt.executeUpdate();
+        }
+    }
+
+    /**
+     * Deletes a workout class from the database by its ID.
+     *
+     * @param classId The ID of the class to delete.
+     * @throws SQLException If a database access error occurs.
+     */
+    @Override
+    public void deleteWorkoutClass(int classId) throws SQLException {
+        String sql = "DELETE FROM workout_classes WHERE class_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, classId);
+            stmt.executeUpdate();
+        }
+    }
+
+    /**
      * Helper to map result row to a WorkoutClass object.
-    */
-    private WorkoutClass map(ResultSet rs) throws SQLException {
+     */
+    private WorkoutClass mapResultSetToWorkoutClass(ResultSet resultSet) throws SQLException {
         return new WorkoutClass(
-            rs.getInt("class_id"),
-            rs.getString("class_name"),
-            rs.getString("class_description"),
-            rs.getInt("trainer_id"),
-            rs.getDate("class_date").toLocalDate(),
-            rs.getTime("class_time").toLocalTime(),
-            rs.getInt("class_duration"),
-            rs.getInt("class_capacity"),
-            rs.getString("class_location"),
-            rs.getString("class_level"),
-            rs.getString("class_equipment"),
-            rs.getBoolean("is_completed")
+                resultSet.getInt("class_id"),
+                resultSet.getString("class_name"),
+                resultSet.getInt("trainer_id"),
+                resultSet.getString("class_level"),
+                resultSet.getString("class_description"),
+                resultSet.getInt("class_duration"),
+                resultSet.getInt("class_capacity"),
+                resultSet.getDate("class_date").toLocalDate(),
+                resultSet.getTime("class_time").toLocalTime(),
+                resultSet.getString("class_location"),
+                resultSet.getString("class_equipment")
         );
     }
 }
