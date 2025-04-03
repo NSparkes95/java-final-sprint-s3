@@ -1,4 +1,4 @@
-package org.keyin.workoutclasses;
+package org.keyin.workout_classes;
 
 import org.keyin.database.DatabaseConnection;
 
@@ -29,10 +29,24 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, trainerId);
+<<<<<<< HEAD
             ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
                 classes.add(mapResultSetToWorkoutClass(rs));
+=======
+            var resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("class_id");
+                String name = resultSet.getString("class_name");
+                LocalDate date = rs.getDate("class_date").toLocalDate();
+                LocalTime time = rs.getTime("class_time").toLocalTime();
+                int duration = resultSet.getInt("class_duration");
+                String location = resultSet.getString("class_location");
+                int classCapacity = resultSet.getInt("class_capacity");
+
+                classes.add(new WorkoutClass(id, name, date, time, duration, location, capacity, trainerId));
+>>>>>>> 1cc488c90583d5f815b702df370e039a356bce26
             }
         }
 
@@ -87,16 +101,21 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
         try (Connection connection = DatabaseConnection.getConnection()) {
             var preparedStatement = connection.prepareStatement(sql);
             var resultSet = preparedStatement.executeQuery();
+
             while (resultSet.next()) {
                 int id = rs.getInt("class_id");
                 String name = rs.getString("class_name");
+                String description = resultSet.getString("class_description");
+                int trainerId = rs.getInt("trainer_id");
                 LocalDate date = rs.getDate("class_date").toLocalDate();
                 LocalTime time = rs.getTime("class_time").toLocalTime();
                 int duration = rs.getInt("class_duration");
                 String location = rs.getString("class_location");
-                int trainerId = rs.getInt("trainer_id");
+                String level = resultSet.getString("class_level");
+                String equipment = resultSet.getString("class_equipment");
+                boolean completed = resultSet.getBoolean("is_completed");
 
-            while (rs.next()) {
+
                 classes.add(mapResultSetToWorkoutClass(rs));
             }
         }
