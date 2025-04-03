@@ -12,10 +12,6 @@ public class WorkoutClassService {
     private final WorkoutClassDAO workoutDAO;
 
     // Constructor that takes a DAO (implementation)
-    /**
-     * Constructor to initialize the WorkoutClassService with a specific DAO implementation.
-     * @param workoutDAO The DAO to interact with the database.
-     */
     public WorkoutClassService(WorkoutClassDAO workoutDAO) {
         this.workoutDAO = workoutDAO;
     }
@@ -64,21 +60,19 @@ public class WorkoutClassService {
 
     /**
      * Update an existing workout class.
-     * This method allows trainers to modify the details of a class they have created.
      *
-     * @param wc the updated workout class object
-     * @throws SQLException if there is a database error
+     * @param workoutClass The workout class object to update.
+     * @throws SQLException If a database error occurs.
      */
-    public void updateWorkoutClass(WorkoutClass wc) throws SQLException {
-        workoutDAO.updateWorkoutClass(wc);
+    public void updateWorkoutClass(WorkoutClass workoutClass) throws SQLException {
+        workoutDAO.updateWorkoutClass(workoutClass);
     }
 
     /**
-     * Delete a workout class by its ID.
-     * This method allows trainers to delete a class they have created.
+     * Delete a workout class.
      *
-     * @param classId the ID of the class to delete
-     * @throws SQLException if there is a database error
+     * @param classId The ID of the class to delete.
+     * @throws SQLException If a database error occurs.
      */
     public void deleteWorkoutClass(int classId) throws SQLException {
         workoutDAO.deleteWorkoutClass(classId);
