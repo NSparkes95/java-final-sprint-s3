@@ -244,26 +244,18 @@ public class GymApp {
 
         while (running) {
             System.out.println("\n=== Admin Menu ===");
-            System.out.println("1. View All Users");
-            System.out.println("2. View All Memberships");
-            System.out.println("3. View Total Membership Revenue");
-            System.out.println("4. Add New Workout Class");
+            System.out.println("1. User Management");
+            System.out.println("2. Membership Management");
+            System.out.println("3. Workout Class Management");
+            System.out.println("4. Trainer Management");
+            System.out.println("5. View Total Revenue");
             System.out.println("0. Back to Main Menu");
             System.out.print("Choose an option: ");
             String choice = scanner.nextLine();
 
             switch (choice) {
                 case "1":
-                    try {
-                        List<User> users = userService.getAllUsers();
-                        System.out.println("\n📋 All Registered Users:");
-                        for (User u : users) {
-                            System.out.println("ID: " + u.getUserId() + " | Name: " + u.getUserName() + " | Role: " + u.getUserRole());
-                        }
-                    } catch (SQLException e) {
-                        System.out.println("❌ Error fetching users: " + e.getMessage());
-                    }
-                    break;
+                    showAdminMenu(scanner, userService);
                 case "2":
                     try {
                         List<Membership> memberships = membershipService.getAllMemberships();
