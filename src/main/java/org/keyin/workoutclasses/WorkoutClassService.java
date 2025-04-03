@@ -77,4 +77,15 @@ public class WorkoutClassService {
     public void deleteWorkoutClass(int classId) throws SQLException {
         workoutDAO.deleteWorkoutClass(classId);
     }
+
+    /**
+     * Get all available workout classes (for members).
+     * This method is used to retrieve all classes available for members.
+     *
+     * @return list of all available workout classes
+     * @throws SQLException if a database error occurs
+     */
+    public List<WorkoutClass> getAllAvailableClasses() throws SQLException {
+        return workoutDAO.getAllWorkoutClasses(); // This method can be extended if you want to filter out completed classes or other conditions.
+    }
 }

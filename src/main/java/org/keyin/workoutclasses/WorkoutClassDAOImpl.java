@@ -13,6 +13,8 @@ import java.util.List;
  */
 public class WorkoutClassDAOImpl implements WorkoutClassDAO {
 
+    // Existing methods...
+
     /**
      * Fetches all workout classes assigned to a specific trainer.
      *
@@ -162,6 +164,30 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
             stmt.setInt(1, classId);
             stmt.executeUpdate();
         }
+    }
+
+    /**
+     * Retrieves all available workout classes for members.
+     * This method filters out completed classes and returns only available ones.
+     *
+     * @return A list of available WorkoutClass objects.
+     * @throws SQLException If a database access error occurs.
+     */
+    @Override
+    public List<WorkoutClass> getAvailableClasses() throws SQLException {
+        List<WorkoutClass> classes = new ArrayList<>();
+        String sql = "SELECT * FROM workout_classes WHERE is_completed = FALSE";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                classes.add(mapResultSetToWorkoutClass(resultSet));
+            }
+        }
+
+        return classes;
     }
 
     /**

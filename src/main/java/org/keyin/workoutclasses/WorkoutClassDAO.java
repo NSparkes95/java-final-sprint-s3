@@ -64,4 +64,13 @@ public interface WorkoutClassDAO {
      * @throws SQLException If a database access error occurs.
      */
     void deleteWorkoutClass(int classId) throws SQLException;
+
+    /**
+     * Retrieves all available workout classes in the system.
+     * This method is used to get all available classes for members.
+     *
+     * @return A list of all available WorkoutClass objects.
+     * @throws SQLException If a database access error occurs.
+     */
+    List<WorkoutClass> getAvailableClasses() throws SQLException;
 }
