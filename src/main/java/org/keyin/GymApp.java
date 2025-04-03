@@ -5,9 +5,10 @@ import org.keyin.membership.MembershipService;
 import org.keyin.membership.MembershipDAOImpl;
 import org.keyin.user.User;
 import org.keyin.user.UserService;
-import org.keyin.user.UserDaoImpl; // Make sure to import the correct implementation
+import org.keyin.user.UserDaoImpl;
 import org.keyin.workoutclasses.WorkoutClass;
 import org.keyin.workoutclasses.WorkoutClassService;
+import org.keyin.workoutclasses.WorkoutClassDAOImpl;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public class GymApp {
         // Initialize services with DAO injection
         UserService userService = new UserService(new UserDaoImpl());  // Inject UserDaoImpl into UserService
         MembershipService membershipService = new MembershipService(new MembershipDAOImpl());
-        WorkoutClassService workoutService = new WorkoutClassService();
+        WorkoutClassService workoutService = new WorkoutClassService(new WorkoutClassDAOImpl());  // Updated constructor with DAOImpl
 
         // Scanner for user input
         Scanner scanner = new Scanner(System.in);
@@ -297,9 +298,8 @@ public class GymApp {
         System.out.print("Enter role (Admin/Trainer/Member): ");
         String role = scanner.nextLine();
 
-        User user = new User(username, password, role);
         try {
-            userService.registerUser(username, password, "email", "phone", "address", role);  // Fix method call
+            userService.registerUser(username, password, "email", "phone", "address", role);  // Using the registerUser method
             System.out.println("User added successfully!");
         } catch (SQLException e) {
             System.out.println("Error adding user: " + e.getMessage());
