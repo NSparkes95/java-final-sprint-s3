@@ -38,7 +38,7 @@ public class Admin extends User {
                     GymApp.showAdminMembershipMenu(scanner, membershipService);
                     break;
                 case "3":
-                    GymApp.showAdminWorkoutClassMenu(scanner, workoutService);
+                    showAdminWorkoutClassMenu(scanner, workoutService);
                     break;
                 case "4":
                     GymApp.showAdminTrainerMenu(scanner, userService);

@@ -27,7 +27,7 @@ public class Trainer extends User {
     * @param membershipService Not used by trainers, but included for consistency
     * @param workoutService Service for managing workout classes
     */
-    public void showTrainerMenu(Scanner scanner, User user, MembershipService membershipService, WorkoutClassService workoutService) {
+    public void showTrainerMenu(Scanner scanner, User user, WorkoutClassService workoutService) {
         boolean running = true;
 
         while (running) {
@@ -169,10 +169,10 @@ public class Trainer extends User {
             }
 
             System.out.print("New Trainer ID (or press Enter to keep '" + existingClass.getTrainerId() + "'): ");
-            String newTrainerIdInput = scanner.nextLine();
-            if (!newTrainerIdInput.isEmpty()) {
-                int newTrainerId = Integer.parseInt(newTrainerIdInput);
-                existingClass.setTrainerId(newTrainerId);
+            String trainerIdInput = scanner.nextLine();
+            if (!trainerIdInput.isEmpty()) {
+                int parsedTrainerId = Integer.parseInt(trainerIdInput);
+                existingClass.setTrainerId(parsedTrainerId);
             }
 
             System.out.print("New class level (or press Enter to keep '" + existingClass.getLevel() + "'): ");
@@ -183,30 +183,30 @@ public class Trainer extends User {
 
             System.out.print("New duration (or press Enter to keep '" + existingClass.getDuration() + "'): ");
             String newDuration = scanner.nextLine();
-            if (!newDuration,isEmpty()) {
-                int newDuration = Integer.parseInt(duration);
-                existingClass.setDuration(newDuration);
+            if (!newDuration.isEmpty()) {
+                int parsedDuration = Integer.parseInt(newDuration);
+                existingClass.setDuration(parsedDuration);
             }
 
             System.out.print("New capacity (or press Enter to keep '" + existingClass.getCapacity() + "'): ");
             String newCapacity = scanner.nextLine();
             if (!newCapacity.isEmpty()) {
-                int newCapacity = Integer.parseInt(capacity);
-                existingClass.setCapacity(newCapacity);
-            }
+                int parsedCapacity = Integer.parseInt(newCapacity);
+                existingClass.setCapacity(parsedCapacity);
+                }
 
             System.out.print("New date (YYYY-MM-DD) (or press Enter to keep '" + existingClass.getDate() + "'): ");
             String newDate = scanner.nextLine();
             if (!newDate.isEmpty()) {
-                LocalDate newDate = LocalDate.parse(date);
-                existingClass.setDate(newDate);
+                LocalDate parsedDate = LocalDate.parse(newDate);
+                existingClass.setDate(parsedDate);
             }
 
             System.out.print("New time (HH:MM) (or press Enter to keep '" + existingClass.getTime() + "'): ");
             String newTime = scanner.nextLine();
             if (!newTime.isEmpty()) {
-                LocalTime newTime = LocalTime.parse(time);
-                existingClass.setTime(newTime);
+                LocalTime parsedTime = LocalTime.parse(newTime);
+                existingClass.setTime(parsedTime);
             }
 
             System.out.print("New location (or press Enter to keep '" + existingClass.getLocation() + "'): ");

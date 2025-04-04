@@ -77,7 +77,7 @@ public class GymApp {
                 System.out.println("Login Successful! Welcome " + user.getUserName());
                 switch (user.getRole().toLowerCase()) {
                     case "admin":
-                        ((Admin) user).showAdminMenu(scanner, userService, membershipService, workoutService);
+                        ((Admin) user).showAdminMenu(scanner, user, userService, membershipService, workoutService);
                         break;
                     case "trainer":
                         ((Trainer) user).showTrainerMenu(scanner, workoutService);
