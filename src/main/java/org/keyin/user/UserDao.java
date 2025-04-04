@@ -19,6 +19,24 @@ public interface UserDao {
     User getUserByUsername(String username) throws SQLException;
 
     /**
+     * Retrieves a user by their user ID.
+     * 
+     * @param userId The ID of the user.
+     * @return The User object corresponding to the user ID, or null if no such user exists.
+     * @throws SQLException If a database access error occurs.
+     */
+    User getUserById(int userId) throws SQLException;
+
+    /**
+     * Retrieves a user by their email.
+     * 
+     * @param email The email of the user.
+     * @return The User object corresponding to the email, or null if no such user exists.
+     * @throws SQLException If a database access error occurs.
+     */
+    User getUserByEmail(String email) throws SQLException;
+
+    /**
      * Inserts a new user into the database.
      * 
      * @param user The User object to insert into the database.

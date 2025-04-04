@@ -70,6 +70,40 @@ public class UserDaoImpl implements UserDao {
     }
 
     /**
+     * Retrieves a user by their user ID from the database.
+     * 
+     * @param userId The ID of the user to retrieve.
+     * @return The User object corresponding to the user ID, or null if no such user exists.
+     * @throws SQLException If a database access error occurs.
+     */
+    @Override
+    public User getUserById(int userId) throws SQLException {
+        String sql = "SELECT * FROM users WHERE user_id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("user_password"),
+                            rs.getString("user_email"),
+                            rs.getString("user_phone"),
+                            rs.getString("user_address"),
+                            rs.getString("user_role")
+                    );
+                }
+            }
+        }
+
+        return null; // User not found
+    }
+
+    /**
      * Retrieves all users in the system from the database.
      * 
      * @return A list of all User objects.

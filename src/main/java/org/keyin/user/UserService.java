@@ -38,9 +38,17 @@ public class UserService {
     public void registerUser(String username, String plainPassword, String email, String phone, String address, String role) throws SQLException {
         String hashedPassword = PasswordUtils.hashPassword(plainPassword);
 
-        User user;
+        if (isUsernameTaken(username)) {
+            System.out.println("❌ Username already exists. Please choose a different one.");
+            return;
+        }
 
-        // Determine role-based subclass to instantiate
+        if (isEmailTaken(email)) {
+            System.out.println("❌ Email already exists. Please choose a different one.");
+            return;
+        }
+
+        User user;
         switch (role.toLowerCase()) {
             case "admin":
                 user = new Admin(username, hashedPassword, email, phone, address);
@@ -55,7 +63,6 @@ public class UserService {
                 throw new IllegalArgumentException("Invalid role: " + role);
         }
 
-        // Save the user to the database
         userDao.insertUser(user);
         System.out.println("✅ User registered successfully: " + user.getUserName());
     }
@@ -82,6 +89,28 @@ public class UserService {
     }
 
     /**
+     * Checks if the username already exists in the system.
+     *
+     * @param username The username to check.
+     * @return true if the username exists, false otherwise.
+     * @throws SQLException If a database access error occurs.
+     */
+    public boolean isUsernameTaken(String username) throws SQLException {
+        return userDao.getUserByUsername(username) != null;
+    }
+
+    /**
+     * Checks if the email already exists in the system.
+     *
+     * @param email The email to check.
+     * @return true if the email exists, false otherwise.
+     * @throws SQLException If a database access error occurs.
+     */
+    public boolean isEmailTaken(String email) throws SQLException {
+        return userDao.getUserByEmail(email) != null;
+    }
+
+    /**
      * Displays a list of all users for an admin to view.
      * 
      * @throws SQLException If a database access error occurs.
@@ -102,7 +131,7 @@ public class UserService {
         try {
             userDao.updateUser(user);
             System.out.println("✅ User updated successfully: " + user.getUserName());
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("❌ Error updating user: " + e.getMessage());
         }
     }
@@ -114,19 +143,14 @@ public class UserService {
      */
     public void deleteUserById(int userId) {
         try {
-            User user = userDao.getAllUsers()
-                .stream()
-                .filter(u -> u.getUserId() == userId)
-                .findFirst()
-                .orElse(null);
-
+            User user = userDao.getUserById(userId);
             if (user != null) {
                 userDao.deleteUser(userId);
                 System.out.println("✅ User deleted successfully: " + user.getUserName());
             } else {
                 System.out.println("❌ User not found with ID: " + userId);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("❌ Error deleting user: " + e.getMessage());
         }
     }
