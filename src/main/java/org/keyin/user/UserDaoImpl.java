@@ -160,6 +160,40 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+     /**
+     * Retrieves a user by their email.
+     * 
+     * @param email The email of the user.
+     * @return The User object corresponding to the email, or null if no such user exists.
+     * @throws SQLException If a database access error occurs.
+     */
+    @Override
+    public User getUserByEmail(String email) throws SQLException {
+        String sql = "SELECT * FROM users WHERE user_email = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, email);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("user_password"),
+                            rs.getString("user_email"),
+                            rs.getString("user_phone"),
+                            rs.getString("user_address"),
+                            rs.getString("user_role")
+                    );
+                }
+            }
+        }
+
+        return null; // User not found
+    }
+
     /**
      * Deletes a user from the database by their ID.
      * 
