@@ -16,7 +16,8 @@ public class Admin extends User {
         super(username, password, email, phone, address, "admin");
     }
 
-    public void showAdminMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
+    public void showAdminMenu(Scanner scanner, User user, UserService userService,
+                               MembershipService membershipService, WorkoutClassService workoutService) {
         boolean running = true;
 
         while (running) {
@@ -31,18 +32,18 @@ public class Admin extends User {
             String choice = scanner.nextLine();
 
             switch (choice) {
-                case"1":
-                    GymApp.showAdminUserMenu(scanner, userService);
+                case "1":
+                    showAdminUserMenu(scanner, userService);
                     break;
                 case "2":
-                    GymApp.showAdminMembershipMenu(scanner, membershipService);
+                    showAdminMembershipMenu(scanner, membershipService);
                     break;
                 case "3":
                     showAdminWorkoutClassMenu(scanner, workoutService);
                     break;
                 case "4":
-                    GymApp.showAdminTrainerMenu(scanner, userService);
-                    break;
+                    showAdminTrainerMenu(scanner, userService);
+                    break
                 case "5":
                     try {
                         double totalRevenue = membershipService.getTotalRevenue();
