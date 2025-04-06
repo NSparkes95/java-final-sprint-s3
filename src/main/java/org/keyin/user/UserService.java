@@ -1,8 +1,8 @@
 package org.keyin.user;
 
-import java.util.List; 
-import org.keyin.utils.PasswordUtils;
 import java.sql.SQLException;
+import java.util.List;
+import org.keyin.utils.PasswordUtils;
 
 /**
  * Service class for handling user-related operations such as registration, login, update, and deletion.
@@ -50,17 +50,14 @@ public class UserService {
      * @return The User object if login is successful, null otherwise.
      * @throws SQLException If a database access error occurs during the login process.
      */
-    public User login(String username, String plainPassword) throws SQLException {
+    public User login(String username, String password) throws SQLException {
+        // Assuming we check the user credentials in the database
         User user = userDao.getUserByUsername(username);
-
-        // Check if the user exists and verify the password
-        if (user != null && PasswordUtils.checkPassword(plainPassword, user.getPassword())) {
-            System.out.println("✅ Login successful for user: " + username);
-            return user;
-        } else {
-            System.out.println("❌ Invalid username or password.");
-            return null;
+        if (user != null && PasswordUtils.checkPassword(password, user.getPassword())) {
+            // Role is already set in the User object
+            return user; // Return the user if login is successful
         }
+        return null; // Return null if login fails
     }
 
     /**
@@ -118,13 +115,8 @@ public class UserService {
      */
     public void deleteUserById(int userId) {
         try {
-            User user = userDao.getUserById(userId);
-            if (user != null) {
-                userDao.deleteUser(userId);
-                System.out.println("✅ User deleted successfully: " + user.getUserName());
-            } else {
-                System.out.println("❌ User not found with ID: " + userId);
-            }
+            userDao.deleteUser(userId);
+            System.out.println("✅ User deleted successfully.");
         } catch (SQLException e) {
             System.out.println("❌ Error deleting user: " + e.getMessage());
         }

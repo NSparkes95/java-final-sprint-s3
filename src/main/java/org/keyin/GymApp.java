@@ -1,14 +1,19 @@
 package org.keyin;
 
 import org.keyin.membership.MembershipService;
+import org.keyin.membership.Membership;
 import org.keyin.membership.MembershipDAOImpl;
 import org.keyin.user.User;
 import org.keyin.user.UserService;
 import org.keyin.user.UserDaoImpl;
 import org.keyin.workoutclasses.WorkoutClassService;
+import org.keyin.workoutclasses.WorkoutClass;
 import org.keyin.workoutclasses.WorkoutClassDAOImpl;
 
+import java.util.List;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Scanner;
 
 public class GymApp {
@@ -88,32 +93,31 @@ public class GymApp {
             String username = scanner.nextLine();
             System.out.print("Password: ");
             String password = scanner.nextLine();
-
-            User user = userService.login(username, password);
+    
+            User user = userService.login(username, password); // Now the login method takes care of the role assignment
             if (user == null) {
                 System.out.println("❌ Login failed.");
                 return;
             }
-
+    
+            // Now, based on the role, we directly call the role-specific menu method
             switch (user.getRole().toLowerCase()) {
                 case "admin":
-                    ((Admin) user).showAdminMenu(scanner, user, userService, membershipService, workoutService);
+                    showAdminMenu(scanner, user, userService, membershipService, workoutService);
                     break;
                 case "trainer":
-                    ((Trainer) user).showTrainerMenu(scanner, workoutService);
+                    showTrainerMenu(scanner, user, workoutService);
                     break;
                 case "member":
-                    ((Member) user).showMemberMenu(scanner, membershipService);
+                    showMemberMenu(scanner, user, membershipService);
                     break;
-            }
-
                 default:
                     System.out.println("❌ Unknown role.");
             }
         } catch (SQLException e) {
             System.out.println("❌ Login error: " + e.getMessage());
         }
-    }
+    }    
 
     public void showAdminMenu(Scanner scanner, User user, UserService userService,
                                MembershipService membershipService, WorkoutClassService workoutService) {
