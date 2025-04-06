@@ -1,12 +1,8 @@
 package org.keyin.user;
 
-import org.keyin.user.childclasses.Admin;
-import org.keyin.user.childclasses.Member;
-import org.keyin.user.childclasses.Trainer;
+import java.util.List; 
 import org.keyin.utils.PasswordUtils;
-
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Service class for handling user-related operations such as registration, login, update, and deletion.
@@ -27,42 +23,21 @@ public class UserService {
     /**
      * Registers a new user by hashing the password and saving the user based on their role.
      * 
-     * @param username    The username for the new user.
+     * @param username The username for the new user.
      * @param plainPassword The plain text password for the new user.
-     * @param email       The email for the new user.
-     * @param phone       The phone number for the new user.
-     * @param address     The address for the new user.
-     * @param role        The role of the new user (Admin, Member, Trainer).
+     * @param email The email for the new user.
+     * @param phone The phone number for the new user.
+     * @param address The address for the new user.
+     * @param role The role of the new user (Admin, Member, Trainer).
      * @throws SQLException If a database access error occurs during user registration.
      */
     public void registerUser(String username, String plainPassword, String email, String phone, String address, String role) throws SQLException {
         String hashedPassword = PasswordUtils.hashPassword(plainPassword);
 
-        if (isUsernameTaken(username)) {
-            System.out.println("❌ Username already exists. Please choose a different one.");
-            return;
-        }
+        // Create a User object with the given role
+        User user = new User(username, hashedPassword, email, phone, address, role);
 
-        if (isEmailTaken(email)) {
-            System.out.println("❌ Email already exists. Please choose a different one.");
-            return;
-        }
-
-        User user;
-        switch (role.toLowerCase()) {
-            case "admin":
-                user = new Admin(username, hashedPassword, email, phone, address);
-                break;
-            case "member":
-                user = new Member(username, hashedPassword, email, phone, address);
-                break;
-            case "trainer":
-                user = new Trainer(username, hashedPassword, email, phone, address);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid role: " + role);
-        }
-
+        // Save the user to the database
         userDao.insertUser(user);
         System.out.println("✅ User registered successfully: " + user.getUserName());
     }
@@ -70,7 +45,7 @@ public class UserService {
     /**
      * Logs in a user by verifying their username and password.
      * 
-     * @param username    The username of the user trying to log in.
+     * @param username The username of the user trying to log in.
      * @param plainPassword The plain text password provided by the user.
      * @return The User object if login is successful, null otherwise.
      * @throws SQLException If a database access error occurs during the login process.
