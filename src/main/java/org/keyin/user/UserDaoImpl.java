@@ -31,7 +31,7 @@ public class UserDaoImpl implements UserDao {
             pstmt.setString(5, user.getAddress());
             pstmt.setString(6, user.getRole());
 
-            stmt.executeUpdate();
+            pstmt.executeUpdate();
         }
     }
 
@@ -51,7 +51,7 @@ public class UserDaoImpl implements UserDao {
 
             pstmt.setString(1, username);
 
-            try (ResultSet rs = stmt.executeQuery()) {
+            try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     return new User(
                             rs.getInt("userid"),
@@ -83,9 +83,9 @@ public class UserDaoImpl implements UserDao {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, userId);
+            stmt.setInt(1, userId);
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return new User(
                             rs.getInt("userid"),
@@ -174,7 +174,7 @@ public class UserDaoImpl implements UserDao {
             pstmt.setString(6, user.getRole());
             pstmt.setInt(7, user.getUserId());
 
-            stmt.executeUpdate();
+            pstmt.executeUpdate();
         }
     }
 
