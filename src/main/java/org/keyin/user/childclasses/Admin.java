@@ -11,10 +11,24 @@ import java.util.Scanner;
 
 public class Admin extends User {
 
+    /**
+     * Constructor for the Admin class.
+     * 
+     * @param username The username of the admin.
+     * @param password The password of the admin (hashed).
+     * @param email    The email address of the admin.
+     * @param phone    The phone number of the admin.
+     * @param address  The address of the admin.
+     */
     public Admin(String username, String password, String email, String phone, String address) {
         super(username, password, email, phone, address, "Admin");
     }
 
+    /**
+     * Allows the admin to view all trainers.
+     * 
+     * @param userService The UserService to interact with user-related data.
+     */
     public void viewAllTrainers(UserService userService) {
         try {
             List<User> trainers = userService.getAllTrainers();
@@ -31,6 +45,12 @@ public class Admin extends User {
         }
     }
 
+    /**
+     * Allows the admin to add a new trainer.
+     * 
+     * @param scanner     Scanner for input.
+     * @param userService The UserService to interact with user-related data.
+     */
     public void addNewTrainer(Scanner scanner, UserService userService) {
         System.out.print("Enter trainer username: ");
         String username = scanner.nextLine();
@@ -56,9 +76,7 @@ public class Admin extends User {
             return;
         }
 
-        User trainer = new User(username, password, "Trainer");
-        trainer.setEmail(email);
-
+        User trainer = new User(username, password, email, "Trainer");
         try {
             userService.registerUser(trainer);
             System.out.println("✅ Trainer added successfully!");
@@ -67,6 +85,12 @@ public class Admin extends User {
         }
     }
 
+    /**
+     * Allows the admin to update a trainer's details.
+     * 
+     * @param scanner     Scanner for input.
+     * @param userService The UserService to interact with user-related data.
+     */
     public void updateTrainer(Scanner scanner, UserService userService) {
         System.out.print("Enter trainer ID to update: ");
         int trainerId = Integer.parseInt(scanner.nextLine());
@@ -97,13 +121,19 @@ public class Admin extends User {
         }
     }
 
+    /**
+     * Allows the admin to delete a trainer by ID.
+     * 
+     * @param scanner     Scanner for input.
+     * @param userService The UserService to interact with user-related data.
+     */
     public void deleteTrainer(Scanner scanner, UserService userService) {
         System.out.print("Enter trainer ID to delete: ");
         int trainerId = Integer.parseInt(scanner.nextLine());
 
         try {
             User trainer = userService.getUserById(trainerId);
-            if (trainer == null || !trainer.getUserRole().equalsIgnoreCase("Trainer")) {
+            if (trainer == null || !trainer.getRole().equalsIgnoreCase("Trainer")) {
                 System.out.println("❌ Trainer not found.");
                 return;
             }
@@ -122,6 +152,12 @@ public class Admin extends User {
         }
     }
 
+    /**
+     * Allows the admin to delete a workout class.
+     * 
+     * @param scanner        Scanner for input.
+     * @param workoutService The WorkoutClassService to interact with workout class data.
+     */
     public void deleteWorkoutClass(Scanner scanner, WorkoutClassService workoutService) {
         System.out.print("Enter class ID to delete: ");
         int classId = Integer.parseInt(scanner.nextLine());
