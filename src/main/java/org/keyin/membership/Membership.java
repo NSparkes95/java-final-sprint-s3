@@ -15,6 +15,8 @@ public class Membership {
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean isOnHold;
+    private String paymentMethod; 
+    private String status;        
 
     /**
      * Full constructor for reading a membership from the database.
@@ -27,8 +29,10 @@ public class Membership {
      * @param startDate Start date of the membership
      * @param endDate End date of the membership
      * @param isOnHold Whether the membership is currently on hold
+     * @param paymentMethod Payment method used for the membership
+     * @param status Status of the membership (e.g., "active", "inactive")
      */
-    public Membership(int membershipId, String membershipType, String membershipDescription, double membershipCost, int memberId, LocalDate startDate, LocalDate endDate, boolean isOnHold) {
+    public Membership(int membershipId, String membershipType, String membershipDescription, double membershipCost, int memberId, LocalDate startDate, LocalDate endDate, boolean isOnHold, String paymentMethod, String status) {
         this.membershipId = membershipId;
         this.membershipType = membershipType;
         this.membershipDescription = membershipDescription;
@@ -37,6 +41,8 @@ public class Membership {
         this.startDate = startDate;
         this.endDate = endDate;
         this.isOnHold = isOnHold;
+        this.paymentMethod = paymentMethod;
+        this.status = status;
     }
 
     /**
@@ -49,8 +55,8 @@ public class Membership {
      * @param startDate Start date of the membership
      * @param endDate End date of the membership
      */
-    public Membership(String membershipType, String membershipDescription, double membershipCost, int memberId, LocalDate startDate, LocalDate endDate) {
-        this(-1, membershipType, membershipDescription, membershipCost, memberId, startDate, endDate, false);
+    public Membership(String membershipType, String membershipDescription, double membershipCost, int memberId, LocalDate startDate, LocalDate endDate, String paymentMethod, String status) {
+        this(-1, membershipType, membershipDescription, membershipCost, memberId, startDate, endDate, false, paymentMethod, status);
     }
 
     // Getters and Setters
@@ -79,6 +85,12 @@ public class Membership {
     public boolean isOnHold() { return isOnHold; }
     public void setOnHold(boolean onHold) { isOnHold = onHold; }
 
+    public String getPaymentMethod() { return paymentMethod; }  // New getter
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }  // New setter
+
+    public String getStatus() { return status; }  // New getter
+    public void setStatus(String status) { this.status = status; }  // New setter
+
     /**
      * Returns a string representation of the membership.
      *
@@ -95,6 +107,8 @@ public class Membership {
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", isOnHold=" + isOnHold +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

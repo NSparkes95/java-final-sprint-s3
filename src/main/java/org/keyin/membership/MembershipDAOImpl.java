@@ -20,7 +20,7 @@ public class MembershipDAOImpl implements MembershipDAO {
      */
     @Override
     public void insertMembership(Membership membership) throws SQLException {
-        String sql = "INSERT INTO memberships (membershiptype, membershipdescription, membershipcost, memberid, startdate, enddate, isonhold, paymentmethod, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO memberships (membershiptype, membershipdescription, membershipcost, memberid, startdate, enddate, isonhold, paymentmethod, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -109,7 +109,7 @@ public class MembershipDAOImpl implements MembershipDAO {
             pstmt.setBoolean(7, membership.isOnHold());
             pstmt.setString(8, membership.getPaymentMethod());
             pstmt.setString(9, membership.getStatus());
-            pstmt.setInt(8, membership.getMembershipId());
+            pstmt.setInt(10, membership.getMembershipId()); 
 
             pstmt.executeUpdate();
         }
@@ -197,9 +197,9 @@ public class MembershipDAOImpl implements MembershipDAO {
                 rs.getInt("memberid"),
                 rs.getDate("startdate").toLocalDate(),
                 rs.getDate("enddate").toLocalDate(),
-                rs.getBoolean("isonhold")
-                rs.getString("paymentmethod"),
-                rs.getString("status")
+                rs.getBoolean("isonhold"),
+                rs.getString("paymentmethod"),  
+                rs.getString("status")          
         );
     }
 }
