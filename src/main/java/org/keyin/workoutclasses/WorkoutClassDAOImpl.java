@@ -1,4 +1,4 @@
-package org.keyin.WorkoutClasses
+package org.keyin.workoutclasses;
 
 import org.keyin.database.DatabaseConnection;
 
