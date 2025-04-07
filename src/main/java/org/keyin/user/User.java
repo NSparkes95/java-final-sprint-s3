@@ -61,6 +61,13 @@ public class User {
         this.role = role;
     }
 
+    /**
+     * No-argument constructor for creating an empty User object.
+     */
+    public User() {
+        // Default constructor for creating an empty User object
+    }
+
     // Getters and setters
 
     /**
@@ -151,6 +158,15 @@ public class User {
     }
 
     public void setRole(String role) {
+        this.role = role;
+    }
+
+    /**
+     * Set the user's role.
+     * 
+     * @param role The role to assign to the user.
+     */
+    public void setUserRole(String role) {
         this.role = role;
     }
 

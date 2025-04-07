@@ -1,11 +1,12 @@
 package org.keyin;
 
-import org.keyin.membership.MembershipDAOImpl;
-import org.keyin.membership.MembershipService;
 import org.keyin.user.User;
 import org.keyin.user.UserService;
-import org.keyin.user.childclasses.Trainer;
 import org.keyin.user.UserDaoImpl;
+import org.keyin.user.childclasses.Admin;
+import org.keyin.user.childclasses.Member;
+import org.keyin.user.childclasses.Trainer;
+import org.keyin.membership.MembershipService;
 import org.keyin.workoutclasses.WorkoutClassService;
 import org.keyin.workoutclasses.WorkoutClassDAOImpl;
 

@@ -144,7 +144,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getAllTrainers() throws SQLException {
         List<User> trainers = new ArrayList<>();
-        String sql = "SELECT * FROM users WHERE role = 'trainer'";
+        String sql = "SELECT * FROM users WHERE userrole = 'trainer'";
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -178,7 +178,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-     /**
+    /**
      * Retrieves a user by their email.
      * 
      * @param email The email of the user.
@@ -230,10 +230,10 @@ public class UserDaoImpl implements UserDao {
     }
 
     /**
-     * Checks if an email is already taken by another user.
+     * Checks if a username is already taken by another user.
      * 
-     * @param email The email to check.
-     * @return true if the email is taken, false otherwise.
+     * @param username The username to check.
+     * @return true if the username is taken, false otherwise.
      * @throws SQLException If a database access error occurs.
      */
     @Override
@@ -256,7 +256,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public boolean isEmailTaken(String email) throws SQLException {
-        String sql = "SELECT 1 FROM users WHERE email = ?";
+        String sql = "SELECT 1 FROM users WHERE user_email = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, email);
@@ -272,16 +272,41 @@ public class UserDaoImpl implements UserDao {
      * @return A User object populated with data from the ResultSet.
      * @throws SQLException If a database access error occurs.
      */
-    @Override
-    private User extractUser(ResultSet rs) throws SQLException {
+    public User extractUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setUserId(rs.getInt("userid"));
         user.setUserName(rs.getString("username"));
-        user.setPassword(rs.getString("password"));
-        user.setEmail(rs.getString("email"));
-        user.setPhone(rs.getString("phone"));
-        user.setAddress(rs.getString("address"));
-        user.setUserRole(rs.getString("role"));
+        user.setPassword(rs.getString("userpassword"));
+        user.setEmail(rs.getString("useremail"));
+        user.setPhone(rs.getString("userphone"));
+        user.setAddress(rs.getString("useraddress"));
+        user.setUserRole(rs.getString("userrole"));
         return user;
+    }
+
+    /**
+     * Retrieves users by their role from the database.
+     * 
+     * @param role The role of the users to retrieve.
+     * @return A list of User objects with the specified role.
+     * @throws SQLException If a database access error occurs.
+     */
+    @Override
+    public List<User> getUsersByRole(String role) throws SQLException {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM users WHERE userrole = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, role);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    users.add(extractUser(rs));
+                }
+            }
+        }
+        return users;
     }
 }

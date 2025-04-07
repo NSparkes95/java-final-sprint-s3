@@ -82,6 +82,15 @@ public interface UserDao {
     List<User> getAllTrainers() throws SQLException;
 
     /**
+     * Retrieves a list of users with a specific role.
+     * 
+     * @param role The role to filter users by (e.g., "trainer", "admin", "member").
+     * @return A list of users with the specified role.
+     * @throws SQLException If a database access error occurs.
+     */
+    List<User> getUsersByRole(String role) throws SQLException;
+
+    /**
      * Checks if a username is already taken by another user.
      * 
      * @param username The username to check.

@@ -95,6 +95,16 @@ public class UserService {
     }
 
     /**
+     * Retrieves all users with the role 'trainer'.
+     * 
+     * @return A list of users with the 'trainer' role.
+     * @throws SQLException If a database access error occurs.
+     */
+    public List<User> getAllTrainers() throws SQLException {
+        return userDao.getUsersByRole("trainer");
+    }
+
+    /**
      * Updates an existing user's details in the database.
      * 
      * @param user The user object containing updated information.
@@ -120,5 +130,16 @@ public class UserService {
         } catch (SQLException e) {
             System.out.println("❌ Error deleting user: " + e.getMessage());
         }
+    }
+
+    /**
+     * Retrieves a user by their ID.
+     * 
+     * @param userId The ID of the user to retrieve.
+     * @return The user object if found, null otherwise.
+     * @throws SQLException If a database access error occurs.
+     */
+    public User getUserById(int userId) throws SQLException {
+        return userDao.getUserById(userId);
     }
 }
