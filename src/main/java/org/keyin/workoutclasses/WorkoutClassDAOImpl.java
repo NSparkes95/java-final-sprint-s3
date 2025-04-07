@@ -1,4 +1,4 @@
-package org.keyin.workoutclasses;
+package org.keyin.WorkoutClasses
 
 import org.keyin.database.DatabaseConnection;
 
@@ -103,17 +103,16 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, workoutClass.getClassName());
-            stmt.setString(2, workoutClass.getClassDescription());
-            stmt.setInt(3, workoutClass.getTrainerId());
-            stmt.setDate(4, java.sql.Date.valueOf(workoutClass.getClassDate()));
-            stmt.setTime(5, java.sql.Time.valueOf(workoutClass.getClassTime()));
-            stmt.setInt(6, workoutClass.getClassDuration());
-            stmt.setInt(7, workoutClass.getClassCapacity());
-            stmt.setString(8, workoutClass.getClassLocation());
-            stmt.setString(9, workoutClass.getClassLevel());
+            stmt.setInt(2, workoutClass.getTrainerId());
+            stmt.setString(3, workoutClass.getClassLevel());
+            stmt.setString(4, workoutClass.getClassDescription());
+            stmt.setInt(5, workoutClass.getClassDuration());
+            stmt.setInt(6, workoutClass.getClassCapacity());
+            stmt.setDate(7, Date.valueOf(workoutClass.getClassDate()));
+            stmt.setTime(8, Time.valueOf(workoutClass.getClassTime()));
+            stmt.setString(9, workoutClass.getClassLocation());
             stmt.setString(10, workoutClass.getClassEquipment());
-            stmt.setBoolean(11, workoutClass.isCompleted());
-
+            
             stmt.executeUpdate();
         }
     }

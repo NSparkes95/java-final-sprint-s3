@@ -1,4 +1,4 @@
-package org.keyin.workoutclasses;
+package org.keyin.WorkoutClasses
 
 import java.sql.SQLException;
 import java.util.List;
@@ -27,7 +27,7 @@ public interface WorkoutClassDAO {
      * @return A list of WorkoutClass objects.
      * @throws SQLException If a database access error occurs.
      */
-    List<WorkoutClass> getUpcomingClasses(int trainerId) throws SQLException;
+    List<WorkoutClass> getUpcomingClasses(int classId) throws SQLException;
 
     /**
      * Returns all workout classes in the system.

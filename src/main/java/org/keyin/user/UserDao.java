@@ -1,5 +1,10 @@
 package org.keyin.user;
 
+import org.keyin.user.childclasses.Admin;
+import org.keyin.user.childclasses.Member;
+import org.keyin.user.childclasses.Trainer;
+import org.keyin.utils.PasswordUtils;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -67,4 +72,30 @@ public interface UserDao {
      * @throws SQLException If a database access error occurs.
      */
     void updateUser(User user) throws SQLException;
+
+    /**
+     * Retrieves all trainers in the system.
+     * 
+     * @return A list of all User objects that are trainers.
+     * @throws SQLException If a database access error occurs.
+     */
+    List<User> getAllTrainers() throws SQLException;
+
+    /**
+     * Checks if a username is already taken by another user.
+     * 
+     * @param username The username to check.
+     * @return true if the username is taken, false otherwise.
+     * @throws SQLException If a database access error occurs.
+     */
+    boolean isUsernameTaken(String username) throws SQLException;
+
+    /**
+     * Checks if an email is already taken by another user.
+     * 
+     * @param email The email to check.
+     * @return true if the email is taken, false otherwise.
+     * @throws SQLException If a database access error occurs.
+     */
+    boolean isEmailTaken(String email) throws SQLException;
 }

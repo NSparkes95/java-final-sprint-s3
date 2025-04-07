@@ -1,5 +1,12 @@
 package org.keyin.user;
 
+import org.keyin.user.childclasses.Admin;
+import org.keyin.user.childclasses.Member;
+import org.keyin.user.childclasses.Trainer;
+import org.keyin.utils.PasswordUtils;
+
+import java.time.LocalDate;
+
 /**
  * This is the parent class for all users.
  * There are 3 types of users: Trainer, Member, and Admin.
@@ -46,7 +53,12 @@ public class User {
      * @param role      The role of the user (Admin, Member, Trainer).
      */
     public User(String userName, String password, String email, String phone, String address, String role) {
-        this(-1, userName, password, email, phone, address, role);
+        this.userName = userName;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.role = role;
     }
 
     // Getters and setters
@@ -150,10 +162,12 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "ID=" + userId +
-                ", Name='" + userName + '\'' +
-                ", Role='" + role + '\'' +
-                ", Email='" + email + '\'' +
-                '}'; 
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", role='" + role + '\'' +
+                '}';
     }
 }

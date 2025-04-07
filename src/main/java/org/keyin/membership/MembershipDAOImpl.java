@@ -20,7 +20,7 @@ public class MembershipDAOImpl implements MembershipDAO {
      */
     @Override
     public void insertMembership(Membership membership) throws SQLException {
-        String sql = "INSERT INTO memberships (membershiptype, membershipdescription, membershipcost, memberid, startdate, enddate, isonhold) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO memberships (membershiptype, membershipdescription, membershipcost, memberid, startdate, enddate, isonhold, paymentmethod, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -32,6 +32,8 @@ public class MembershipDAOImpl implements MembershipDAO {
             pstmt.setDate(5, Date.valueOf(membership.getStartDate()));
             pstmt.setDate(6, Date.valueOf(membership.getEndDate()));
             pstmt.setBoolean(7, membership.isOnHold());
+            pstmt.setString(8, membership.getPaymentMethod());
+            pstmt.setString(9, membership.getStatus());
 
             pstmt.executeUpdate();
         }
@@ -93,7 +95,7 @@ public class MembershipDAOImpl implements MembershipDAO {
      */
     @Override
     public void updateMembership(Membership membership) throws SQLException {
-        String sql = "UPDATE memberships SET membershiptype=?, membershipdescription=?, membershipcost=?, memberid=?, startdate=?, enddate=?, isonhold=? WHERE membershipid=?";
+        String sql = "UPDATE memberships SET membershiptype=?, membershipdescription=?, membershipcost=?, memberid=?, startdate=?, enddate=?, isonhold=?, paymentmethod=?, status=? WHERE membershipid=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -105,6 +107,8 @@ public class MembershipDAOImpl implements MembershipDAO {
             pstmt.setDate(5, Date.valueOf(membership.getStartDate()));
             pstmt.setDate(6, Date.valueOf(membership.getEndDate()));
             pstmt.setBoolean(7, membership.isOnHold());
+            pstmt.setString(8, membership.getPaymentMethod());
+            pstmt.setString(9, membership.getStatus());
             pstmt.setInt(8, membership.getMembershipId());
 
             pstmt.executeUpdate();
@@ -194,6 +198,8 @@ public class MembershipDAOImpl implements MembershipDAO {
                 rs.getDate("startdate").toLocalDate(),
                 rs.getDate("enddate").toLocalDate(),
                 rs.getBoolean("isonhold")
+                rs.getString("paymentmethod"),
+                rs.getString("status")
         );
     }
 }

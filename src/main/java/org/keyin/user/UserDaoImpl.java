@@ -20,16 +20,16 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public void insertUser(User user) throws SQLException {
-        String sql = "INSERT INTO users (user_name, user_password, user_email, user_phone, user_address, user_role) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, userpassword, useremail, userphone, useraddress, userrole) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, user.getUserName());
-            stmt.setString(2, user.getPassword());
-            stmt.setString(3, user.getEmail());
-            stmt.setString(4, user.getPhone());
-            stmt.setString(5, user.getAddress());
-            stmt.setString(6, user.getRole());
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, user.getUserName());
+            pstmt.setString(2, user.getPassword());
+            pstmt.setString(3, user.getEmail());
+            pstmt.setString(4, user.getPhone());
+            pstmt.setString(5, user.getAddress());
+            pstmt.setString(6, user.getRole());
 
             stmt.executeUpdate();
         }
@@ -44,23 +44,23 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public User getUserByUsername(String username) throws SQLException {
-        String sql = "SELECT * FROM users WHERE user_name = ?";
+        String sql = "SELECT * FROM users WHERE username = ?";
         
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, username);
+            pstmt.setString(1, username);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return new User(
-                            rs.getInt("user_id"),
-                            rs.getString("user_name"),
-                            rs.getString("user_password"),
-                            rs.getString("user_email"),
-                            rs.getString("user_phone"),
-                            rs.getString("user_address"),
-                            rs.getString("user_role")
+                            rs.getInt("userid"),
+                            rs.getString("username"),
+                            rs.getString("userpassword"),
+                            rs.getString("useremail"),
+                            rs.getString("userphone"),
+                            rs.getString("useraddress"),
+                            rs.getString("userrole")
                     );
                 }
             }
@@ -78,23 +78,23 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public User getUserById(int userId) throws SQLException {
-        String sql = "SELECT * FROM users WHERE user_id = ?";
+        String sql = "SELECT * FROM users WHERE userid = ?";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, userId);
+            pstmt.setInt(1, userId);
 
-            try (ResultSet rs = stmt.executeQuery()) {
+            try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     return new User(
-                            rs.getInt("user_id"),
-                            rs.getString("user_name"),
-                            rs.getString("user_password"),
-                            rs.getString("user_email"),
-                            rs.getString("user_phone"),
-                            rs.getString("user_address"),
-                            rs.getString("user_role")
+                            rs.getInt("userid"),
+                            rs.getString("username"),
+                            rs.getString("userpassword"),
+                            rs.getString("useremail"),
+                            rs.getString("userphone"),
+                            rs.getString("useraddress"),
+                            rs.getString("userrole")
                     );
                 }
             }
@@ -120,19 +120,37 @@ public class UserDaoImpl implements UserDao {
 
             while (rs.next()) {
                 User user = new User(
-                        rs.getInt("user_id"),
-                        rs.getString("user_name"),
-                        rs.getString("user_password"),
-                        rs.getString("user_email"),
-                        rs.getString("user_phone"),
-                        rs.getString("user_address"),
-                        rs.getString("user_role")
+                        rs.getInt("userid"),
+                        rs.getString("username"),
+                        rs.getString("userpassword"),
+                        rs.getString("useremail"),
+                        rs.getString("userphone"),
+                        rs.getString("useraddress"),
+                        rs.getString("userrole")
                 );
                 users.add(user);
             }
         }
 
         return users;
+    }
+
+    /**
+     * Retrieves all trainers from the database.
+     * 
+     * @return A list of User objects representing trainers.
+     * @throws SQLException If a database access error occurs.
+     */
+    @Override
+    public List<User> getAllTrainers() throws SQLException {
+        List<User> trainers = new ArrayList<>();
+        String sql = "SELECT * FROM users WHERE role = 'trainer'";
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) trainers.add(extractUser(rs));
+        }
+        return trainers;
     }
 
     /**
@@ -143,18 +161,18 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public void updateUser(User user) throws SQLException {
-        String sql = "UPDATE users SET user_name = ?, user_password = ?, user_email = ?, user_phone = ?, user_address = ?, user_role = ? WHERE user_id = ?";
+        String sql = "UPDATE users SET username = ?, userpassword = ?, useremail = ?, userphone = ?, useraddress = ?, userrole = ? WHERE userid = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 
-            stmt.setString(1, user.getUserName());
-            stmt.setString(2, user.getPassword());
-            stmt.setString(3, user.getEmail());
-            stmt.setString(4, user.getPhone());
-            stmt.setString(5, user.getAddress());
-            stmt.setString(6, user.getRole());
-            stmt.setInt(7, user.getUserId());
+            pstmt.setString(1, user.getUserName());
+            pstmt.setString(2, user.getPassword());
+            pstmt.setString(3, user.getEmail());
+            pstmt.setString(4, user.getPhone());
+            pstmt.setString(5, user.getAddress());
+            pstmt.setString(6, user.getRole());
+            pstmt.setInt(7, user.getUserId());
 
             stmt.executeUpdate();
         }
@@ -179,13 +197,13 @@ public class UserDaoImpl implements UserDao {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return new User(
-                            rs.getInt("user_id"),
-                            rs.getString("user_name"),
-                            rs.getString("user_password"),
-                            rs.getString("user_email"),
-                            rs.getString("user_phone"),
-                            rs.getString("user_address"),
-                            rs.getString("user_role")
+                            rs.getInt("userid"),
+                            rs.getString("username"),
+                            rs.getString("userpassword"),
+                            rs.getString("useremail"),
+                            rs.getString("userphone"),
+                            rs.getString("useraddress"),
+                            rs.getString("userrole")
                     );
                 }
             }
@@ -209,5 +227,61 @@ public class UserDaoImpl implements UserDao {
             stmt.setInt(1, userId);
             stmt.executeUpdate();
         }
+    }
+
+    /**
+     * Checks if an email is already taken by another user.
+     * 
+     * @param email The email to check.
+     * @return true if the email is taken, false otherwise.
+     * @throws SQLException If a database access error occurs.
+     */
+    @Override
+    public boolean isUsernameTaken(String username) throws SQLException {
+        String sql = "SELECT 1 FROM users WHERE username = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.next();
+        }
+    }
+
+    /**
+     * Checks if an email is already taken by another user.
+     * 
+     * @param email The email to check.
+     * @return true if the email is taken, false otherwise.
+     * @throws SQLException If a database access error occurs.
+     */
+    @Override
+    public boolean isEmailTaken(String email) throws SQLException {
+        String sql = "SELECT 1 FROM users WHERE email = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.next();
+        }
+    }
+
+    /**
+     * Helper method to extract a User object from a ResultSet.
+     * 
+     * @param rs The ResultSet containing user data.
+     * @return A User object populated with data from the ResultSet.
+     * @throws SQLException If a database access error occurs.
+     */
+    @Override
+    private User extractUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setUserId(rs.getInt("userid"));
+        user.setUserName(rs.getString("username"));
+        user.setPassword(rs.getString("password"));
+        user.setEmail(rs.getString("email"));
+        user.setPhone(rs.getString("phone"));
+        user.setAddress(rs.getString("address"));
+        user.setUserRole(rs.getString("role"));
+        return user;
     }
 }

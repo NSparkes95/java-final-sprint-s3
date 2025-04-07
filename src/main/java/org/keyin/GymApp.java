@@ -1,21 +1,27 @@
 package org.keyin;
 
+import org.keyin.membership.Membership;
 import org.keyin.membership.MembershipService;
 import org.keyin.membership.Membership;
 import org.keyin.membership.MembershipDAOImpl;
 import org.keyin.user.User;
 import org.keyin.user.UserService;
 import org.keyin.user.UserDaoImpl;
+import org.keyin.workoutclasses.WorkoutClass;
 import org.keyin.workoutclasses.WorkoutClassService;
 import org.keyin.workoutclasses.WorkoutClass;
 import org.keyin.workoutclasses.WorkoutClassDAOImpl;
 
-import java.util.List;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Main application entry point for the Gym Management System.
+ * Manages user login, registration, and routing to role-specific menus.
+ */
 public class GymApp {
 
     public static void main(String[] args) throws SQLException {
@@ -69,6 +75,11 @@ public class GymApp {
 
             System.out.print("Password: ");
             String password = scanner.nextLine();
+            if (password.length() < 8 || !password.matches(".*\\d.*") ||
+                !password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) {
+                System.out.println("❌ Password must be at least 8 characters, include a digit and a special character.");
+                return;
+            }
 
             System.out.print("Phone: ");
             String phone = scanner.nextLine();
@@ -119,7 +130,10 @@ public class GymApp {
         }
     }    
 
-    public void showAdminMenu(Scanner scanner, User user, UserService userService,
+    /**
+     * Admin menu to manage users, memberships, classes, trainers, revenue.
+     */
+    public static void showAdminMenu(Scanner scanner, User user, UserService userService,
                                MembershipService membershipService, WorkoutClassService workoutService) {
         boolean running = true;
 
@@ -319,7 +333,7 @@ public class GymApp {
     * @param scanner Scanner for capturing admin input
     * @param userService Service for handling user-related database operations
     */
-    public void updateUser(Scanner scanner, UserService userService) {
+    public static void updateUser(Scanner scanner, UserService userService) {
         System.out.print("Enter user ID to update: ");
         int userId = Integer.parseInt(scanner.nextLine());
 
@@ -366,7 +380,7 @@ public class GymApp {
     * @param scanner Scanner for capturing admin input
     * @param userService Service used to access and modify user data
     */
-    public void deleteUser(Scanner scanner, UserService userService) {
+    public static void deleteUser(Scanner scanner, UserService userService) {
         System.out.print("Enter user ID to delete: ");
         int userId = Integer.parseInt(scanner.nextLine());
 
@@ -616,7 +630,7 @@ public class GymApp {
      * @param scanner Scanner for user input
      * @param membershipService Service for managing memberships
      */
-    public void showMemberMenu(Scanner scanner, User user, MembershipService membershipService) {
+    public static void showMemberMenu(Scanner scanner, User user, MembershipService membershipService) {
         boolean running = true;
 
         while (running) {
@@ -732,7 +746,7 @@ public class GymApp {
     * @param membershipService Not used by trainers, but included for consistency
     * @param workoutService Service for managing workout classes
     */
-    public void showTrainerMenu(Scanner scanner, User user, WorkoutClassService workoutService) {
+    public static void showTrainerMenu(Scanner scanner, User user, WorkoutClassService workoutService) {
         boolean running = true;
 
         while (running) {
