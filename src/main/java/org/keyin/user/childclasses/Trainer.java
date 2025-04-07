@@ -19,16 +19,16 @@ public class Trainer extends User {
      * Constructs a Trainer with required details.
      */
     public Trainer(String username, String password, String email, String phoneNumber) {
-        super(username, password, email, phone, "trainer");
+        super(username, password, email, phoneNumber, "trainer");
     }
 
     /**
      * Displays the trainer menu for managing workout classes.
      */
-    public void showTrainerMenu(Scanner scanner, workoutClassService, workoutService) {
-        boolean = running = true;
+    public void showTrainerMenu(Scanner scanner, WorkoutClassService workoutClassService) {
+        boolean running = true;
 
-        while(running) {
+        while (running) {
             System.out.println("Trainer Menu:");
             System.out.println("1. View My Classes");
             System.out.println("2. Add Class");
@@ -38,7 +38,7 @@ public class Trainer extends User {
             System.out.print("Choose an option: ");
             String choice = scanner.nextLine();
 
-            which(choice) {
+            switch (choice) {
                 case "1":
                     viewMyClasses(workoutClassService);
                     break;
@@ -56,9 +56,8 @@ public class Trainer extends User {
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
-
             }
-        }    
+        }
     }
 
     /**
@@ -66,7 +65,7 @@ public class Trainer extends User {
      */
     private void viewMyClasses(WorkoutClassService workoutClassService) {
         try {
-            workoutService.getClassesByTrainerId(this.getUserId()).forEach(System.out::println);
+            workoutClassService.getClassesByTrainerId(this.getUserId()).forEach(System.out::println);
         } catch (SQLException e) {
             System.out.println("Error retrieving classes: " + e.getMessage());
         }
@@ -75,7 +74,7 @@ public class Trainer extends User {
     /**
      * Prompts the trainer to input details for a new workout class.
      */
-    private void addClass(Scanner scanner, WorkoutClassService workoutService) {
+    private void addClass(Scanner scanner, WorkoutClassService workoutClassService) {
         try {
             System.out.print("Enter class name: ");
             String className = scanner.nextLine();
@@ -89,7 +88,7 @@ public class Trainer extends User {
             System.out.print("Enter duration (in minutes): ");
             int duration = Integer.parseInt(scanner.nextLine());
 
-            SysSystem.out.print("Enter capacity: ");
+            System.out.print("Enter capacity: ");
             int capacity = Integer.parseInt(scanner.nextLine());
 
             System.out.print("Enter class date (YYYY-MM-DD): ");
@@ -105,7 +104,7 @@ public class Trainer extends User {
             String equipment = scanner.nextLine();
 
             WorkoutClass workoutClass = new WorkoutClass(className, this.getUserId(), classDate, classTime, duration);
-            workoutService.addClass(workoutClass);
+            workoutClassService.addClass(workoutClass);
             System.out.println("Class added successfully.");
         } catch (SQLException e) {
             System.out.println("Error adding class: " + e.getMessage());
@@ -117,19 +116,19 @@ public class Trainer extends User {
     /**
      * Allows the trainer to update details of an existing class they own.
      */
-    private void updateClass(Scanner scanner, WorkoutClassService workoutService) {
+    private void updateClass(Scanner scanner, WorkoutClassService workoutClassService) {
         try {
             System.out.print("Enter class ID to update: ");
             int classId = Integer.parseInt(scanner.nextLine());
-            WorkoutClass existing = workoutService.getClassById(classId);
+            WorkoutClass existing = workoutClassService.getClassById(classId);
 
             if (existing == null || existing.getTrainerId() != this.getUserId()) {
                 System.out.println("Class not found or not owned by you.");
                 return;
             }
 
-            System.out.print("New name (Enter to keep '" + existing.getName() + "'): ");
-            String className = scanner.nextLine();
+            System.out.print("New name (Enter to keep '" + existing.getClassName() + "'): ");
+            String newName = scanner.nextLine();
             if (!newName.isEmpty()) existing.setClassName(newName);
 
             System.out.print("New description: ");
@@ -164,26 +163,25 @@ public class Trainer extends User {
             String newEquipment = scanner.nextLine();
             if (!newEquipment.isEmpty()) existing.setEquipment(newEquipment);
 
-            workoutService.updateClass(existing);
+            workoutClassService.updateClass(existing);
             System.out.println("Class updated successfully.");
         } catch (Exception e) {
             System.out.println("Error updating class: " + e.getMessage());
         }
-        
     }
 
     /**
      * Allows the trainer to delete one of their own classes.
      */
-    private void deleteClass(Scanner scanner, WorkoutClassService workoutService) {
+    private void deleteClass(Scanner scanner, WorkoutClassService workoutClassService) {
         try {
             System.out.print("Enter class ID to delete: ");
             int classId = Integer.parseInt(scanner.nextLine());
-            WorkoutClass cls = workoutService.getWorkoutClassById(classId);
+            WorkoutClass cls = workoutClassService.getWorkoutClassById(classId);
             if (cls == null || cls.getTrainerId() != this.getUserId()) {
-                System.out.println("Class not found or not owned by you")
+                System.out.println("Class not found or not owned by you");
             } else {
-                workoutService.deleteClass(classId);
+                workoutClassService.deleteClass(classId);
                 System.out.println("Class deleted successfully.");
             }
         } catch(Exception e) {

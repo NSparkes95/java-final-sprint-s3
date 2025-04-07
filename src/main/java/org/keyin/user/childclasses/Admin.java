@@ -3,15 +3,18 @@ package org.keyin.user.childclasses;
 import org.keyin.membership.MembershipService;
 import org.keyin.user.User;
 import org.keyin.user.UserService;
-import org.keyin.workout.WorkoutService;
+import org.keyin.workoutclasses.WorkoutClassService;
 
 import java.util.Scanner;
 import java.sql.SQLException;
 
-public class Admin extends User{
-    public Admin(String username, String password, String email, String phone) {
-        super(username, password, email, phone, Address, "Admin");
+public class Admin extends User {
+    // Constructor should properly initialize the User fields
+    public Admin(String username, String password, String email, String phone, String address) {
+        super(username, password, email, phone, address, "Admin");
     }
+
+    // Admin menu for showing different options
     public void showAdminMenu(Scanner scanner, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
         boolean running = true;
         while (running) {
@@ -25,7 +28,7 @@ public class Admin extends User{
             System.out.print("Choose an option: ");
             String choice = scanner.nextLine();
 
-            switch(choice) {
+            switch (choice) {
                 case "1":
                     userService.showUserManagementMenu(scanner);
                     break;
@@ -51,6 +54,6 @@ public class Admin extends User{
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-
+        }
     }
 }
