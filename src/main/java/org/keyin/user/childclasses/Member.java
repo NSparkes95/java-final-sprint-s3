@@ -18,8 +18,9 @@ public class Member extends User {
     /**
      * Constructs a Member with extended user information.
      */
-    public Member(String username, String password, String firstName, String lastName, LocalDate dateOfBirth, String phone) {
-        super(username, password, firstName, lastName, dateOfBirth, phone, "member");
+    public Member(String username, String password, String firstName, String lastName, String phone, String role) {
+        // Use the constructor from User that matches the parameters
+        super(username, password, firstName, lastName, phone, role);
     }
 
     /**
