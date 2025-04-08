@@ -42,11 +42,20 @@ public class WorkoutClass {
         this.isCompleted = false; // Default to not completed
     }
 
+    /**
+     * Constructor used for adding a new workout class (without classId).
+     */
+    public WorkoutClass(String className, int trainerId, LocalDate classDate, LocalTime classTime, int classDuration) {
+        this.className = className;
+        this.trainerId = trainerId;
+        this.classDate = classDate;
+        this.classTime = classTime;
+        this.classDuration = classDuration;
+        this.isCompleted = false;
+    }
+
     // Getters and Setters
 
-    /**
-     * Gets the class ID.
-     */
     public int getClassId() {
         return classId;
     }
@@ -55,9 +64,6 @@ public class WorkoutClass {
         this.classId = classId;
     }
 
-    /**
-     * Gets the name of the class.
-     */
     public String getClassName() {
         return className;
     }
@@ -66,9 +72,6 @@ public class WorkoutClass {
         this.className = className;
     }
 
-    /**
-     * Gets the ID of the trainer running the class.
-     */
     public int getTrainerId() {
         return trainerId;
     }
@@ -77,9 +80,6 @@ public class WorkoutClass {
         this.trainerId = trainerId;
     }
 
-    /**
-     * Gets the difficulty level (e.g. Beginner, Intermediate).
-     */
     public String getClassLevel() {
         return classLevel;
     }
@@ -88,9 +88,6 @@ public class WorkoutClass {
         this.classLevel = classLevel;
     }
 
-    /**
-     * Gets the description of the class.
-     */
     public String getClassDescription() {
         return classDescription;
     }
@@ -99,9 +96,6 @@ public class WorkoutClass {
         this.classDescription = classDescription;
     }
 
-    /**
-     * Gets the duration of the class in minutes.
-     */
     public int getClassDuration() {
         return classDuration;
     }
@@ -110,9 +104,6 @@ public class WorkoutClass {
         this.classDuration = classDuration;
     }
 
-    /**
-     * Gets the maximum number of participants allowed.
-     */
     public int getClassCapacity() {
         return classCapacity;
     }
@@ -121,9 +112,6 @@ public class WorkoutClass {
         this.classCapacity = classCapacity;
     }
 
-    /**
-     * Gets the scheduled date of the class.
-     */
     public LocalDate getClassDate() {
         return classDate;
     }
@@ -132,9 +120,6 @@ public class WorkoutClass {
         this.classDate = classDate;
     }
 
-    /**
-     * Gets the scheduled time of the class.
-     */
     public LocalTime getClassTime() {
         return classTime;
     }
@@ -143,9 +128,6 @@ public class WorkoutClass {
         this.classTime = classTime;
     }
 
-    /**
-     * Gets the location where the class will be held.
-     */
     public String getClassLocation() {
         return classLocation;
     }
@@ -154,9 +136,6 @@ public class WorkoutClass {
         this.classLocation = classLocation;
     }
 
-    /**
-     * Gets the required equipment (if any).
-     */
     public String getClassEquipment() {
         return classEquipment;
     }
@@ -165,9 +144,6 @@ public class WorkoutClass {
         this.classEquipment = classEquipment;
     }
 
-    /**
-     * Checks whether the class has been marked as completed.
-     */
     public boolean isCompleted() {
         return isCompleted;
     }
@@ -176,9 +152,6 @@ public class WorkoutClass {
         isCompleted = completed;
     }
 
-    /**
-     * String version of the workout class.
-     */
     @Override
     public String toString() {
         return "WorkoutClass{" +

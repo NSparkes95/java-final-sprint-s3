@@ -88,4 +88,15 @@ public class WorkoutClassService {
     public List<WorkoutClass> getAllAvailableClasses() throws SQLException {
         return workoutDAO.getAllWorkoutClasses(); // This method can be extended if you want to filter out completed classes or other conditions.
     }
+
+    /**
+     * Retrieves a workout class by its ID.
+     *
+     * @param classId The ID of the class to retrieve.
+     * @return The WorkoutClass object if found, otherwise null.
+     * @throws SQLException If a database error occurs.
+     */
+    public WorkoutClass getClassById(int classId) throws SQLException {
+        return workoutDAO.getClassById(classId);
+    }
 }

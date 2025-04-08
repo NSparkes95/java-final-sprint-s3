@@ -3,6 +3,7 @@ package org.keyin.user;
 import java.sql.SQLException;
 import java.util.List;
 import org.keyin.utils.PasswordUtils;
+import org.keyin.workoutclasses.WorkoutClassService;  // Import WorkoutClassService for assigning trainers to classes
 
 /**
  * Service class for handling user-related operations such as registration, login, update, and deletion.
@@ -87,11 +88,9 @@ public class UserService {
      * 
      * @throws SQLException If a database access error occurs.
      */
-    public void viewAllUsers() throws SQLException {
+    public List<User> getAllUsers() throws SQLException {
         List<User> users = userDao.getAllUsers();
-        for (User user : users) {
-            System.out.println(user);
-        }
+        return users;  // Return the list of users
     }
 
     /**
@@ -141,5 +140,31 @@ public class UserService {
      */
     public User getUserById(int userId) throws SQLException {
         return userDao.getUserById(userId);
+    }
+
+    /**
+     * Assigns a trainer to a specific class.
+     * 
+     * @param trainerId The ID of the trainer.
+     * @param classId The ID of the class.
+     * @throws SQLException If a database access error occurs.
+     */
+    public void assignTrainerToClass(int trainerId, int classId) throws SQLException {
+        // Implement the logic to assign a trainer to a class
+        System.out.println("Trainer with ID " + trainerId + " assigned to class with ID " + classId);
+        // You might call a method in the WorkoutClassService to handle this
+    }
+
+    /**
+     * Unassigns a trainer from a specific class.
+     * 
+     * @param trainerId The ID of the trainer.
+     * @param classId The ID of the class.
+     * @throws SQLException If a database access error occurs.
+     */
+    public void unassignTrainerFromClass(int trainerId, int classId) throws SQLException {
+        // Implement the logic to unassign a trainer from a class
+        System.out.println("Trainer with ID " + trainerId + " unassigned from class with ID " + classId);
+        // You might call a method in the WorkoutClassService to handle this
     }
 }

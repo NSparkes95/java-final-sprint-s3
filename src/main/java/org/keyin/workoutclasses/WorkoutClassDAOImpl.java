@@ -3,17 +3,14 @@ package org.keyin.workoutclasses;
 import org.keyin.database.DatabaseConnection;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Implements the WorkoutClassDAO interface using JDBC to manage workout class data.
  */
 public class WorkoutClassDAOImpl implements WorkoutClassDAO {
-
-    // Existing methods...
 
     /**
      * Fetches all workout classes assigned to a specific trainer.
@@ -103,16 +100,17 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, workoutClass.getClassName());
-            stmt.setInt(2, workoutClass.getTrainerId());
-            stmt.setString(3, workoutClass.getClassLevel());
-            stmt.setString(4, workoutClass.getClassDescription());
-            stmt.setInt(5, workoutClass.getClassDuration());
-            stmt.setInt(6, workoutClass.getClassCapacity());
-            stmt.setDate(7, Date.valueOf(workoutClass.getClassDate()));
-            stmt.setTime(8, Time.valueOf(workoutClass.getClassTime()));
-            stmt.setString(9, workoutClass.getClassLocation());
+            stmt.setString(2, workoutClass.getClassDescription());
+            stmt.setInt(3, workoutClass.getTrainerId());
+            stmt.setDate(4, Date.valueOf(workoutClass.getClassDate()));
+            stmt.setTime(5, Time.valueOf(workoutClass.getClassTime()));
+            stmt.setInt(6, workoutClass.getClassDuration());
+            stmt.setInt(7, workoutClass.getClassCapacity());
+            stmt.setString(8, workoutClass.getClassLocation());
+            stmt.setString(9, workoutClass.getClassLevel());
             stmt.setString(10, workoutClass.getClassEquipment());
-            
+            stmt.setBoolean(11, workoutClass.isCompleted());
+
             stmt.executeUpdate();
         }
     }
@@ -187,6 +185,27 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
         }
 
         return classes;
+    }
+
+    /**
+     * Retrieves a workout class by its ID.
+     */
+    @Override
+    public WorkoutClass getClassById(int classId) throws SQLException {
+        String sql = "SELECT * FROM workout_classes WHERE class_id = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, classId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return mapResultSetToWorkoutClass(resultSet);
+            }
+        }
+
+        return null; // No class found
     }
 
     /**

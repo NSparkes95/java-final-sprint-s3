@@ -41,7 +41,7 @@ public class Trainer extends User {
         try {
             System.out.print("Enter class name: ");
             String className = scanner.nextLine();
-            
+
             System.out.print("Enter description: ");
             String description = scanner.nextLine();
 
@@ -66,7 +66,14 @@ public class Trainer extends User {
             System.out.print("Enter equipment needed: ");
             String equipment = scanner.nextLine();
 
+            // Assuming the correct constructor exists for WorkoutClass
             WorkoutClass workoutClass = new WorkoutClass(className, this.getUserId(), classDate, classTime, duration);
+            workoutClass.setDescription(description);
+            workoutClass.setLevel(level);
+            workoutClass.setCapacity(capacity);
+            workoutClass.setLocation(location);
+            workoutClass.setEquipment(equipment);
+
             workoutClassService.addClass(workoutClass);
             System.out.println("Class added successfully.");
         } catch (SQLException e) {

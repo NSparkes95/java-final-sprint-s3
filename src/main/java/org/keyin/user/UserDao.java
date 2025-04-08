@@ -1,10 +1,5 @@
 package org.keyin.user;
 
-import org.keyin.user.childclasses.Admin;
-import org.keyin.user.childclasses.Member;
-import org.keyin.user.childclasses.Trainer;
-import org.keyin.utils.PasswordUtils;
-
 import java.sql.SQLException;
 import java.util.List;
 

@@ -1,11 +1,5 @@
 package org.keyin.user;
 
-import org.keyin.user.childclasses.Admin;
-import org.keyin.user.childclasses.Member;
-import org.keyin.user.childclasses.Trainer;
-import org.keyin.utils.PasswordUtils;
-
-import java.time.LocalDate;
 
 /**
  * This is the parent class for all users.
@@ -66,6 +60,25 @@ public class User {
      */
     public User() {
         // Default constructor for creating an empty User object
+    }
+
+    /**
+     * Constructor for creating a user with the specific role (for Trainer, Admin, Member)
+     * 
+     * @param userName  The user's name.
+     * @param password  The user's password (plain text, to be hashed).
+     * @param email     The user's email address.
+     * @param phone     The user's phone number.
+     * @param address   The user's address.
+     * @param role      The role of the user (Admin, Member, Trainer).
+     */
+    public User(String userName, String password, String email, String phone, String address) {
+        this.userName = userName;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.role = "trainer";  // Default role as trainer for Trainer class
     }
 
     // Getters and setters

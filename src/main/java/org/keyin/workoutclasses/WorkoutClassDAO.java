@@ -27,7 +27,7 @@ public interface WorkoutClassDAO {
      * @return A list of WorkoutClass objects.
      * @throws SQLException If a database access error occurs.
      */
-    List<WorkoutClass> getUpcomingClasses(int classId) throws SQLException;
+    List<WorkoutClass> getUpcomingClasses(int trainerId) throws SQLException;  // Fixed parameter name
 
     /**
      * Returns all workout classes in the system.
@@ -73,4 +73,14 @@ public interface WorkoutClassDAO {
      * @throws SQLException If a database access error occurs.
      */
     List<WorkoutClass> getAvailableClasses() throws SQLException;
+
+    /**
+     * Retrieves a workout class by its ID.
+     * This method will fetch a specific class based on the provided ID.
+     *
+     * @param classId The ID of the workout class.
+     * @return The WorkoutClass object.
+     * @throws SQLException If a database access error occurs.
+     */
+    WorkoutClass getClassById(int classId) throws SQLException;  // Added this method
 }
