@@ -1,470 +1,240 @@
 package org.keyin;
 
-import org.keyin.user.User;
-import org.keyin.user.UserService;
-import org.keyin.user.UserDaoImpl;
+import org.keyin.membership.*;
+import org.keyin.user.*;
 import org.keyin.user.childclasses.Admin;
 import org.keyin.user.childclasses.Member;
 import org.keyin.user.childclasses.Trainer;
-import org.keyin.membership.MembershipService;
-import org.keyin.membership.MembershipDAOImpl;
-import org.keyin.workoutclasses.WorkoutClass;
-import org.keyin.workoutclasses.WorkoutClassService;
-import org.keyin.workoutclasses.WorkoutClassDAOImpl;
+import org.keyin.workoutclasses.*;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
-/**
- * Main class for the Gym Management System.
- * This class handles user registration, login, and menu navigation for different user roles.
- * It uses services to manage users, memberships, and workout classes.
- */
 public class GymApp {
-    /**
-     * Main method to run the Gym Management System.
-     * It initializes services and handles user input for registration and login.
-     *
-     * @param args Command line arguments (not used)
-     * @throws SQLException If a database access error occurs
-     */
-    // Main method to run the Gym Management System
-    public static void main(String[] args) throws SQLException {
-        Scanner scanner = new Scanner(System.in);
 
-        // Initialize services
-        UserService userService = new UserService(new UserDaoImpl());
-        MembershipService membershipService = new MembershipService(new MembershipDAOImpl());
-        WorkoutClassService workoutService = new WorkoutClassService(new WorkoutClassDAOImpl());
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final UserService userService = new UserService(new UserDaoImpl());
+    private static final MembershipService membershipService = new MembershipService(new MembershipDAOImpl());
+    private static final WorkoutClassService workoutClassService = new WorkoutClassService(new WorkoutClassDAOImpl());
 
-        // Main application loop
-        while (true) {
-            System.out.println("\n🌟=== Welcome to the Gym Management System ===🌟");
-            System.out.println("1. 🧑‍💻 Register New User");
-            System.out.println("2. 🔐 Login");
-            System.out.println("3. 🚪 Exit");
-            System.out.print("Enter your choice: ");
+    public static void main(String[] args) {
+        System.out.println("=== Welcome to the Gym Management System ===");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+        System.out.print("Do you want to (1) Login or (2) Register? ");
+        String initialChoice = scanner.nextLine();
 
-            switch (choice) {
-                case 1:
-                    addNewUser(scanner, userService);
-                    break;
-                case 2:
-                    logInAsUser(scanner, userService, membershipService, workoutService);
-                    break;
-                case 3:
-                    System.out.println("Goodbye!");
-                    return;
-                default:
-                    System.out.println("❌ Invalid option.");
-            }
+        if (initialChoice.equals("2")) {
+            handleUserRegistration();
+            return;
+        }
+
+        System.out.print("Enter your email to login: ");
+        String email = scanner.nextLine();
+
+        User loggedInUser = userService.login(email);
+
+        if (loggedInUser == null) {
+            System.out.println("User not found. Please check your email and try again.");
+            return;
+        }
+
+        System.out.println("Welcome, " + loggedInUser.getUsername() + " (" + loggedInUser.getRole() + ")");
+
+        if (loggedInUser instanceof Admin) {
+            showAdminMenu(loggedInUser);
+        } else if (loggedInUser instanceof Trainer) {
+            showTrainerMenu(loggedInUser);
+        } else if (loggedInUser instanceof Member) {
+            showMemberMenu(loggedInUser);
+        } else {
+            System.out.println("Unrecognized role. Contact system admin.");
         }
     }
 
-    /**
-     * Prompts the user for registration details and registers a new user.
-     *
-     * @param scanner    Scanner object for user input
-     * @param userService The service to manage users
-     */
-    // Registration method for new users
-    private static void addNewUser(Scanner scanner, UserService userService) {
-        try {
-            System.out.print("Username: ");
-            String username = scanner.nextLine();
-            if (userService.isUsernameTaken(username)) {
-                System.out.println("Username taken.");
-                return;
-            }
+    private static void handleUserRegistration() {
+        System.out.println("=== User Registration ===");
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
 
-            System.out.print("Email: ");
-            String email = scanner.nextLine();
-            if (userService.isEmailTaken(email)) {
-                System.out.println("Email already exists.");
-                return;
-            }
+        System.out.print("Enter email: ");
+        String email = scanner.nextLine();
 
-            System.out.print("Password: ");
-            String password = scanner.nextLine();
-            if (password.length() < 8 || !password.matches(".*\\d.*") ||
-                !password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) {
-                System.out.println("❌ Password must be at least 8 characters, include a digit and a special character.");
-                return;
-            }
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
 
-            System.out.print("Phone: ");
-            String phone = scanner.nextLine();
+        System.out.print("Enter role (Admin / Member / Trainer): ");
+        String role = scanner.nextLine();
 
-            System.out.print("Address: ");
-            String address = scanner.nextLine();
+        boolean registered = userService.registerUser(username, email, password, role);
 
-            System.out.print("Role (Admin/Trainer/Member): ");
-            String role = scanner.nextLine();
-
-            userService.registerUser(username, password, email, phone, address, role);
-            System.out.println("✅ Registered successfully.");
-        } catch (Exception e) {
-            System.out.println("❌ Error: " + e.getMessage());
+        if (registered) {
+            System.out.println("Registration successful! You can now login.");
+        } else {
+            System.out.println("Registration failed. Email might already be in use.");
         }
     }
 
-    /**
-     * Prompts the user to log in and redirects them to the appropriate menu based on their role.
-     *
-     * @param scanner        Scanner object for user input
-     * @param userService    The service to manage users
-     * @param membershipService The service to manage memberships
-     * @param workoutService The service to manage workout classes
-     */
-    // Login method for users to access their respective menus
-    private static void logInAsUser(Scanner scanner, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
+    private static void showAdminMenu(User loggedInUser) {
+        System.out.println("\n=== Admin Menu ===");
+        System.out.println("1. View all users");
+        System.out.println("2. View all memberships and total revenue");
+        System.out.println("0. Exit");
+        System.out.print("Select an option: ");
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1":
+                List<User> users = userService.getAllUsers();
+                users.forEach(System.out::println);
+                break;
+            case "2":
+                List<Membership> memberships = membershipService.getAllMemberships();
+                memberships.forEach(System.out::println);
+                double total = membershipService.getTotalRevenue();
+                System.out.println("Total Revenue: $" + total);
+                break;
+            case "0":
+                System.out.println("Exiting...");
+                break;
+            default:
+                System.out.println("Invalid option.");
+        }
+    }
+
+    private static void showTrainerMenu(User loggedInUser) {
+        System.out.println("\n=== Trainer Menu ===");
+        System.out.println("1. Add workout class");
+        System.out.println("2. Buy membership");
+        System.out.println("3. View my workout classes");
+        System.out.println("4. Delete workout class");
+        System.out.println("0. Exit");
+        System.out.print("Select an option: ");
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1":
+                handleAddWorkoutClass(loggedInUser);
+                break;
+            case "2":
+                handleBuyMembership(loggedInUser);
+                break;
+            case "3":
+                try {
+                    List<WorkoutClass> trainerClasses = workoutClassService.getWorkoutClassesByTrainerId(loggedInUser.getId());
+                    trainerClasses.forEach(System.out::println);
+                } catch (SQLException e) {
+                    System.out.println("Error loading classes: " + e.getMessage());
+                }
+                break;
+            case "4":
+                handleDeleteWorkoutClass();
+                break;
+            case "0":
+                System.out.println("Exiting...");
+                break;
+            default:
+                System.out.println("Invalid option.");
+        }
+    }
+
+    private static void showMemberMenu(User loggedInUser) {
+        System.out.println("\n=== Member Menu ===");
+        System.out.println("1. Browse workout classes");
+        System.out.println("2. Buy membership");
+        System.out.println("3. View my memberships");
+        System.out.println("0. Exit");
+        System.out.print("Select an option: ");
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1":
+                try {
+                    List<WorkoutClass> availableClasses = workoutClassService.getAllWorkoutClasses();
+                    availableClasses.forEach(System.out::println);
+                } catch (SQLException e) {
+                    System.out.println("Error loading classes: " + e.getMessage());
+                }
+                break;
+            case "2":
+                handleBuyMembership(loggedInUser);
+                break;
+            case "3":
+                List<Membership> myMemberships = membershipService.getMembershipsByMemberId(loggedInUser.getId());
+                myMemberships.forEach(System.out::println);
+                break;
+            case "0":
+                System.out.println("Exiting...");
+                break;
+            default:
+                System.out.println("Invalid option.");
+        }
+    }
+
+    private static void handleBuyMembership(User loggedInUser) {
+        System.out.print("Enter membership type (e.g., Basic, Premium): ");
+        String type = scanner.nextLine();
+
+        System.out.print("Enter description: ");
+        String desc = scanner.nextLine();
+
+        System.out.print("Enter cost: ");
+        double cost = Double.parseDouble(scanner.nextLine());
+
+        Membership newMembership = new Membership(type, desc, cost, loggedInUser.getId());
+        membershipService.buyMembership(newMembership);
+
+        System.out.println("Membership purchased successfully!");
+    }
+
+    private static void handleAddWorkoutClass(User loggedInUser) {
+        System.out.print("Enter workout class name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter class description: ");
+        String description = scanner.nextLine();
+
+        System.out.print("Enter level: ");
+        String level = scanner.nextLine();
+
+        System.out.print("Enter duration (in minutes): ");
+        int duration = Integer.parseInt(scanner.nextLine());
+
+        System.out.print("Enter capacity: ");
+        int capacity = Integer.parseInt(scanner.nextLine());
+
+        System.out.print("Enter date (YYYY-MM-DD): ");
+        String date = scanner.nextLine();
+
+        System.out.print("Enter time (HH:MM): ");
+        String time = scanner.nextLine();
+
+        System.out.print("Enter location: ");
+        String location = scanner.nextLine();
+
+        System.out.print("Enter equipment: ");
+        String equipment = scanner.nextLine();
+
+        WorkoutClass newClass = new WorkoutClass(
+                0, name, loggedInUser.getId(), description, level, duration, capacity,
+                java.time.LocalDate.parse(date), java.time.LocalTime.parse(time), location, equipment);
+
         try {
-            System.out.print("Username: ");
-            String username = scanner.nextLine();
-            System.out.print("Password: ");
-            String password = scanner.nextLine();
-
-            User user = userService.login(username, password);
-            if (user == null) {
-                System.out.println("❌ Login failed.");
-                return;
-            }
-
-            switch (user.getRole().toLowerCase()) {
-                case "admin":
-                    showAdminMenu(scanner, user, userService, membershipService, workoutService);
-                    break;
-                case "trainer":
-                    showTrainerMenu(scanner, user, workoutService);
-                    break;
-                case "member":
-                    showMemberMenu(scanner, user, membershipService);
-                    break;
-                default:
-                    System.out.println("❌ Unknown role.");
-            }
+            workoutClassService.addWorkoutClass(newClass);
+            System.out.println("Workout class added successfully!");
         } catch (SQLException e) {
-            System.out.println("❌ Login error: " + e.getMessage());
+            System.out.println("Failed to add workout class: " + e.getMessage());
         }
     }
 
-    /**
-     * Displays the admin menu for managing users, memberships, and workout classes.
-     *
-     * @param scanner        Scanner object for user input
-     * @param user           The logged-in admin
-     * @param userService    The service to manage users
-     * @param membershipService The service to manage memberships
-     * @param workoutService The service to manage workout classes
-     */
-    // Admin menu for managing users, memberships, and workout classes
-    public static void showAdminMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
-        boolean running = true;
-        while (running) {
-            System.out.println("\n=== 🛠️Admin Menu ===");
-            System.out.println("1. 👤User Management");
-            System.out.println("2. 💳Membership Management");
-            System.out.println("3. 🏋️Workout Class Management");
-            System.out.println("4. 🧑‍🏫Trainer Management");
-            System.out.println("5. 💰View Total Revenue");
-            System.out.println("0.🔙Back to Main Menu");
-            System.out.print("Choose an option: ");
-            String choice = scanner.nextLine();
-
-            switch (choice) {
-                case "1":
-                    showAdminUserMenu(scanner, userService);
-                    break;
-                case "2":
-                    showAdminMembershipMenu(scanner, membershipService);
-                    break;
-                case "3":
-                    showAdminWorkoutClassMenu(scanner, workoutService);
-                    break;
-                case "4":
-                    showAdminTrainerMenu(scanner, userService);
-                    break;
-                case "5":
-                    try {
-                        double totalRevenue = membershipService.getTotalRevenue();
-                        System.out.println("💰 Total Revenue from Memberships: $" + totalRevenue);
-                    } catch (SQLException e) {
-                        System.out.println("❌ Error retrieving total revenue: " + e.getMessage());
-                    }
-                    break;
-                case "0":
-                    running = false;
-                    break;
-                default:
-                    System.out.println("❌Invalid option. Try again.");
-            }
+    private static void handleDeleteWorkoutClass() {
+        System.out.print("Enter ID of the class to delete: ");
+        int classId = Integer.parseInt(scanner.nextLine());
+        try {
+            workoutClassService.deleteWorkoutClass(classId);
+            System.out.println("Workout class deleted.");
+        } catch (SQLException e) {
+            System.out.println("Failed to delete class: " + e.getMessage());
         }
     }
-
-    /**
-     * Displays the member menu for managing memberships and expenses.
-     *
-     * @param scanner        Scanner object for user input
-     * @param user           The logged-in member
-     * @param membershipService The service to manage memberships
-     */
-    // Member menu for managing memberships and expenses
-    public static void showMemberMenu(Scanner scanner, User user, MembershipService membershipService) {
-        Member member = (Member) user;
-        boolean running = true;
-
-        while (running) {
-            System.out.println("\n=== Member Menu ===");
-            System.out.println("1. Buy Membership");
-            System.out.println("2. View My Memberships");
-            System.out.println("3. Check My Expenses");
-            System.out.println("0. Back to Main Menu");
-            System.out.print("Choose an option: ");
-            String choice = scanner.nextLine();
-
-            switch (choice) {
-                case "1":
-                    member.buyMembership(scanner, membershipService);
-                    break;
-                case "2":
-                    member.viewMyMemberships(membershipService);
-                    break;
-                case "3":
-                    member.checkMyExpenses(membershipService);
-                    break;
-                case "0":
-                    running = false;
-                    break;
-                default:
-                    System.out.println("❌ Invalid option. Try again.");
-            }
-        }
-    }
-
-    /**
-     * Displays the trainer menu for managing workout classes.
-     *
-     * @param scanner        Scanner object for user input
-     * @param user           The logged-in trainer
-     * @param workoutService The service to manage workout classes
-     */
-    // Trainer menu for managing workout classes
-    public static void showTrainerMenu(Scanner scanner, User user, WorkoutClassService workoutService) {
-        Trainer trainer = (Trainer) user;
-        boolean running = true;
-
-        while (running) {
-            System.out.println("\n=== Trainer Menu ===");
-            System.out.println("1. View My Classes");
-            System.out.println("2. Add Class");
-            System.out.println("3. Update Class");
-            System.out.println("4. Delete Class");
-            System.out.println("0. Back to Main Menu");
-            System.out.print("Choose an option: ");
-            String choice = scanner.nextLine();
-
-            switch (choice) {
-                case "1":
-                    trainer.viewMyClasses(workoutService);
-                    break;
-                case "2":
-                    trainer.addClass(scanner, workoutService);
-                    break;
-                case "3":
-                    trainer.updateClass(scanner, workoutService);
-                    break;
-                case "4":
-                    trainer.deleteClass(scanner, workoutService);
-                    break;
-                case "0":
-                    running = false;
-                    break;
-                default:
-                    System.out.println("❌ Invalid option. Try again.");
-            }
-        }
-    }
-
-    // Admin user management, membership management, workout class management, and trainer management
-
-    // Admin user management
-    private static void showAdminUserMenu(Scanner scanner, UserService userService) {
-        boolean running = true;
-    
-        while (running) {
-            System.out.println("\n=== User Management ===");
-            System.out.println("1. View All Users");
-            System.out.println("2. Delete User");
-            System.out.println("0. Back to Admin Menu");
-            System.out.print("Choose an option: ");
-            String choice = scanner.nextLine();
-    
-            switch (choice) {
-                case "1":
-                    // View all users
-                    userService.getAllUsers().forEach(System.out::println);  // userService.getAllUsers() returns a list of all users
-                    break;
-                case "2":
-                    // Delete a user
-                    System.out.print("Enter the user ID to delete: ");
-                    int userIdToDelete = Integer.parseInt(scanner.nextLine());
-                    userService.deleteUserById(userIdToDelete);(userIdToDelete);  // userService.deleteUser(userId) deletes the user
-                    System.out.println("User deleted.");
-                    break;
-                case "0":
-                    running = false;
-                    break;
-                default:
-                    System.out.println("❌ Invalid option. Try again.");
-            }
-        }
-    }
-    
-    // Admin membership management
-    private static void showAdminMembershipMenu(Scanner scanner, MembershipService membershipService) {
-        boolean running = true;
-    
-        while (running) {
-            System.out.println("\n=== Membership Management ===");
-            System.out.println("1. View All Memberships");
-            System.out.println("2. Cancel Membership");
-            System.out.println("0. Back to Admin Menu");
-            System.out.print("Choose an option: ");
-            String choice = scanner.nextLine();
-    
-            switch (choice) {
-                case "1":
-                    // View all memberships
-                    membershipService.getAllMemberships().forEach(System.out::println);  // fetches all memberships
-                    break;
-                case "2":
-                    // Cancel a membership
-                    System.out.print("Enter the membership ID to cancel: ");
-                    int membershipIdToCancel = Integer.parseInt(scanner.nextLine());
-                    membershipService.cancelMembership(membershipIdToCancel);  // cancelMembership cancels the membership
-                    System.out.println("Membership canceled.");
-                    break;
-                case "0":
-                    running = false;
-                    break;
-                default:
-                    System.out.println("❌ Invalid option. Try again.");
-            }
-        }
-    }
-    
-    // Admin workout class management
-    private static void showAdminWorkoutClassMenu(Scanner scanner, WorkoutClassService workoutService) {
-        boolean running = true;
-    
-        while (running) {
-            System.out.println("\n=== Workout Class Management ===");
-            System.out.println("1. View All Classes");
-            System.out.println("2. Add New Class");
-            System.out.println("3. Update Class");
-            System.out.println("4. Delete Class");
-            System.out.println("0. Back to Admin Menu");
-            System.out.print("Choose an option: ");
-            String choice = scanner.nextLine();
-    
-            switch (choice) {
-                case "1":
-                    // View all workout classes
-                    workoutService.getAllWorkoutClasses().forEach(System.out::println);  // fetches all workout classes
-                    break;
-                case "2":
-                    // Add new workout class
-                    System.out.print("Enter class name: ");
-                    String className = scanner.nextLine();
-                    System.out.print("Enter class description: ");
-                    String description = scanner.nextLine();
-                    System.out.print("Enter trainer ID: ");
-                    int trainerId = Integer.parseInt(scanner.nextLine());
-                    // Other input for class can be added here
-                    WorkoutClass newClass = new WorkoutClass(className, trainerId, description);
-                    workoutService.addWorkoutClass(newClass);  // addWorkoutClass adds a new class
-                    System.out.println("Class added.");
-                    break;
-                case "3":
-                    // Update an existing class
-                    System.out.print("Enter class ID to update: ");
-                    int classIdToUpdate = Integer.parseInt(scanner.nextLine());
-                    WorkoutClass existingClass = workoutService.getClassById(classIdToUpdate);  // getClassById fetches the class
-                    if (existingClass != null) {
-                        System.out.print("Enter new class name (leave empty to keep current): ");
-                        String newClassName = scanner.nextLine();
-                        if (!newClassName.isEmpty()) {
-                            existingClass.setClassName(newClassName);
-                        }
-                        // Repeat for other class attributes...
-                        workoutService.updateWorkoutClass(existingClass);
-                        System.out.println("Class updated.");
-                    } else {
-                        System.out.println("❌ Class not found.");
-                    }
-                    break;
-                case "4":
-                    // Delete a workout class
-                    System.out.print("Enter class ID to delete: ");
-                    int classIdToDelete = Integer.parseInt(scanner.nextLine());
-                    workoutService.deleteWorkoutClass(classIdToDelete);  // deleteWorkoutClass deletes the class
-                    System.out.println("Class deleted.");
-                    break;
-                case "0":
-                    running = false;
-                    break;
-                default:
-                    System.out.println("❌ Invalid option. Try again.");
-            }
-        }
-    }
-    
-    // Admin trainer management
-    private static void showAdminTrainerMenu(Scanner scanner, UserService userService) {
-        boolean running = true;
-    
-        while (running) {
-            System.out.println("\n=== Trainer Management ===");
-            System.out.println("1. View All Trainers");
-            System.out.println("2. Assign Trainer to Class");
-            System.out.println("3. Unassign Trainer from Class");
-            System.out.println("0. Back to Admin Menu");
-            System.out.print("Choose an option: ");
-            String choice = scanner.nextLine();
-    
-            switch (choice) {
-                case "1":
-                    // View all trainers
-                    userService.getAllTrainers().forEach(System.out::println);  // getAllTrainers fetches all trainers
-                    break;
-                case "2":
-                    // Assign trainer to class
-                    System.out.print("Enter trainer ID: ");
-                    int trainerIdToAssign = Integer.parseInt(scanner.nextLine());
-                    System.out.print("Enter class ID to assign trainer to: ");
-                    int classIdToAssign = Integer.parseInt(scanner.nextLine());
-                    userService.assignTrainerToClass(trainerIdToAssign, classIdToAssign);  // this method assigns a trainer to a class
-                    System.out.println("Trainer assigned.");
-                    break;
-                case "3":
-                    // Unassign trainer from class
-                    System.out.print("Enter trainer ID to unassign: ");
-                    int trainerIdToUnassign = Integer.parseInt(scanner.nextLine());
-                    System.out.print("Enter class ID to unassign trainer from: ");
-                    int classIdToUnassign = Integer.parseInt(scanner.nextLine());
-                    userService.unassignTrainerFromClass(trainerIdToUnassign, classIdToUnassign);  // this method unassigns a trainer from a class
-                    System.out.println("Trainer unassigned.");
-                    break;
-                case "0":
-                    running = false;
-                    break;
-                default:
-                    System.out.println("❌ Invalid option. Try again.");
-            }
-        }
-    }
-    
 }

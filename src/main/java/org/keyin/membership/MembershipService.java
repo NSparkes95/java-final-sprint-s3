@@ -1,58 +1,32 @@
 package org.keyin.membership;
 
-import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Service class to handle membership-related logic and use MembershipDAO to interact with the database.
- */
 public class MembershipService {
 
-    private final MembershipDAO membershipDAO;
+    private MembershipDAO membershipDAO;
 
-    /**
-     * Constructor to inject the DAO (implementation).
-     *
-     * @param membershipDAO The DAO implementation to use.
-     */
     public MembershipService(MembershipDAO membershipDAO) {
         this.membershipDAO = membershipDAO;
     }
 
-    /**
-     * Purchase a membership (insert into the database).
-     *
-     * @param membership The membership to be added.
-     */
-    public void buyMembership(Membership membership) throws SQLException {
-        membershipDAO.insertMembership(membership);
+    // Add a new membership to the system (used by trainers/members)
+    public void buyMembership(Membership membership) {
+        membershipDAO.addMembership(membership);
     }
 
-   /**
-     * Get all memberships linked to a specific user.
-     *
-     * @param userId The user's ID (member or trainer).
-     * @return List of memberships.
-     */
-    public List<Membership> getMembershipsByUserId(int userId) throws SQLException {
-        return membershipDAO.getMembershipsByMemberId(userId);
+    // Get all memberships in the system (used by admin)
+    public List<Membership> getAllMemberships() {
+        return membershipDAO.getAllMemberships();
     }
 
-    /**
-    * Get all memberships in the system (for admin use).
-    *
-    * @return List of all memberships.
-    */
-    public List<Membership> getAllMemberships() throws SQLException {
-       return membershipDAO.getAllMemberships();
+    // Get memberships for a specific member (used by trainer/member)
+    public List<Membership> getMembershipsByMemberId(int memberId) {
+        return membershipDAO.getMembershipsByMemberId(memberId);
     }
 
-    /**
-     * Get the total revenue generated from all memberships.
-     *
-     * @return The total revenue value.
-     */
-    public double getTotalRevenue() throws SQLException {
-        return membershipDAO.getTotalMembershipRevenue();
+    // Calculate total revenue from all memberships (used by admin)
+    public double getTotalRevenue() {
+        return membershipDAO.getTotalRevenue();
     }
 }

@@ -1,119 +1,52 @@
 package org.keyin.user;
 
-
-/**
- * This is the parent class for all users.
- * There are 3 types of users: Trainer, Member, and Admin.
- * It contains user details like ID, name, password, email, phone, address, and role.
- */
 public class User {
-    private int userId;
-    private String userName;
-    private String password;
-    private String email;
-    private String phone;
-    private String address;
-    private String role;
+    protected int id;
+    protected String username;
+    protected String password;
+    protected String email;
+    protected String phoneNumber;
+    protected String address;
+    protected String role;
 
-    /**
-     * Full constructor (used by DAO when reading from the database).
-     * 
-     * @param userId    The unique ID of the user.
-     * @param userName  The user's name.
-     * @param password  The user's password (hashed).
-     * @param email     The user's email address.
-     * @param phone     The user's phone number.
-     * @param address   The user's address.
-     * @param role      The role of the user (Admin, Member, Trainer).
-     */
-    public User(int userId, String userName, String password, String email, String phone, String address, String role) {
-        this.userId = userId;
-        this.userName = userName;
+    public User(int id, String username, String password, String email, String phoneNumber, String address, String role) {
+        this.id = id;
+        this.username = username;
         this.password = password;
         this.email = email;
-        this.phone = phone;
+        this.phoneNumber = phoneNumber;
         this.address = address;
         this.role = role;
     }
 
-    /**
-     * Constructor used for registering new users (ID auto-generated).
-     * 
-     * @param userName  The user's name.
-     * @param password  The user's password (plain text, to be hashed).
-     * @param email     The user's email address.
-     * @param phone     The user's phone number.
-     * @param address   The user's address.
-     * @param role      The role of the user (Admin, Member, Trainer).
-     */
-    public User(String userName, String password, String email, String phone, String address, String role) {
-        this.userName = userName;
-        this.password = password;
+    // Simplified constructor for DAO usage
+    public User(int id, String username, String email, String password) {
+        this.id = id;
+        this.username = username;
         this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.role = role;
-    }
-
-    /**
-     * No-argument constructor for creating an empty User object.
-     */
-    public User() {
-        // Default constructor for creating an empty User object
-    }
-
-    /**
-     * Constructor for creating a user with the specific role (for Trainer, Admin, Member)
-     * 
-     * @param userName  The user's name.
-     * @param password  The user's password (plain text, to be hashed).
-     * @param email     The user's email address.
-     * @param phone     The user's phone number.
-     * @param address   The user's address.
-     * @param role      The role of the user (Admin, Member, Trainer).
-     */
-    public User(String userName, String password, String email, String phone, String address) {
-        this.userName = userName;
         this.password = password;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.role = "trainer";  // Default role as trainer for Trainer class
+        this.phoneNumber = "";
+        this.address = "";
+        this.role = "";
     }
 
-    // Getters and setters
-
-    /**
-     * Gets the user ID.
-     * 
-     * @return The unique user ID.
-     */
-    public int getUserId() {
-        return userId;
+    // Basic getters and setters for user info
+    public int getId() {
+        return id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    /**
-     * Gets the user's name.
-     * 
-     * @return The user's name.
-     */
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    /**
-     * Gets the user's password.
-     * 
-     * @return The user's password (hashed).
-     */
     public String getPassword() {
         return password;
     }
@@ -122,11 +55,6 @@ public class User {
         this.password = password;
     }
 
-    /**
-     * Gets the user's email.
-     * 
-     * @return The user's email address.
-     */
     public String getEmail() {
         return email;
     }
@@ -135,24 +63,14 @@ public class User {
         this.email = email;
     }
 
-    /**
-     * Gets the user's phone number.
-     * 
-     * @return The user's phone number.
-     */
-    public String getPhone() {
-        return phone;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    /**
-     * Gets the user's address.
-     * 
-     * @return The user's address.
-     */
     public String getAddress() {
         return address;
     }
@@ -161,11 +79,6 @@ public class User {
         this.address = address;
     }
 
-    /**
-     * Gets the user's role.
-     * 
-     * @return The role of the user (Admin, Member, Trainer).
-     */
     public String getRole() {
         return role;
     }
@@ -174,29 +87,8 @@ public class User {
         this.role = role;
     }
 
-    /**
-     * Set the user's role.
-     * 
-     * @param role The role to assign to the user.
-     */
-    public void setUserRole(String role) {
-        this.role = role;
-    }
-
-    /**
-     * Provides a string representation of the User object.
-     * 
-     * @return A string containing the user's ID, name, role, and email.
-     */
     @Override
     public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", userName='" + userName + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
-                ", role='" + role + '\'' +
-                '}';
+        return "User [id=" + id + ", username=" + username + ", role=" + role + "]";
     }
 }
