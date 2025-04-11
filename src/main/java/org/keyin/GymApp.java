@@ -1,5 +1,7 @@
-// GymApp.java
-// Gym Management System Main Application
+/**
+ * Main application entry point for the Gym Management System.
+ * Supports Admin, Trainer, and Member role-based menus.
+ */
 package org.keyin;
 
 import org.keyin.membership.*;
@@ -19,7 +21,10 @@ import java.util.Scanner;
  * and perform actions based on their roles (Admin, Trainer, Member).
  */
 public class GymApp {
-
+    /**
+     * Launches the console-based Gym Management System.
+     * Initializes services and starts login/register menu.
+     */
     private static final Scanner scanner = new Scanner(System.in);
     private static final UserService userService = new UserService(new UserDaoImpl());
     private static final MembershipService membershipService = new MembershipService(new MembershipDAOImpl());
