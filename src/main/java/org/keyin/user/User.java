@@ -1,5 +1,11 @@
+// User.java
 package org.keyin.user;
 
+/**
+ * The User class serves as the base class for all user roles in the system,
+ * including Admin, Trainer, and Member. It contains shared user attributes
+ * such as ID, username, email, password, phone number, address, and role.
+ */
 public class User {
     protected int id;
     protected String username;
@@ -9,6 +15,9 @@ public class User {
     protected String address;
     protected String role;
 
+    /**
+     * Full constructor for setting all user fields.
+     */
     public User(int id, String username, String password, String email, String phoneNumber, String address, String role) {
         this.id = id;
         this.username = username;
@@ -19,7 +28,9 @@ public class User {
         this.role = role;
     }
 
-    // Simplified constructor for DAO usage
+    /**
+     * Minimal constructor used primarily during login flows.
+     */
     public User(int id, String username, String email, String password) {
         this.id = id;
         this.username = username;
@@ -30,15 +41,17 @@ public class User {
         this.role = "";
     }
 
-    // Basic getters and setters for user info
+    /**
+     * Constructor for creating a new user with only username and password.
+     */
     public int getId() {
         return id;
     }
-
+    
     public void setId(int id) {
         this.id = id;
     }
-
+    
     public String getUsername() {
         return username;
     }
@@ -46,7 +59,7 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
-
+    
     public String getPassword() {
         return password;
     }
@@ -54,7 +67,7 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
     public String getEmail() {
         return email;
     }

@@ -1,6 +1,10 @@
 // Membership.java
 package org.keyin.membership;
 
+/**
+ * Represents a gym membership assigned to a user.
+ * Contains information such as type, description, cost, and the ID of the member.
+ */
 public class Membership {
     private int membershipId;
     private String membershipType;
@@ -8,7 +12,9 @@ public class Membership {
     private double membershipCost;
     private int memberId;
 
-    // Constructor used when fetching from database
+    /**
+     * Constructor used when fetching memberships from the database.
+     */
     public Membership(int membershipId, String membershipType, String membershipDescription, double membershipCost, int memberId) {
         this.membershipId = membershipId;
         this.membershipType = membershipType;
@@ -17,7 +23,9 @@ public class Membership {
         this.memberId = memberId;
     }
 
-    // Constructor used when inserting into database (ID auto-generated)
+    /**
+     * Constructor used when creating a new membership (ID is auto-generated).
+     */
     public Membership(String membershipType, String membershipDescription, double membershipCost, int memberId) {
         this.membershipType = membershipType;
         this.membershipDescription = membershipDescription;
@@ -64,15 +72,4 @@ public class Membership {
     public void setMemberId(int memberId) {
         this.memberId = memberId;
     }
-
-    @Override
-    public String toString() {
-        return "Membership {" +
-                "ID=" + membershipId +
-                ", Type='" + membershipType + '\'' +
-                ", Description='" + membershipDescription + '\'' +
-                ", Cost=" + membershipCost +
-                ", Member ID=" + memberId +
-                '}';
-    }
-}
+} 

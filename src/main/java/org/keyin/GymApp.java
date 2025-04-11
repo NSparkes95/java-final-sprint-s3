@@ -1,3 +1,5 @@
+// GymApp.java
+// Gym Management System Main Application
 package org.keyin;
 
 import org.keyin.membership.*;
@@ -11,6 +13,11 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * The main application class for the Gym Management System.
+ * Provides a console-based interface for users to register, login,
+ * and perform actions based on their roles (Admin, Trainer, Member).
+ */
 public class GymApp {
 
     private static final Scanner scanner = new Scanner(System.in);
@@ -52,6 +59,9 @@ public class GymApp {
         }
     }
 
+    /**
+     * Handles registration flow for new users.
+     */
     private static void handleUserRegistration() {
         System.out.println("=== User Registration ===");
         System.out.print("Enter username: ");
@@ -75,6 +85,9 @@ public class GymApp {
         }
     }
 
+    /**
+     * Displays admin-specific options such as viewing users and revenue.
+     */
     private static void showAdminMenu(User loggedInUser) {
         System.out.println("\n=== Admin Menu ===");
         System.out.println("1. View all users");
@@ -102,6 +115,9 @@ public class GymApp {
         }
     }
 
+    /**
+     * Displays trainer-specific menu options.
+     */
     private static void showTrainerMenu(User loggedInUser) {
         System.out.println("\n=== Trainer Menu ===");
         System.out.println("1. Add workout class");
@@ -138,6 +154,9 @@ public class GymApp {
         }
     }
 
+    /**
+     * Displays member-specific options.
+     */
     private static void showMemberMenu(User loggedInUser) {
         System.out.println("\n=== Member Menu ===");
         System.out.println("1. Browse workout classes");
@@ -171,6 +190,9 @@ public class GymApp {
         }
     }
 
+    /**
+     * Logic for purchasing a new membership.
+     */
     private static void handleBuyMembership(User loggedInUser) {
         System.out.print("Enter membership type (e.g., Basic, Premium): ");
         String type = scanner.nextLine();
@@ -187,6 +209,9 @@ public class GymApp {
         System.out.println("Membership purchased successfully!");
     }
 
+    /**
+     * Trainer workflow for adding a new workout class.
+     */
     private static void handleAddWorkoutClass(User loggedInUser) {
         System.out.print("Enter workout class name: ");
         String name = scanner.nextLine();
@@ -227,6 +252,9 @@ public class GymApp {
         }
     }
 
+    /**
+     * Deletes a workout class by its ID.
+     */
     private static void handleDeleteWorkoutClass() {
         System.out.print("Enter ID of the class to delete: ");
         int classId = Integer.parseInt(scanner.nextLine());
