@@ -94,36 +94,36 @@ public class GymApp {
      * Displays admin-specific options such as viewing users and revenue.
      */
     private static void showAdminMenu(User loggedInUser) {
-        System.out.println("\n=== Admin Menu ===");
-        System.out.println("1. View all users");
-        System.out.println("2. View all memberships and total revenue");
-        System.out.println("0. Exit");
-        System.out.print("Select an option: ");
+        boolean running = true;
 
-        if (!scanner.hasNextLine()) {
-            System.out.println("No input received.");
-            return;
-        }
+        while (running) {
+            System.out.println("\n=== Admin Menu ===");
+            System.out.println("1. View all users");
+            System.out.println("2. View all memberships and total revenue");
+            System.out.println("0. Exit");
+            System.out.print("Select an option: ");
 
-        String choice = scanner.nextLine();
+            String choice = scanner.nextLine();
 
-        switch (choice) {
-            case "1":
-                List<User> users = userService.getAllUsers();
-                users.forEach(System.out::println);
-                break;
-            case "2":
-                List<Membership> memberships = membershipService.getAllMemberships();
-                memberships.forEach(System.out::println);
-                double total = membershipService.getTotalRevenue();
-                System.out.println("Total Revenue: $" + total);
-                break;
-            case "0":
-                System.out.println("Exiting...");
-                break;
-            default:
-                System.out.println("Invalid option.");
-        }
+            switch (choice) {
+                case "1":
+                    List<User> users = userService.getAllUsers();
+                    users.forEach(System.out::println);
+                    break;
+                case "2":
+                    List<Membership> memberships = membershipService.getAllMemberships();
+                    memberships.forEach(System.out::println);
+                    double total = membershipService.getTotalRevenue();
+                    System.out.println("Total Revenue: $" + total);
+                    break;
+                case "0":
+                    System.out.println("Exiting...");
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid option.");
+            }
+        } 
     }
 
     /**
