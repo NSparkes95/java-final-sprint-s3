@@ -99,6 +99,12 @@ public class GymApp {
         System.out.println("2. View all memberships and total revenue");
         System.out.println("0. Exit");
         System.out.print("Select an option: ");
+
+        if (!scanner.hasNextLine()) {
+            System.out.println("No input received.");
+            return;
+        }
+
         String choice = scanner.nextLine();
 
         switch (choice) {
