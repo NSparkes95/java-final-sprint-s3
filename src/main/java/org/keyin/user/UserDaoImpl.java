@@ -25,7 +25,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public User findByEmail(String email) {
-        String sql = "SELECT * FROM users WHERE email = ?";
+        String sql = "SELECT * FROM users WHERE user_email = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              java.util.Scanner scanner = new java.util.Scanner(System.in)) {
@@ -34,10 +34,10 @@ public class UserDaoImpl implements UserDao {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                String role = rs.getString("role");
-                int id = rs.getInt("id");
-                String username = rs.getString("username");
-                String hashedPassword = rs.getString("password");
+                String role = rs.getString("user_role");
+                int id = rs.getInt("user_id");
+                String username = rs.getString("user_name");
+                String hashedPassword = rs.getString("user_password");
 
                 System.out.print("Enter password: ");
                 String enteredPassword = scanner.nextLine();
@@ -76,11 +76,11 @@ public class UserDaoImpl implements UserDao {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                String role = rs.getString("role");
-                int id = rs.getInt("id");
-                String username = rs.getString("username");
-                String email = rs.getString("email");
-                String password = rs.getString("password");
+                String role = rs.getString("user_role");
+                int id = rs.getInt("user_id");
+                String username = rs.getString("user_name");
+                String email = rs.getString("user_email");
+                String password = rs.getString("user_password");
 
                 switch (role.toLowerCase()) {
                     case "admin":
@@ -110,7 +110,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public boolean registerUser(String username, String email, String password, String role) {
-        String sql = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO users (user_name, user_email, user_password, user_role) VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
