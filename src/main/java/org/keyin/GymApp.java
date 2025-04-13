@@ -23,26 +23,37 @@ import java.util.NoSuchElementException;
  * and perform actions based on their roles (Admin, Trainer, Member).
  */
 public class GymApp {
-    /**
-     * Launches the console-based Gym Management System.
-     * Initializes services and starts login/register menu.
-     */
     private static final Scanner scanner = new Scanner(System.in);
     private static final UserService userService = new UserService(new UserDaoImpl());
     private static final MembershipService membershipService = new MembershipService(new MembershipDAOImpl());
     private static final WorkoutClassService workoutClassService = new WorkoutClassService(new WorkoutClassDAOImpl());
 
     public static void main(String[] args) {
-        System.out.println("=== Welcome to the Gym Management System ===");
+        while (true) {
+            System.out.println("=== Welcome to the Gym Management System ===");
+            System.out.print("Do you want to (1) Login or (2) Register or (0) Exit? ");
+            String initialChoice = scanner.nextLine();
 
-        System.out.print("Do you want to (1) Login or (2) Register? ");
-        String initialChoice = scanner.nextLine();
-
-        if (initialChoice.equals("2")) {
-            handleUserRegistration();
-            return;
+            switch (initialChoice) {
+                case "1":
+                    logInAsUser();
+                    break;
+                case "2":
+                    handleUserRegistration();
+                    break;
+                case "0":
+                    System.out.println("Exiting... Goodbye!");
+                    return;
+                default:
+                    System.out.println("Invalid option. Try again.");
+            }
         }
+    }
 
+    /**
+     * Handles user login and redirects to the appropriate menu based on role.
+     */
+    private static void logInAsUser() {
         System.out.print("Enter your email to login: ");
         String email = scanner.nextLine();
 
@@ -67,7 +78,7 @@ public class GymApp {
     }
 
     /**
-     * Handles registration flow for new users.
+     * Handles user registration by collecting necessary details and calling the service layer.
      */
     private static void handleUserRegistration() {
         System.out.println("=== User Registration ===");
