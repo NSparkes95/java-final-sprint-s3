@@ -14,6 +14,8 @@ import org.keyin.workoutclasses.*;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.NoSuchElementException;
+
 
 /**
  * The main application class for the Gym Management System.
@@ -137,8 +139,18 @@ public class GymApp {
         System.out.println("4. Delete workout class");
         System.out.println("0. Exit");
         System.out.print("Select an option: ");
-        String choice = scanner.nextLine();
+        String choice;
 
+        try {
+            if(!scanner.hasNextLine()) {
+                System.out.println("No input detected. Exiting...");
+                return;
+            }
+            choice = scanner.nextLine();
+        }  catch (NoSuchElementException | IllegalStateException e) {
+            System.out.println("No input received. ");
+            return;
+        }
         switch (choice) {
             case "1":
                 handleAddWorkoutClass(loggedInUser);
