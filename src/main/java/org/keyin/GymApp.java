@@ -159,10 +159,10 @@ public class GymApp {
             System.out.println("4. Delete workout class");
             System.out.println("0. Exit");
             System.out.print("Select an option: ");
-
+    
             String choice = scanner.next();
             scanner.nextLine();
-
+    
             switch (choice) {
                 case "1":
                     handleAddWorkoutClass(loggedInUser);
@@ -173,7 +173,25 @@ public class GymApp {
                 case "3":
                     try {
                         List<WorkoutClass> trainerClasses = workoutClassService.getWorkoutClassesByTrainerId(loggedInUser.getId());
-                        trainerClasses.forEach(System.out::println);
+                        System.out.printf("%-5s %-25s %-30s %-12s %-10s %-10s %-12s %-8s %-18s %-10s%n",
+                                "ID", "Name", "Description", "Level", "Duration", "Capacity", "Date", "Time", "Location", "Done");
+                        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------");
+                        for (WorkoutClass wc : trainerClasses) {
+                            String shortDesc = wc.getClassDescription().length() > 28
+                                    ? wc.getClassDescription().substring(0, 25) + "..."
+                                    : wc.getClassDescription();
+                            System.out.printf("%-5d %-25s %-30s %-12s %-10d %-10d %-12s %-8s %-18s %-10s%n",
+                                    wc.getClassId(),
+                                    wc.getClassName(),
+                                    shortDesc,
+                                    wc.getClassLevel(),
+                                    wc.getClassDuration(),
+                                    wc.getClassCapacity(),
+                                    wc.getClassDate(),
+                                    wc.getClassTime(),
+                                    wc.getClassLocation(),
+                                    wc.isCompleted() ? "Yes" : "No");
+                        }
                     } catch (SQLException e) {
                         System.out.println("Error loading classes: " + e.getMessage());
                     }
@@ -188,7 +206,7 @@ public class GymApp {
                     System.out.println("Invalid option.");
             }
         }
-    }
+    }    
 
     private static void showMemberMenu(User loggedInUser) {
         System.out.println("\n=== Member Menu ===");

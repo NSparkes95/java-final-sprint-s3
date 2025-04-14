@@ -49,7 +49,7 @@ public void addWorkoutClass(WorkoutClass workoutClass) throws SQLException {
     @Override
     public List<WorkoutClass> getAllWorkoutClasses() throws SQLException {
         List<WorkoutClass> classes = new ArrayList<>();
-        String sql = "SELECT * FROM workoutClasses";
+        String sql = "SELECT * FROM workoutclasses";
 
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -72,7 +72,7 @@ public void addWorkoutClass(WorkoutClass workoutClass) throws SQLException {
     @Override
     public List<WorkoutClass> getWorkoutClassesByTrainerId(int trainerId) throws SQLException {
         List<WorkoutClass> classes = new ArrayList<>();
-        String sql = "SELECT * FROM workoutClasses WHERE trainerId = ?";
+        String sql = "SELECT * FROM workoutClasses WHERE trainer_id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
