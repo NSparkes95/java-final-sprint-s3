@@ -197,15 +197,33 @@ public class GymApp {
         System.out.println("3. View my memberships");
         System.out.println("0. Exit");
         System.out.print("Select an option: ");
-
+    
         String choice = scanner.next();
         scanner.nextLine();
-
+    
         switch (choice) {
             case "1":
                 try {
                     List<WorkoutClass> availableClasses = workoutClassService.getAllWorkoutClasses();
-                    availableClasses.forEach(System.out::println);
+                    System.out.printf("%-5s %-25s %-35s %-12s %-10s %-10s %-12s %-8s %-18s %-10s%n",
+                            "ID", "Name", "Description", "Level", "Duration", "Capacity", "Date", "Time", "Location", "Done");
+                    System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------");
+                    for (WorkoutClass wc : availableClasses) {
+                        String shortDesc = wc.getClassDescription().length() > 33
+                                ? wc.getClassDescription().substring(0, 30) + "..."
+                                : wc.getClassDescription();
+                        System.out.printf("%-5d %-25s %-35s %-12s %-10d %-10d %-12s %-8s %-18s %-10s%n",
+                                wc.getClassId(),
+                                wc.getClassName(),
+                                shortDesc,
+                                wc.getClassLevel(),
+                                wc.getClassDuration(),
+                                wc.getClassCapacity(),
+                                wc.getClassDate(),
+                                wc.getClassTime(),
+                                wc.getClassLocation(),
+                                wc.isCompleted() ? "Yes" : "No");
+                    }
                 } catch (SQLException e) {
                     System.out.println("Error loading classes: " + e.getMessage());
                 }
@@ -222,7 +240,7 @@ public class GymApp {
             default:
                 System.out.println("Invalid option.");
         }
-    }
+    }        
 
     private static void handleBuyMembership(User loggedInUser) {
         System.out.print("Enter membership type (e.g., Basic, Premium): ");
