@@ -19,26 +19,26 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
      * @throws SQLException If a database access error occurs.
      */
     @Override
-    public void addWorkoutClass(WorkoutClass workoutClass) throws SQLException {
-        String sql = "INSERT INTO workoutClasses (className, trainerId, classDescription, classLevel, classDuration, classCapacity, classDate, classTime, classLocation, classEquipment, isCompleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+public void addWorkoutClass(WorkoutClass workoutClass) throws SQLException {
+    String sql = "INSERT INTO workoutclasses (class_name, trainer_id, class_description, class_level, class_duration, class_capacity, class_date, class_time, class_location, class_equipment, is_completed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, workoutClass.getClassName());
-            stmt.setInt(2, workoutClass.getTrainerId());
-            stmt.setString(3, workoutClass.getClassDescription());
-            stmt.setString(4, workoutClass.getClassLevel());
-            stmt.setInt(5, workoutClass.getClassDuration());
-            stmt.setInt(6, workoutClass.getClassCapacity());
-            stmt.setDate(7, Date.valueOf(workoutClass.getClassDate()));
-            stmt.setTime(8, Time.valueOf(workoutClass.getClassTime()));
-            stmt.setString(9, workoutClass.getClassLocation());
-            stmt.setString(10, workoutClass.getClassEquipment());
-            stmt.setBoolean(11, workoutClass.isCompleted());
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, workoutClass.getClassName());
+        stmt.setInt(2, workoutClass.getTrainerId());
+        stmt.setString(3, workoutClass.getClassDescription());
+        stmt.setString(4, workoutClass.getClassLevel());
+        stmt.setInt(5, workoutClass.getClassDuration());
+        stmt.setInt(6, workoutClass.getClassCapacity());
+        stmt.setDate(7, Date.valueOf(workoutClass.getClassDate()));
+        stmt.setTime(8, Time.valueOf(workoutClass.getClassTime()));
+        stmt.setString(9, workoutClass.getClassLocation());
+        stmt.setString(10, workoutClass.getClassEquipment());
+        stmt.setBoolean(11, workoutClass.isCompleted());
 
-            stmt.executeUpdate();
-        }
+        stmt.executeUpdate();
     }
+}
 
     /**
      * Retrieves all workout classes from the database.
