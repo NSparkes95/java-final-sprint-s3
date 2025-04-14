@@ -48,6 +48,8 @@ public class GymApp {
     }
 
     private static void logInAsUser() {
+        System.out.println("=== User Login ===");
+        scanner.nextLine();
         System.out.print("Enter your email to login: ");
         String email = scanner.nextLine();
         System.out.print("Enter password: ");
@@ -75,6 +77,7 @@ public class GymApp {
 
     private static void handleUserRegistration() {
         System.out.println("=== User Registration ===");
+        scanner.nextLine();
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
         System.out.print("Enter email: ");
