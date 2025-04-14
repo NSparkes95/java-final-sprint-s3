@@ -14,7 +14,7 @@ public interface UserDao {
      * @param email the email address to search for
      * @return the matching User object or null if not found
      */
-    User findByEmail(String email);
+    User findByEmailAndPassword(String email, String enteredPassword); 
 
     /**
      * Retrieves a list of all users in the database.

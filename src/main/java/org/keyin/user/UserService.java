@@ -36,8 +36,8 @@ public class UserService {
      * @param email user's email
      * @return the corresponding User object if login is valid, otherwise null
      */
-    public User login(String email) {
-        return userDao.findByEmail(email);
+    public User login(String email, String password) {
+        return userDao.findByEmailAndPassword(email, password);
     }
 
     /**

@@ -24,11 +24,11 @@ public class UserDaoImpl implements UserDao {
      * @return User object if valid, null otherwise
      */
     @Override
-    public User findByEmail(String email) {
+    public User findByEmailAndPassword(String email, String enteredPassword) {
         String sql = "SELECT * FROM users WHERE user_email = ?";
+
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             java.util.Scanner scanner = new java.util.Scanner(System.in)) {
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, email);
             ResultSet rs = stmt.executeQuery();
@@ -38,9 +38,6 @@ public class UserDaoImpl implements UserDao {
                 int id = rs.getInt("user_id");
                 String username = rs.getString("user_name");
                 String hashedPassword = rs.getString("user_password");
-
-                System.out.print("Enter password: ");
-                String enteredPassword = scanner.nextLine();
 
                 if (!PasswordUtils.checkPassword(enteredPassword, hashedPassword)) {
                     System.out.println("Incorrect password.");
