@@ -249,12 +249,18 @@ public class GymApp {
         String desc = scanner.nextLine();
         System.out.print("Enter cost: ");
         String costStr = scanner.nextLine();
-
+    
         double cost = Double.parseDouble(costStr);
-        Membership newMembership = new Membership(type, desc, cost, loggedInUser.getId());
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusMonths(1);
+    
+        Membership newMembership = new Membership(
+                type, desc, cost, loggedInUser.getId(), startDate, endDate, false
+        );
+    
         membershipService.buyMembership(newMembership);
         System.out.println("Membership purchased successfully!");
-    }
+    }    
 
     /**
      * @param loggedInUser

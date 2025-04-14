@@ -1,20 +1,18 @@
 // Membership.java
 package org.keyin.membership;
 
-/**
- * Represents a gym membership assigned to a user.
- * Contains information such as type, description, cost, and the ID of the member.
- */
+import java.time.LocalDate;
+
 public class Membership {
     private int membershipId;
     private String membershipType;
     private String membershipDescription;
     private double membershipCost;
     private int memberId;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private boolean isOnHold;
 
-    /**
-     * Constructor used when fetching memberships from the database.
-     */
     public Membership(int membershipId, String membershipType, String membershipDescription, double membershipCost, int memberId) {
         this.membershipId = membershipId;
         this.membershipType = membershipType;
@@ -23,14 +21,21 @@ public class Membership {
         this.memberId = memberId;
     }
 
-    /**
-     * Constructor used when creating a new membership (ID is auto-generated).
-     */
     public Membership(String membershipType, String membershipDescription, double membershipCost, int memberId) {
         this.membershipType = membershipType;
         this.membershipDescription = membershipDescription;
         this.membershipCost = membershipCost;
         this.memberId = memberId;
+    }
+
+    public Membership(String membershipType, String membershipDescription, double membershipCost, int memberId, LocalDate startDate, LocalDate endDate, boolean isOnHold) {
+        this.membershipType = membershipType;
+        this.membershipDescription = membershipDescription;
+        this.membershipCost = membershipCost;
+        this.memberId = memberId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.isOnHold = isOnHold;
     }
 
     public int getMembershipId() {
@@ -73,13 +78,39 @@ public class Membership {
         this.memberId = memberId;
     }
 
-    @Override
-public String toString() {
-    return "Membership ID: " + membershipId +
-           ", Type: " + membershipType +
-           ", Description: " + membershipDescription +
-           ", Cost: $" + membershipCost +
-           ", Member ID: " + memberId;
-}
+    public LocalDate getStartDate() {
+        return startDate;
+    }
 
-} 
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public boolean isOnHold() {
+        return isOnHold;
+    }
+
+    public void setOnHold(boolean onHold) {
+        isOnHold = onHold;
+    }
+
+    @Override
+    public String toString() {
+        return "Membership ID: " + membershipId +
+               ", Type: " + membershipType +
+               ", Description: " + membershipDescription +
+               ", Cost: $" + membershipCost +
+               ", Member ID: " + memberId +
+               ", Start Date: " + (startDate != null ? startDate : "N/A") +
+               ", End Date: " + (endDate != null ? endDate : "N/A") +
+               ", On Hold: " + (isOnHold ? "Yes" : "No");
+    }
+}

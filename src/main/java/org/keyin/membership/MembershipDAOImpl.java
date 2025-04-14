@@ -15,23 +15,26 @@ import java.util.List;
 public class MembershipDAOImpl implements MembershipDAO {
 
     /**
-     * Adds a new membership to the database.
-     * @param membership the Membership object to insert
-     */
-    @Override
-    public void addMembership(Membership membership) {
-        String sql = "INSERT INTO memberships (membership_type, membership_description, membership_cost, member_id) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, membership.getMembershipType());
-            pstmt.setString(2, membership.getMembershipDescription());
-            pstmt.setDouble(3, membership.getMembershipCost());
-            pstmt.setInt(4, membership.getMemberId());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+ * Adds a new membership to the database.
+ * @param membership the Membership object to insert
+ */
+@Override
+public void addMembership(Membership membership) {
+    String sql = "INSERT INTO memberships (membership_type, membership_description, membership_cost, member_id, start_date, end_date, is_on_hold) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setString(1, membership.getMembershipType());
+        pstmt.setString(2, membership.getMembershipDescription());
+        pstmt.setDouble(3, membership.getMembershipCost());
+        pstmt.setInt(4, membership.getMemberId());
+        pstmt.setDate(5, java.sql.Date.valueOf(membership.getStartDate()));
+        pstmt.setDate(6, java.sql.Date.valueOf(membership.getEndDate()));
+        pstmt.setBoolean(7, membership.isOnHold());
+        pstmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+}
 
     /**
      * Retrieves all memberships in the database.
