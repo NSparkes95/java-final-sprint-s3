@@ -105,17 +105,18 @@ public class WorkoutClassDAOImpl implements WorkoutClassDAO {
      */
     private WorkoutClass buildWorkoutClassFromResultSet(ResultSet rs) throws SQLException {
         return new WorkoutClass(
-                rs.getInt("id"),
-                rs.getString("className"),
-                rs.getInt("trainerId"),
-                rs.getString("classDescription"),
-                rs.getString("classLevel"),
-                rs.getInt("classDuration"),
-                rs.getInt("classCapacity"),
-                rs.getDate("classDate").toLocalDate(),
-                rs.getTime("classTime").toLocalTime(),
-                rs.getString("classLocation"),
-                rs.getString("classEquipment")
+            rs.getInt("class_id"),
+            rs.getString("class_name"),
+            rs.getInt("trainer_id"),
+            rs.getString("class_description"),
+            rs.getString("class_level"),
+            rs.getInt("class_duration"),
+            rs.getInt("class_capacity"),
+            rs.getDate("class_date").toLocalDate(),
+            rs.getTime("class_time").toLocalTime(),
+            rs.getString("class_location"),
+            rs.getString("class_equipment")
         );
     }
 }
+    
