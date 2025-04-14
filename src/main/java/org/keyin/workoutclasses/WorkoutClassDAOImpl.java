@@ -89,7 +89,7 @@ public void addWorkoutClass(WorkoutClass workoutClass) throws SQLException {
 
     @Override
     public void deleteWorkoutClass(int classId) throws SQLException {
-        String sql = "DELETE FROM workoutClasses WHERE id = ?";
+        String sql = "DELETE FROM workoutClasses WHERE class_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, classId);
