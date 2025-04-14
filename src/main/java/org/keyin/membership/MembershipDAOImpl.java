@@ -96,7 +96,7 @@ public class MembershipDAOImpl implements MembershipDAO {
     @Override
     public double getTotalRevenue() {
         double totalRevenue = 0;
-        String sql = "SELECT SUM(membership_cost) AS total FROM memberships";
+        String sql = "SELECT SUM(membershipcost) AS total FROM memberships";
 
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
