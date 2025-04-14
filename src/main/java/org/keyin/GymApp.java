@@ -233,7 +233,18 @@ public class GymApp {
                 break;
             case "3":
                 List<Membership> myMemberships = membershipService.getMembershipsByMemberId(loggedInUser.getId());
-                myMemberships.forEach(System.out::println);
+                System.out.println("\nMy Memberships:");
+                System.out.println("--------------------------------------------------");
+                for (Membership membership : myMemberships) {
+                    System.out.println("Membership ID : " + membership.getMembershipId());
+                    System.out.println("Type          : " + membership.getMembershipType());
+                    System.out.println("Description   : " + membership.getMembershipDescription());
+                    System.out.println("Cost          : $" + membership.getMembershipCost());
+                    System.out.println("Start Date    : " + (membership.getStartDate() != null ? membership.getStartDate() : "N/A"));
+                    System.out.println("End Date      : " + (membership.getEndDate() != null ? membership.getEndDate() : "N/A"));
+                    System.out.println("On Hold       : " + (membership.isOnHold() ? "Yes" : "No"));
+                    System.out.println("--------------------------------------------------");
+                }
                 break;
             case "0":
                 break;

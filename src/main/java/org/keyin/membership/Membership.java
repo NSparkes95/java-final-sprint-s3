@@ -38,6 +38,17 @@ public class Membership {
         this.isOnHold = isOnHold;
     }
 
+    public Membership(int membershipId, String membershipType, String membershipDescription, double membershipCost, int memberId, LocalDate startDate, LocalDate endDate, boolean isOnHold) {
+        this.membershipId = membershipId;
+        this.membershipType = membershipType;
+        this.membershipDescription = membershipDescription;
+        this.membershipCost = membershipCost;
+        this.memberId = memberId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.isOnHold = isOnHold;
+    }    
+
     public int getMembershipId() {
         return membershipId;
     }

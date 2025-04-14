@@ -41,27 +41,31 @@ public void addMembership(Membership membership) {
      * @return a list of all Membership objects
      */
     @Override
-    public List<Membership> getAllMemberships() {
-        List<Membership> memberships = new ArrayList<>();
-        String sql = "SELECT * FROM memberships";
+public List<Membership> getAllMemberships() {
+    List<Membership> memberships = new ArrayList<>();
+    String sql = "SELECT * FROM memberships";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                memberships.add(new Membership(
-                        rs.getInt("membership_id"),
-                        rs.getString("membership_type"),
-                        rs.getString("membership_description"),
-                        rs.getDouble("membership_cost"),
-                        rs.getInt("member_id")
-                ));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    try (Connection conn = DatabaseConnection.getConnection();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+        while (rs.next()) {
+            memberships.add(new Membership(
+                    rs.getInt("membership_id"),
+                    rs.getString("membership_type"),
+                    rs.getString("membership_description"),
+                    rs.getDouble("membership_cost"),
+                    rs.getInt("member_id"),
+                    rs.getDate("start_date").toLocalDate(),
+                    rs.getDate("end_date").toLocalDate(),
+                    rs.getBoolean("is_on_hold")
+            ));
         }
-        return memberships;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return memberships;
+}
+
 
     /**
      * Retrieves memberships associated with a specific member.
@@ -69,28 +73,32 @@ public void addMembership(Membership membership) {
      * @return a list of memberships belonging to the member
      */
     @Override
-    public List<Membership> getMembershipsByMemberId(int memberId) {
-        List<Membership> memberships = new ArrayList<>();
-        String sql = "SELECT * FROM memberships WHERE member_id = ?";
+public List<Membership> getMembershipsByMemberId(int memberId) {
+    List<Membership> memberships = new ArrayList<>();
+    String sql = "SELECT * FROM memberships WHERE member_id = ?";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, memberId);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                memberships.add(new Membership(
-                        rs.getInt("membership_id"),
-                        rs.getString("membership_type"),
-                        rs.getString("membership_description"),
-                        rs.getDouble("membership_cost"),
-                        rs.getInt("member_id")
-                ));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setInt(1, memberId);
+        ResultSet rs = pstmt.executeQuery();
+        while (rs.next()) {
+            memberships.add(new Membership(
+                    rs.getInt("membership_id"),
+                    rs.getString("membership_type"),
+                    rs.getString("membership_description"),
+                    rs.getDouble("membership_cost"),
+                    rs.getInt("member_id"),
+                    rs.getDate("start_date").toLocalDate(),
+                    rs.getDate("end_date").toLocalDate(),
+                    rs.getBoolean("is_on_hold")
+            ));
         }
-        return memberships;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return memberships;
+}
+
 
     /**
      * Calculates the total revenue earned from all memberships.
