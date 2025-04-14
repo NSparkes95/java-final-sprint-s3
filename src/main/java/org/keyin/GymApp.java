@@ -106,14 +106,22 @@ public class GymApp {
             System.out.println("2. View all memberships and total revenue");
             System.out.println("0. Exit");
             System.out.print("Select an option: ");
-
+    
             String choice = scanner.next();
             scanner.nextLine();
-
+    
             switch (choice) {
                 case "1":
                     List<User> users = userService.getAllUsers();
-                    users.forEach(System.out::println);
+                    System.out.printf("%-5s %-25s %-30s %-10s%n", "ID", "Username", "Email", "Role");
+                    System.out.println("---------------------------------------------------------------------------------");
+                    for (User user : users) {
+                        System.out.printf("%-5d %-25s %-30s %-10s%n",
+                                user.getId(),
+                                user.getUsername(),
+                                user.getEmail(),
+                                user.getRole());
+                    }
                     break;
                 case "2":
                     List<Membership> memberships = membershipService.getAllMemberships();
@@ -128,7 +136,7 @@ public class GymApp {
                     System.out.println("Invalid option.");
             }
         }
-    }
+    }    
 
     private static void showTrainerMenu(User loggedInUser) {
         boolean running = true;
