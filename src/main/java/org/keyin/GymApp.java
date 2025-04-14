@@ -106,10 +106,10 @@ public class GymApp {
             System.out.println("2. View all memberships and total revenue");
             System.out.println("0. Exit");
             System.out.print("Select an option: ");
-    
+
             String choice = scanner.next();
             scanner.nextLine();
-    
+
             switch (choice) {
                 case "1":
                     List<User> users = userService.getAllUsers();
@@ -125,8 +125,19 @@ public class GymApp {
                     break;
                 case "2":
                     List<Membership> memberships = membershipService.getAllMemberships();
-                    memberships.forEach(System.out::println);
+                    System.out.println("\nMemberships:");
+                    System.out.printf("%-5s %-12s %-35s %-10s %-10s%n", "ID", "Type", "Description", "Cost", "Member ID");
+                    System.out.println("--------------------------------------------------------------------------------");
+                    for (Membership m : memberships) {
+                        System.out.printf("%-5d %-12s %-35s $%-9.2f %-10d%n",
+                                m.getMembershipId(),
+                                m.getMembershipType(),
+                                m.getMembershipDescription(),
+                                m.getMembershipCost(),
+                                m.getMemberId());
+                    }
                     double total = membershipService.getTotalRevenue();
+                    System.out.println("--------------------------------------------------------------------------------");
                     System.out.println("Total Revenue: $" + total);
                     break;
                 case "0":
