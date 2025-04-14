@@ -72,4 +72,14 @@ public class Membership {
     public void setMemberId(int memberId) {
         this.memberId = memberId;
     }
+
+    @Override
+public String toString() {
+    return "Membership ID: " + membershipId +
+           ", Type: " + membershipType +
+           ", Description: " + membershipDescription +
+           ", Cost: $" + membershipCost +
+           ", Member ID: " + memberId;
+}
+
 } 
