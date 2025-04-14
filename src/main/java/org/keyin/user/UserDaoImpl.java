@@ -107,16 +107,30 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public boolean registerUser(String username, String email, String password, String role) {
-        String sql = "INSERT INTO users (user_name, user_email, user_password, user_role) VALUES (?, ?, ?, ?)";
+        String checkSql = "SELECT 1 FROM users WHERE user_email = ?";
+        String insertSql = "INSERT INTO users (user_name, user_email, user_password, user_role) VALUES (?, ?, ?, ?)";
+
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, username);
-            stmt.setString(2, email);
-            stmt.setString(3, PasswordUtils.hashPassword(password));
-            stmt.setString(4, role);
-            stmt.executeUpdate();
-            return true;
+        PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+            checkStmt.setString(1, email);
+            ResultSet rs = checkStmt.executeQuery();
+
+            if (rs.next()) {
+                // Email exists
+                return false;
+            }   
+
+            try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                insertStmt.setString(1, username);
+                insertStmt.setString(2, email);
+                insertStmt.setString(3, PasswordUtils.hashPassword(password));
+                insertStmt.setString(4, role);
+                insertStmt.executeUpdate();
+                return true;
+            }
+    
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }

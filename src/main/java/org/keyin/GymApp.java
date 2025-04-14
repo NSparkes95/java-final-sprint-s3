@@ -131,39 +131,43 @@ public class GymApp {
     }
 
     private static void showTrainerMenu(User loggedInUser) {
-        System.out.println("\n=== Trainer Menu ===");
-        System.out.println("1. Add workout class");
-        System.out.println("2. Buy membership");
-        System.out.println("3. View my workout classes");
-        System.out.println("4. Delete workout class");
-        System.out.println("0. Exit");
-        System.out.print("Select an option: ");
+        boolean running = true;
+        while (running) {
+            System.out.println("\n=== Trainer Menu ===");
+            System.out.println("1. Add workout class");
+            System.out.println("2. Buy membership");
+            System.out.println("3. View my workout classes");
+            System.out.println("4. Delete workout class");
+            System.out.println("0. Exit");
+            System.out.print("Select an option: ");
 
-        String choice = scanner.next();
-        scanner.nextLine();
+            String choice = scanner.next();
+            scanner.nextLine();
 
-        switch (choice) {
-            case "1":
-                handleAddWorkoutClass(loggedInUser);
-                break;
-            case "2":
-                handleBuyMembership(loggedInUser);
-                break;
-            case "3":
-                try {
-                    List<WorkoutClass> trainerClasses = workoutClassService.getWorkoutClassesByTrainerId(loggedInUser.getId());
-                    trainerClasses.forEach(System.out::println);
-                } catch (SQLException e) {
-                    System.out.println("Error loading classes: " + e.getMessage());
-                }
-                break;
-            case "4":
-                handleDeleteWorkoutClass();
-                break;
-            case "0":
-                break;
-            default:
-                System.out.println("Invalid option.");
+            switch (choice) {
+                case "1":
+                    handleAddWorkoutClass(loggedInUser);
+                    break;
+                case "2":
+                    handleBuyMembership(loggedInUser);
+                    break;
+                case "3":
+                    try {
+                        List<WorkoutClass> trainerClasses = workoutClassService.getWorkoutClassesByTrainerId(loggedInUser.getId());
+                        trainerClasses.forEach(System.out::println);
+                    } catch (SQLException e) {
+                        System.out.println("Error loading classes: " + e.getMessage());
+                    }
+                    break;
+                case "4":
+                    handleDeleteWorkoutClass();
+                    break;
+                case "0":
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid option.");
+            }
         }
     }
 
