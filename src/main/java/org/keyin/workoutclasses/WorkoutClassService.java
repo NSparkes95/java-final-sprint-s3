@@ -55,4 +55,14 @@ public class WorkoutClassService {
     public void deleteWorkoutClass(int classId) throws SQLException {
         workoutClassDAO.deleteWorkoutClass(classId);
     }
+
+    /**
+     * Updates an existing workout class in the database.
+     * @param workoutClass the class with updated details
+     * @return true if the update was successful, false otherwise
+     */
+    public boolean updateWorkoutClass(WorkoutClass workoutClass) {
+        return workoutClassDAO.updateWorkoutClass(workoutClass);
+    }
+    
 } 

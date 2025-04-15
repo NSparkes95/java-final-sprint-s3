@@ -43,4 +43,13 @@ public interface WorkoutClassDAO {
      * @throws SQLException If a database access error occurs or the ID does not exist.
      */
     void deleteWorkoutClass(int classId) throws SQLException;
+
+    /**
+     * Updates the details of an existing workout class in the database.
+     *
+     * @param workoutClass The {@link WorkoutClass} object with updated details.
+     * @throws SQLException If a database access error occurs or the ID does not exist.
+     */
+    boolean updateWorkoutClass(WorkoutClass workoutClass);
+
 }

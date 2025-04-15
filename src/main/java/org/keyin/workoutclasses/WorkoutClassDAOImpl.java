@@ -125,5 +125,40 @@ public void addWorkoutClass(WorkoutClass workoutClass) throws SQLException {
             rs.getString("class_equipment")
         );
     }
+
+    /**
+     * Updates the details of an existing workout class in the database.
+     *
+     * @param workoutClass The {@link WorkoutClass} object with updated details.
+     * @return true if the update was successful, false otherwise.
+     */
+    @Override
+    public boolean updateWorkoutClass(WorkoutClass workoutClass) {
+     String sql = "UPDATE workoutclasses SET " +
+              "class_name = ?, class_description = ?, class_level = ?, class_duration = ?, " +
+               "class_capacity = ?, class_date = ?, class_time = ?, class_location = ?, is_completed = ? " +
+               "WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+           stmt.setString(1, workoutClass.getClassName());
+           stmt.setString(2, workoutClass.getClassDescription());
+           stmt.setString(3, workoutClass.getClassLevel());
+           stmt.setInt(4, workoutClass.getClassDuration());
+           stmt.setInt(5, workoutClass.getClassCapacity());
+           stmt.setDate(6, java.sql.Date.valueOf(workoutClass.getClassDate()));
+           stmt.setTime(7, java.sql.Time.valueOf(workoutClass.getClassTime()));
+           stmt.setString(8, workoutClass.getClassLocation());
+           stmt.setBoolean(9, workoutClass.isCompleted());
+           stmt.setInt(10, workoutClass.getClassId());
+
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+         System.out.println("Error updating workout class: " + e.getMessage());
+            return false;
+        }
+    }
 }
     

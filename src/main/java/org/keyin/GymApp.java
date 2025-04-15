@@ -171,61 +171,66 @@ private static void showAdminMenu(User loggedInUser) {
 }
 
     /**
-     * Displays the Trainer dashboard menu and allows trainers to manage classes and memberships.
-     *
-     * @param loggedInUser the currently logged-in trainer
-     */
-    private static void showTrainerMenu(User loggedInUser) {
-        boolean running = true;
-        while (running) {
-            System.out.println("\n=== Trainer Menu ===");
-            System.out.println("1. Add workout class");
-            System.out.println("2. Buy membership");
-            System.out.println("3. View my workout classes");
-            System.out.println("4. Delete workout class");
-            System.out.println("0. Exit");
-            System.out.print("Select an option: ");
+ * Displays the Trainer dashboard menu and allows trainers to manage classes and memberships.
+ *
+ * @param loggedInUser the currently logged-in trainer
+ */
+private static void showTrainerMenu(User loggedInUser) {
+    boolean running = true;
+    while (running) {
+        System.out.println("\n=== Trainer Menu ===");
+        System.out.println("1. Add workout class");
+        System.out.println("2. Buy membership");
+        System.out.println("3. View my workout classes");
+        System.out.println("4. Delete workout class");
+        System.out.println("5. Update workout class"); // New
+        System.out.println("0. Exit");
+        System.out.print("Select an option: ");
 
-            String choice = scanner.next();
-            scanner.nextLine();
+        String choice = scanner.next();
+        scanner.nextLine();
 
-            switch (choice) {
-                case "1":
-                    handleAddWorkoutClass(loggedInUser);
-                    break;
-                case "2":
-                    handleBuyMembership(loggedInUser);
-                    break;
-                case "3":
-                    try {
-                        List<WorkoutClass> trainerClasses = workoutClassService.getWorkoutClassesByTrainerId(loggedInUser.getId());
-                        System.out.printf("%-5s %-25s %-30s %-12s %-10s %-10s %-12s %-8s %-18s %-10s%n",
-                                "ID", "Name", "Description", "Level", "Duration", "Capacity", "Date", "Time", "Location", "Done");
-                        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------");
-                        for (WorkoutClass wc : trainerClasses) {
-                            String shortDesc = wc.getClassDescription().length() > 28
-                                    ? wc.getClassDescription().substring(0, 25) + "..."
-                                    : wc.getClassDescription();
-                            System.out.printf("%-5d %-25s %-30s %-12s %-10d %-10d %-12s %-8s %-18s %-10s%n",
-                                    wc.getClassId(), wc.getClassName(), shortDesc, wc.getClassLevel(),
-                                    wc.getClassDuration(), wc.getClassCapacity(), wc.getClassDate(),
-                                    wc.getClassTime(), wc.getClassLocation(), wc.isCompleted() ? "Yes" : "No");
-                        }
-                    } catch (SQLException e) {
-                        System.out.println("Error loading classes: " + e.getMessage());
+        switch (choice) {
+            case "1":
+                handleAddWorkoutClass(loggedInUser);
+                break;
+            case "2":
+                handleBuyMembership(loggedInUser);
+                break;
+            case "3":
+                try {
+                    List<WorkoutClass> trainerClasses = workoutClassService.getWorkoutClassesByTrainerId(loggedInUser.getId());
+                    System.out.printf("%-5s %-25s %-30s %-12s %-10s %-10s %-12s %-8s %-18s %-10s%n",
+                            "ID", "Name", "Description", "Level", "Duration", "Capacity", "Date", "Time", "Location", "Done");
+                    System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------");
+                    for (WorkoutClass wc : trainerClasses) {
+                        String shortDesc = wc.getClassDescription().length() > 28
+                                ? wc.getClassDescription().substring(0, 25) + "..."
+                                : wc.getClassDescription();
+                        System.out.printf("%-5d %-25s %-30s %-12s %-10d %-10d %-12s %-8s %-18s %-10s%n",
+                                wc.getClassId(), wc.getClassName(), shortDesc, wc.getClassLevel(),
+                                wc.getClassDuration(), wc.getClassCapacity(), wc.getClassDate(),
+                                wc.getClassTime(), wc.getClassLocation(), wc.isCompleted() ? "Yes" : "No");
                     }
-                    break;
-                case "4":
-                    handleDeleteWorkoutClass();
-                    break;
-                case "0":
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Invalid option.");
-            }
+                } catch (SQLException e) {
+                    System.out.println("Error loading classes: " + e.getMessage());
+                }
+                break;
+            case "4":
+                handleDeleteWorkoutClass();
+                break;
+            case "5":
+                handleUpdateWorkoutClass(loggedInUser);
+                break;
+            case "0":
+                running = false;
+                break;
+            default:
+                System.out.println("Invalid option.");
         }
     }
+}
+
 
     /**
      * Displays the Member dashboard with options to browse classes,
@@ -374,4 +379,110 @@ private static void showAdminMenu(User loggedInUser) {
             System.out.println("Failed to delete class: " + e.getMessage());
         }
     }
+
+    /**
+     * Prompts trainer to enter class details and updates the corresponding class.
+     *
+     * @param trainer the trainer updating the class
+     */
+    private static void handleUpdateWorkoutClass(User trainer) {
+        System.out.print("Enter ID of the class to update: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // consume leftover newline
+    
+        WorkoutClass existing = null;
+        try {
+            List<WorkoutClass> classes = workoutClassService.getWorkoutClassesByTrainerId(trainer.getId());
+            for (WorkoutClass wc : classes) {
+                if (wc.getClassId() == id) {
+                    existing = wc;
+                    break;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Could not retrieve class: " + e.getMessage());
+            return;
+        }
+    
+        if (existing == null) {
+            System.out.println("No class found with that ID.");
+            return;
+        }
+    
+        boolean updating = true;
+        while (updating) {
+            System.out.println("\nCurrent class details:");
+            System.out.println("1. Name: " + existing.getClassName());
+            System.out.println("2. Description: " + existing.getClassDescription());
+            System.out.println("3. Level: " + existing.getClassLevel());
+            System.out.println("4. Duration: " + existing.getClassDuration());
+            System.out.println("5. Capacity: " + existing.getClassCapacity());
+            System.out.println("6. Date: " + existing.getClassDate());
+            System.out.println("7. Time: " + existing.getClassTime());
+            System.out.println("8. Location: " + existing.getClassLocation());
+            System.out.println("9. Equipment: " + existing.getClassEquipment());
+            System.out.println("10. Completed: " + (existing.isCompleted() ? "Yes" : "No"));
+            System.out.println("0. Save and Exit");
+    
+            System.out.print("Select a field to update: ");
+            String option = scanner.nextLine();
+    
+            switch (option) {
+                case "1":
+                    System.out.print("New name: ");
+                    existing.setClassName(scanner.nextLine());
+                    break;
+                case "2":
+                    System.out.print("New description: ");
+                    existing.setClassDescription(scanner.nextLine());
+                    break;
+                case "3":
+                    System.out.print("New level: ");
+                    existing.setClassLevel(scanner.nextLine());
+                    break;
+                case "4":
+                    System.out.print("New duration (minutes): ");
+                    existing.setClassDuration(scanner.nextInt());
+                    scanner.nextLine();
+                    break;
+                case "5":
+                    System.out.print("New capacity: ");
+                    existing.setClassCapacity(scanner.nextInt());
+                    scanner.nextLine();
+                    break;
+                case "6":
+                    System.out.print("New date (YYYY-MM-DD): ");
+                    existing.setClassDate(LocalDate.parse(scanner.nextLine()));
+                    break;
+                case "7":
+                    System.out.print("New time (HH:MM): ");
+                    existing.setClassTime(LocalTime.parse(scanner.nextLine()));
+                    break;
+                case "8":
+                    System.out.print("New location: ");
+                    existing.setClassLocation(scanner.nextLine());
+                    break;
+                case "9":
+                    System.out.print("New equipment: ");
+                    existing.setClassEquipment(scanner.nextLine());
+                    break;
+                case "10":
+                    System.out.print("Is the class completed? (true/false): ");
+                    existing.setCompleted(scanner.nextBoolean());
+                    scanner.nextLine();
+                    break;
+                case "0":
+                    updating = false;
+                    break;
+                default:
+                    System.out.println("Invalid option.");
+            }
+        }
+    
+        boolean success = workoutClassService.updateWorkoutClass(existing);
+        System.out.println(success ? "\nClass updated successfully!" : "\nFailed to update class.");
+    }
+    
+    
+    
 }
