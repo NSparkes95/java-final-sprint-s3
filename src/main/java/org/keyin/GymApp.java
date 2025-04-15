@@ -1,4 +1,4 @@
-// GymApp.java (Fixed Input Handling)
+// GymApp.java
 package org.keyin;
 
 import org.keyin.membership.*;
@@ -14,13 +14,21 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Scanner;
 
-
+/**
+ * Main class for the Gym Management System.
+ * This handles login, registration, and role-based menu access
+ * for Admins, Trainers, and Members.
+ */
 public class GymApp {
     private static final Scanner scanner = new Scanner(System.in);
     private static final UserService userService = new UserService(new UserDaoImpl());
     private static final MembershipService membershipService = new MembershipService(new MembershipDAOImpl());
     private static final WorkoutClassService workoutClassService = new WorkoutClassService(new WorkoutClassDAOImpl());
 
+    /**
+     * Entry point of the application. Presents the login/register menu
+     * and routes users to their respective dashboards.
+     */
     public static void main(String[] args) {
         while (true) {
             System.out.println("=== Welcome to the Gym Management System ===");
@@ -29,7 +37,7 @@ public class GymApp {
             if (initialChoice == null) {
                 System.out.println("Input stream closed. Exiting...");
                 return;
-            }    
+            }
 
             switch (initialChoice) {
                 case "1":
@@ -47,6 +55,10 @@ public class GymApp {
         }
     }
 
+    /**
+     * Handles login for a user and opens their respective dashboard
+     * based on their role.
+     */
     private static void logInAsUser() {
         System.out.println("=== User Login ===");
         scanner.nextLine();
@@ -75,6 +87,9 @@ public class GymApp {
         }
     }
 
+    /**
+     * Prompts the user for registration details and attempts to create an account.
+     */
     private static void handleUserRegistration() {
         System.out.println("=== User Registration ===");
         scanner.nextLine();
@@ -98,6 +113,11 @@ public class GymApp {
         }
     }
 
+    /**
+     * Displays the Admin dashboard menu and handles admin actions.
+     *
+     * @param loggedInUser the currently logged-in admin user
+     */
     private static void showAdminMenu(User loggedInUser) {
         boolean running = true;
         while (running) {
@@ -117,10 +137,7 @@ public class GymApp {
                     System.out.println("---------------------------------------------------------------------------------");
                     for (User user : users) {
                         System.out.printf("%-5d %-25s %-30s %-10s%n",
-                                user.getId(),
-                                user.getUsername(),
-                                user.getEmail(),
-                                user.getRole());
+                                user.getId(), user.getUsername(), user.getEmail(), user.getRole());
                     }
                     break;
                 case "2":
@@ -130,11 +147,8 @@ public class GymApp {
                     System.out.println("--------------------------------------------------------------------------------");
                     for (Membership m : memberships) {
                         System.out.printf("%-5d %-12s %-35s $%-9.2f %-10d%n",
-                                m.getMembershipId(),
-                                m.getMembershipType(),
-                                m.getMembershipDescription(),
-                                m.getMembershipCost(),
-                                m.getMemberId());
+                                m.getMembershipId(), m.getMembershipType(), m.getMembershipDescription(),
+                                m.getMembershipCost(), m.getMemberId());
                     }
                     double total = membershipService.getTotalRevenue();
                     System.out.println("--------------------------------------------------------------------------------");
@@ -147,8 +161,13 @@ public class GymApp {
                     System.out.println("Invalid option.");
             }
         }
-    }    
+    }
 
+    /**
+     * Displays the Trainer dashboard menu and allows trainers to manage classes and memberships.
+     *
+     * @param loggedInUser the currently logged-in trainer
+     */
     private static void showTrainerMenu(User loggedInUser) {
         boolean running = true;
         while (running) {
@@ -159,10 +178,10 @@ public class GymApp {
             System.out.println("4. Delete workout class");
             System.out.println("0. Exit");
             System.out.print("Select an option: ");
-    
+
             String choice = scanner.next();
             scanner.nextLine();
-    
+
             switch (choice) {
                 case "1":
                     handleAddWorkoutClass(loggedInUser);
@@ -181,16 +200,9 @@ public class GymApp {
                                     ? wc.getClassDescription().substring(0, 25) + "..."
                                     : wc.getClassDescription();
                             System.out.printf("%-5d %-25s %-30s %-12s %-10d %-10d %-12s %-8s %-18s %-10s%n",
-                                    wc.getClassId(),
-                                    wc.getClassName(),
-                                    shortDesc,
-                                    wc.getClassLevel(),
-                                    wc.getClassDuration(),
-                                    wc.getClassCapacity(),
-                                    wc.getClassDate(),
-                                    wc.getClassTime(),
-                                    wc.getClassLocation(),
-                                    wc.isCompleted() ? "Yes" : "No");
+                                    wc.getClassId(), wc.getClassName(), shortDesc, wc.getClassLevel(),
+                                    wc.getClassDuration(), wc.getClassCapacity(), wc.getClassDate(),
+                                    wc.getClassTime(), wc.getClassLocation(), wc.isCompleted() ? "Yes" : "No");
                         }
                     } catch (SQLException e) {
                         System.out.println("Error loading classes: " + e.getMessage());
@@ -206,8 +218,14 @@ public class GymApp {
                     System.out.println("Invalid option.");
             }
         }
-    }    
+    }
 
+    /**
+     * Displays the Member dashboard with options to browse classes,
+     * purchase a membership, or view current memberships.
+     *
+     * @param loggedInUser the currently logged-in member
+     */
     private static void showMemberMenu(User loggedInUser) {
         System.out.println("\n=== Member Menu ===");
         System.out.println("1. Browse workout classes");
@@ -215,10 +233,10 @@ public class GymApp {
         System.out.println("3. View my memberships");
         System.out.println("0. Exit");
         System.out.print("Select an option: ");
-    
+
         String choice = scanner.next();
         scanner.nextLine();
-    
+
         switch (choice) {
             case "1":
                 try {
@@ -231,16 +249,9 @@ public class GymApp {
                                 ? wc.getClassDescription().substring(0, 30) + "..."
                                 : wc.getClassDescription();
                         System.out.printf("%-5d %-25s %-35s %-12s %-10d %-10d %-12s %-8s %-18s %-10s%n",
-                                wc.getClassId(),
-                                wc.getClassName(),
-                                shortDesc,
-                                wc.getClassLevel(),
-                                wc.getClassDuration(),
-                                wc.getClassCapacity(),
-                                wc.getClassDate(),
-                                wc.getClassTime(),
-                                wc.getClassLocation(),
-                                wc.isCompleted() ? "Yes" : "No");
+                                wc.getClassId(), wc.getClassName(), shortDesc, wc.getClassLevel(),
+                                wc.getClassDuration(), wc.getClassCapacity(), wc.getClassDate(),
+                                wc.getClassTime(), wc.getClassLocation(), wc.isCompleted() ? "Yes" : "No");
                     }
                 } catch (SQLException e) {
                     System.out.println("Error loading classes: " + e.getMessage());
@@ -269,8 +280,13 @@ public class GymApp {
             default:
                 System.out.println("Invalid option.");
         }
-    }        
+    }
 
+    /**
+     * Handles the logic for purchasing a membership for a user.
+     *
+     * @param loggedInUser the user buying the membership
+     */
     private static void handleBuyMembership(User loggedInUser) {
         System.out.print("Enter membership type (e.g., Basic, Premium): ");
         String type = scanner.nextLine();
@@ -278,21 +294,23 @@ public class GymApp {
         String desc = scanner.nextLine();
         System.out.print("Enter cost: ");
         String costStr = scanner.nextLine();
-    
+
         double cost = Double.parseDouble(costStr);
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusMonths(1);
-    
+
         Membership newMembership = new Membership(
                 type, desc, cost, loggedInUser.getId(), startDate, endDate, false
         );
-    
+
         membershipService.buyMembership(newMembership);
         System.out.println("Membership purchased successfully!");
-    }    
+    }
 
     /**
-     * @param loggedInUser
+     * Collects information and creates a new workout class for a trainer.
+     *
+     * @param loggedInUser the trainer creating the class
      */
     private static void handleAddWorkoutClass(User loggedInUser) {
         System.out.print("Enter class name: ");
@@ -312,7 +330,7 @@ public class GymApp {
         System.out.print("Enter location: ");
         String location = scanner.nextLine();
         System.out.print("Enter equipment: ");
-        String equipment = scanner.nextLine();;
+        String equipment = scanner.nextLine();
 
         try {
             int duration = Integer.parseInt(durationStr);
@@ -333,9 +351,12 @@ public class GymApp {
         }
     }
 
+    /**
+     * Prompts trainer to enter an ID and deletes the corresponding class.
+     */
     private static void handleDeleteWorkoutClass() {
         System.out.print("Enter ID of the class to delete: ");
-        String classIdStr = scanner.nextLine();;
+        String classIdStr = scanner.nextLine();
         if (classIdStr == null) return;
 
         int classId = Integer.parseInt(classIdStr);

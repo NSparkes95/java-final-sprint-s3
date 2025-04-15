@@ -87,6 +87,12 @@ public void addWorkoutClass(WorkoutClass workoutClass) throws SQLException {
         return classes;
     }
 
+    /**
+     * Deletes a workout class from the database.
+     *
+     * @param classId The ID of the class to delete.
+     * @throws SQLException If a database access error occurs.
+     */
     @Override
     public void deleteWorkoutClass(int classId) throws SQLException {
         String sql = "DELETE FROM workoutClasses WHERE class_id = ?";
@@ -96,6 +102,7 @@ public void addWorkoutClass(WorkoutClass workoutClass) throws SQLException {
             stmt.executeUpdate();
         }
     }
+
     /**
      * Builds a {@link WorkoutClass} object from a database result set.
      *

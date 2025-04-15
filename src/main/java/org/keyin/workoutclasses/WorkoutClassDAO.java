@@ -17,6 +17,7 @@ public interface WorkoutClassDAO {
      */
 
     void addWorkoutClass(WorkoutClass workoutClass) throws SQLException;
+    
     /**
      * Retrieves all workout classes from the database.
      *
@@ -24,6 +25,7 @@ public interface WorkoutClassDAO {
      * @throws SQLException If a database access error occurs.
      */
     List<WorkoutClass> getAllWorkoutClasses() throws SQLException;
+
     /**
      * Retrieves workout classes associated with a specific trainer.
      *
@@ -33,6 +35,7 @@ public interface WorkoutClassDAO {
      */
 
     List<WorkoutClass> getWorkoutClassesByTrainerId(int trainerId) throws SQLException;
+
     /**
      * Deletes a workout class from the database using its ID.
      *
