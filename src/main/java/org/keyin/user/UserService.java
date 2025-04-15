@@ -47,4 +47,14 @@ public class UserService {
     public List<User> getAllUsers() {
         return userDao.getAllUsers();
     }
+
+    /**
+     * Deletes a user by their ID.
+     * @param userId the ID of the user to be deleted
+     * @return true if deletion was successful, false otherwise
+     */
+    public boolean deleteUser(int userId) {
+        return userDao.deleteUserById(userId);
+    }
+    
 } 

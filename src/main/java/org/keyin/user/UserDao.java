@@ -31,4 +31,12 @@ public interface UserDao {
      * @return true if registration is successful, false otherwise
      */
     boolean registerUser(String username, String email, String password, String role);
+
+    /**
+     * Deletes a user from the database by their ID.
+     * @param userId the ID of the user to be deleted
+     * @return true if deletion was successful, false otherwise
+     */
+    boolean deleteUserById(int userId);
+
 } 

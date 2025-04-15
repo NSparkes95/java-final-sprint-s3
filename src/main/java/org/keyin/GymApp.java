@@ -114,54 +114,61 @@ public class GymApp {
     }
 
     /**
-     * Displays the Admin dashboard menu and handles admin actions.
-     *
-     * @param loggedInUser the currently logged-in admin user
-     */
-    private static void showAdminMenu(User loggedInUser) {
-        boolean running = true;
-        while (running) {
-            System.out.println("\n=== Admin Menu ===");
-            System.out.println("1. View all users");
-            System.out.println("2. View all memberships and total revenue");
-            System.out.println("0. Exit");
-            System.out.print("Select an option: ");
+ * Displays the Admin dashboard menu and handles admin actions.
+ *
+ * @param loggedInUser the currently logged-in admin user
+ */
+private static void showAdminMenu(User loggedInUser) {
+    boolean running = true;
+    while (running) {
+        System.out.println("\n=== Admin Menu ===");
+        System.out.println("1. View all users");
+        System.out.println("2. View all memberships and total revenue");
+        System.out.println("3. Delete user by ID");
+        System.out.println("0. Exit");
+        System.out.print("Select an option: ");
 
-            String choice = scanner.next();
-            scanner.nextLine();
+        String choice = scanner.next();
+        scanner.nextLine();
 
-            switch (choice) {
-                case "1":
-                    List<User> users = userService.getAllUsers();
-                    System.out.printf("%-5s %-25s %-30s %-10s%n", "ID", "Username", "Email", "Role");
-                    System.out.println("---------------------------------------------------------------------------------");
-                    for (User user : users) {
-                        System.out.printf("%-5d %-25s %-30s %-10s%n",
-                                user.getId(), user.getUsername(), user.getEmail(), user.getRole());
-                    }
-                    break;
-                case "2":
-                    List<Membership> memberships = membershipService.getAllMemberships();
-                    System.out.println("\nMemberships:");
-                    System.out.printf("%-5s %-12s %-35s %-10s %-10s%n", "ID", "Type", "Description", "Cost", "Member ID");
-                    System.out.println("--------------------------------------------------------------------------------");
-                    for (Membership m : memberships) {
-                        System.out.printf("%-5d %-12s %-35s $%-9.2f %-10d%n",
-                                m.getMembershipId(), m.getMembershipType(), m.getMembershipDescription(),
-                                m.getMembershipCost(), m.getMemberId());
-                    }
-                    double total = membershipService.getTotalRevenue();
-                    System.out.println("--------------------------------------------------------------------------------");
-                    System.out.println("Total Revenue: $" + total);
-                    break;
-                case "0":
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Invalid option.");
-            }
+        switch (choice) {
+            case "1":
+                List<User> users = userService.getAllUsers();
+                System.out.printf("%-5s %-25s %-30s %-10s%n", "ID", "Username", "Email", "Role");
+                System.out.println("---------------------------------------------------------------------------------");
+                for (User user : users) {
+                    System.out.printf("%-5d %-25s %-30s %-10s%n",
+                            user.getId(), user.getUsername(), user.getEmail(), user.getRole());
+                }
+                break;
+            case "2":
+                List<Membership> memberships = membershipService.getAllMemberships();
+                System.out.println("\nMemberships:");
+                System.out.printf("%-5s %-12s %-35s %-10s %-10s%n", "ID", "Type", "Description", "Cost", "Member ID");
+                System.out.println("--------------------------------------------------------------------------------");
+                for (Membership m : memberships) {
+                    System.out.printf("%-5d %-12s %-35s $%-9.2f %-10d%n",
+                            m.getMembershipId(), m.getMembershipType(), m.getMembershipDescription(),
+                            m.getMembershipCost(), m.getMemberId());
+                }
+                double total = membershipService.getTotalRevenue();
+                System.out.println("--------------------------------------------------------------------------------");
+                System.out.println("Total Revenue: $" + total);
+                break;
+            case "3":
+                System.out.print("Enter user ID to delete: ");
+                int userIdToDelete = scanner.nextInt();
+                boolean deleted = userService.deleteUser(userIdToDelete);
+                System.out.println(deleted ? "User deleted successfully." : "Failed to delete user.");
+                break;
+            case "0":
+                running = false;
+                break;
+            default:
+                System.out.println("Invalid option.");
         }
     }
+}
 
     /**
      * Displays the Trainer dashboard menu and allows trainers to manage classes and memberships.

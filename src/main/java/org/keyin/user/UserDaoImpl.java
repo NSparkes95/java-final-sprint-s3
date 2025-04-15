@@ -134,4 +134,23 @@ public class UserDaoImpl implements UserDao {
             return false;
         }
     }
+
+    /**
+     * Deletes a user from the database by their ID.
+     * @param userId the ID of the user to be deleted
+     * @return true if deletion was successful, false otherwise
+     */
+    @Override
+    public boolean deleteUserById(int userId) {
+        String sql = "DELETE FROM users WHERE user_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+          PreparedStatement stmt = conn.prepareStatement(sql)) {
+         stmt.setInt(1, userId);
+          return stmt.executeUpdate() > 0;
+     } catch (SQLException e) {
+          System.out.println("Failed to delete user: " + e.getMessage());
+           return false;
+       }
+    }
+
 } 
