@@ -170,7 +170,7 @@ private static void showAdminMenu(User loggedInUser) {
     }
 }
 
-    /**
+     /**
  * Displays the Trainer dashboard menu and allows trainers to manage classes and memberships.
  *
  * @param loggedInUser the currently logged-in trainer
@@ -180,9 +180,10 @@ private static void showTrainerMenu(User loggedInUser) {
     while (running) {
         System.out.println("\n=== Trainer Menu ===");
         System.out.println("1. Add workout class");
-        System.out.println("2. View my workout classes");
-        System.out.println("3. Delete workout class");
-        System.out.println("4. Update workout class"); // New
+        System.out.println("2. Buy membership");
+        System.out.println("3. View my workout classes");
+        System.out.println("4. Delete workout class");
+        System.out.println("5. Update workout class"); 
         System.out.println("0. Exit");
         System.out.print("Select an option: ");
 
@@ -194,6 +195,9 @@ private static void showTrainerMenu(User loggedInUser) {
                 handleAddWorkoutClass(loggedInUser);
                 break;
             case "2":
+                handleBuyMembership(loggedInUser);
+                break;
+            case "3":
                 try {
                     List<WorkoutClass> trainerClasses = workoutClassService.getWorkoutClassesByTrainerId(loggedInUser.getId());
                     System.out.printf("%-5s %-25s %-30s %-12s %-10s %-10s %-12s %-8s %-18s %-10s%n",
@@ -212,10 +216,10 @@ private static void showTrainerMenu(User loggedInUser) {
                     System.out.println("Error loading classes: " + e.getMessage());
                 }
                 break;
-            case "3":
+            case "4":
                 handleDeleteWorkoutClass();
                 break;
-            case "4":
+            case "5":
                 handleUpdateWorkoutClass(loggedInUser);
                 break;
             case "0":
@@ -226,7 +230,6 @@ private static void showTrainerMenu(User loggedInUser) {
         }
     }
 }
-
 
     /**
      * Displays the Member dashboard with options to browse classes,

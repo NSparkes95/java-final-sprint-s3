@@ -34,15 +34,15 @@ VALUES
 
 -- Create memberships table
 CREATE TABLE memberships (
-    membershipid SERIAL PRIMARY KEY,
-    membershiptype VARCHAR(100) NOT NULL,
-    membershipdescription TEXT,
-    membershipcost NUMERIC(10, 2) NOT NULL,
-    memberid INT REFERENCES users(user_id) ON DELETE CASCADE,
-    startdate DATE NOT NULL,
-    enddate DATE NOT NULL,
-    isonhold BOOLEAN DEFAULT FALSE,
-    paymentmethod VARCHAR(100),
+    membership_id SERIAL PRIMARY KEY,
+    membership_type VARCHAR(100) NOT NULL,
+    membership_description TEXT,
+    membership_cost NUMERIC(10, 2) NOT NULL,
+    member_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    is_on_hold BOOLEAN DEFAULT FALSE,
+    payment_method VARCHAR(100),
     status VARCHAR(50)
 );
 
