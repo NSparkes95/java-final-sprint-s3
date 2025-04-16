@@ -60,42 +60,54 @@ public class UserDaoImpl implements UserDao {
     }
 
     /**
-     * Retrieves all users from the database.
-     * @return a list of all User objects
-     */
-    @Override
-    public List<User> getAllUsers() {
-        List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM users";
+ * Retrieves all users from the database.
+ * @return a list of all User objects
+ */
+@Override
+public List<User> getAllUsers() {
+    List<User> users = new ArrayList<>();
+    String sql = "SELECT * FROM users";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+    try (Connection conn = DatabaseConnection.getConnection();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
 
-            while (rs.next()) {
-                String role = rs.getString("user_role");
-                int id = rs.getInt("user_id");
-                String username = rs.getString("user_name");
-                String email = rs.getString("user_email");
-                String password = rs.getString("user_password");
+        while (rs.next()) {
+            String role = rs.getString("user_role");
+            int id = rs.getInt("user_id");
+            String username = rs.getString("user_name");
+            String email = rs.getString("user_email");
+            String password = rs.getString("user_password");
+            String phone = rs.getString("user_phone");
+            String address = rs.getString("user_address");
 
-                switch (role.toLowerCase()) {
-                    case "admin":
-                        users.add(new Admin(id, username, email, password));
-                        break;
-                    case "trainer":
-                        users.add(new Trainer(id, username, email, password));
-                        break;
-                    case "member":
-                        users.add(new Member(id, username, email, password));
-                        break;
-                }
+            User user;
+            switch (role.toLowerCase()) {
+                case "admin":
+                    user = new Admin(id, username, email, password);
+                    break;
+                case "trainer":
+                    user = new Trainer(id, username, email, password);
+                    break;
+                case "member":
+                    user = new Member(id, username, email, password);
+                    break;
+                default:
+                    user = new User(id, username, email, password);
+                    break;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+            user.setPhoneNumber(phone);
+            user.setAddress(address);
+            users.add(user);
         }
-        return users;
+
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return users;
+}
+
 
     /**
      * Registers a new user in the database with hashed password.

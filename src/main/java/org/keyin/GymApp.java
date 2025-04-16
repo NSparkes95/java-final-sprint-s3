@@ -133,13 +133,19 @@ private static void showAdminMenu(User loggedInUser) {
         switch (choice) {
             case "1":
                 List<User> users = userService.getAllUsers();
-                System.out.printf("%-5s %-25s %-30s %-10s%n", "ID", "Username", "Email", "Role");
-                System.out.println("---------------------------------------------------------------------------------");
+                System.out.printf("%-5s %-20s %-30s %-12s %-15s %-30s%n", "ID", "Username", "Email", "Role", "Phone", "Address");
+                System.out.println("---------------------------------------------------------------------------------------------------------------");
                 for (User user : users) {
-                    System.out.printf("%-5d %-25s %-30s %-10s%n",
-                            user.getId(), user.getUsername(), user.getEmail(), user.getRole());
+                    System.out.printf("%-5d %-20s %-30s %-12s %-15s %-30s%n",
+                            user.getId(),
+                            user.getUsername(),
+                            user.getEmail(),
+                            user.getRole(),
+                            user.getPhoneNumber() != null ? user.getPhoneNumber() : "N/A",
+                            user.getAddress() != null ? user.getAddress() : "N/A");
                 }
                 break;
+
             case "2":
                 List<Membership> memberships = membershipService.getAllMemberships();
                 System.out.println("\nMemberships:");
@@ -154,20 +160,24 @@ private static void showAdminMenu(User loggedInUser) {
                 System.out.println("--------------------------------------------------------------------------------");
                 System.out.println("Total Revenue: $" + total);
                 break;
+
             case "3":
                 System.out.print("Enter user ID to delete: ");
                 int userIdToDelete = scanner.nextInt();
                 boolean deleted = userService.deleteUser(userIdToDelete);
                 System.out.println(deleted ? "User deleted successfully." : "Failed to delete user.");
                 break;
+
             case "0":
                 running = false;
                 break;
+
             default:
                 System.out.println("Invalid option.");
         }
     }
 }
+
 
      /**
  * Displays the Trainer dashboard menu and allows trainers to manage classes and memberships.
