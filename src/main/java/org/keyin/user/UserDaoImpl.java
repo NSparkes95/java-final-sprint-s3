@@ -103,12 +103,14 @@ public class UserDaoImpl implements UserDao {
      * @param email the new user's email
      * @param password the new user's plain password
      * @param role the assigned role (admin, trainer, member)
+     * @param phone the user's phone number
+     * @param address the user's mailing address
      * @return true if insert was successful, false otherwise
      */
     @Override
-    public boolean registerUser(String username, String email, String password, String role) {
+    public boolean registerUser(String username, String email, String password, String role, String phone, String address) {
         String checkSql = "SELECT 1 FROM users WHERE user_email = ?";
-        String insertSql = "INSERT INTO users (user_name, user_email, user_password, user_role) VALUES (?, ?, ?, ?)";
+        String insertSql = "INSERT INTO users (user_name, user_email, user_password, user_role, user_phone, user_address) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
         PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
@@ -125,6 +127,8 @@ public class UserDaoImpl implements UserDao {
                 insertStmt.setString(2, email);
                 insertStmt.setString(3, PasswordUtils.hashPassword(password));
                 insertStmt.setString(4, role);
+                insertStmt.setString(5, phone);
+                insertStmt.setString(6, address);
                 insertStmt.executeUpdate();
                 return true;
             }
@@ -153,4 +157,4 @@ public class UserDaoImpl implements UserDao {
        }
     }
 
-} 
+}

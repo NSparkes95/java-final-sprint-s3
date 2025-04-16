@@ -19,15 +19,17 @@ public class UserService {
     }
 
     /**
-     * Registers a new user using provided attributes.
-     * @param username user's name
-     * @param email user's email
-     * @param password user's raw password (to be hashed)
-     * @param role the assigned role (admin, trainer, member)
-     * @return true if registration is successful, false otherwise
+     * Registers a new user in the system.
+     * @param username the username of the new user
+     * @param email the email of the new user
+     * @param password the password of the new user
+     * @param role the role of the new user (e.g., "admin", "user")
+     * @param phone the phone number of the new user
+     * @param address the address of the new user
+     * @return true if registration was successful, false otherwise
      */
-    public boolean registerUser(String username, String email, String password, String role) {
-        return userDao.registerUser(username, email, password, role);
+    public boolean registerUser(String username, String email, String password, String role, String phone, String address) {
+        return userDao.registerUser(username, email, password, role, phone, address);
     }
 
     /**

@@ -25,12 +25,15 @@ public interface UserDao {
     /**
      * Registers a new user in the database.
      * @param username the username of the new user
-     * @param email the email address of the new user
-     * @param password the plain text password (will be hashed)
-     * @param role the role assigned to the user (admin, member, trainer)
-     * @return true if registration is successful, false otherwise
+     * @param email the email of the new user
+     * @param password the password of the new user
+     * @param role the role of the new user (e.g., "admin", "user")
+     * @param phone the phone number of the new user
+     * @param address the address of the new user
+     * @return true if registration was successful, false otherwise
      */
-    boolean registerUser(String username, String email, String password, String role);
+    boolean registerUser(String username, String email, String password, String role, String phone, String address);
+
 
     /**
      * Deletes a user from the database by their ID.

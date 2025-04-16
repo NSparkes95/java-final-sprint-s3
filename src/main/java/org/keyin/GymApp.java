@@ -99,18 +99,17 @@ public class GymApp {
         String email = scanner.nextLine();
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
+        System.out.print("Enter phone number: ");
+        String phone = scanner.nextLine();
+        System.out.print("Enter address: ");
+        String address = scanner.nextLine();
         System.out.print("Enter role (Admin / Member / Trainer): ");
         String role = scanner.nextLine();
 
-        if (username == null || email == null || password == null || role == null) return;
+        if (username == null || email == null || password == null || role == null || phone == null || address == null) return;
 
-        boolean registered = userService.registerUser(username, email, password, role);
-
-        if (registered) {
-            System.out.println("Registration successful! You can now login.");
-        } else {
-            System.out.println("Registration failed. Email might already be in use.");
-        }
+        boolean registered = userService.registerUser(username, email, password, role, phone, address);
+        System.out.println(registered ? "Registration successful! You can now login." : "Registration failed. Email might already be in use.");
     }
 
     /**
