@@ -6,6 +6,7 @@ import org.keyin.database.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.Duration;
 
 /**
  * Implementation of the {@link WorkoutClassDAO} interface.
@@ -28,7 +29,8 @@ public void addWorkoutClass(WorkoutClass workoutClass) throws SQLException {
         stmt.setInt(2, workoutClass.getTrainerId());
         stmt.setString(3, workoutClass.getClassDescription());
         stmt.setString(4, workoutClass.getClassLevel());
-        stmt.setInt(5, workoutClass.getClassDuration());
+        Duration duration = Duration.ofMinutes(workoutClass.getClassDuration());
+        stmt.setObject(5, duration);
         stmt.setInt(6, workoutClass.getClassCapacity());
         stmt.setDate(7, Date.valueOf(workoutClass.getClassDate()));
         stmt.setTime(8, Time.valueOf(workoutClass.getClassTime()));
