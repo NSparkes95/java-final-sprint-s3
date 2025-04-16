@@ -112,146 +112,166 @@ public class GymApp {
         System.out.println(registered ? "Registration successful! You can now login." : "Registration failed. Email might already be in use.");
     }
 
-    /**
- * Displays the Admin dashboard menu and handles admin actions.
- *
- * @param loggedInUser the currently logged-in admin user
- */
-private static void showAdminMenu(User loggedInUser) {
-    boolean running = true;
-    while (running) {
-        System.out.println("\n=== Admin Menu ===");
-        System.out.println("1. View all users");
-        System.out.println("2. View all memberships and total revenue");
-        System.out.println("3. Delete user by ID");
-        System.out.println("0. Exit");
-        System.out.print("Select an option: ");
-
-        String choice = scanner.next();
-        scanner.nextLine();
-
-        switch (choice) {
-            case "1":
-                List<User> users = userService.getAllUsers();
-                System.out.printf("%-5s %-20s %-30s %-12s %-15s %-30s%n", "ID", "Username", "Email", "Role", "Phone", "Address");
-                System.out.println("---------------------------------------------------------------------------------------------------------------");
-                for (User user : users) {
-                    System.out.printf("%-5d %-20s %-30s %-12s %-15s %-30s%n",
-                            user.getId(),
-                            user.getUsername(),
-                            user.getEmail(),
-                            user.getRole(),
-                            user.getPhoneNumber() != null ? user.getPhoneNumber() : "N/A",
-                            user.getAddress() != null ? user.getAddress() : "N/A");
-                }
-                break;
-
-            case "2":
-                List<Membership> memberships = membershipService.getAllMemberships();
-                System.out.println("\nMemberships:");
-                System.out.printf("%-5s %-12s %-35s %-10s %-10s%n", "ID", "Type", "Description", "Cost", "Member ID");
-                System.out.println("--------------------------------------------------------------------------------");
-                for (Membership m : memberships) {
-                    System.out.printf("%-5d %-12s %-35s $%-9.2f %-10d%n",
-                            m.getMembershipId(), m.getMembershipType(), m.getMembershipDescription(),
-                            m.getMembershipCost(), m.getMemberId());
-                }
-                double total = membershipService.getTotalRevenue();
-                System.out.println("--------------------------------------------------------------------------------");
-                System.out.println("Total Revenue: $" + total);
-                break;
-
-            case "3":
-                System.out.print("Enter user ID to delete: ");
-                int userIdToDelete = scanner.nextInt();
-                boolean deleted = userService.deleteUser(userIdToDelete);
-                System.out.println(deleted ? "User deleted successfully." : "Failed to delete user.");
-                break;
-
-            case "0":
-                running = false;
-                break;
-
-            default:
-                System.out.println("Invalid option.");
-        }
-    }
-}
-
-
-     /**
- * Displays the Trainer dashboard menu and allows trainers to manage classes and memberships.
- *
- * @param loggedInUser the currently logged-in trainer
- */
-private static void showTrainerMenu(User loggedInUser) {
-    boolean running = true;
-    while (running) {
-        System.out.println("\n=== Trainer Menu ===");
-        System.out.println("1. Add workout class");
-        System.out.println("2. Buy membership");
-        System.out.println("3. View my workout classes");
-        System.out.println("4. Delete workout class");
-        System.out.println("5. Update workout class"); 
-        System.out.println("0. Exit");
-        System.out.print("Select an option: ");
-
-        String choice = scanner.next();
-        scanner.nextLine();
-
-        switch (choice) {
-            case "1":
-                handleAddWorkoutClass(loggedInUser);
-                break;
-            case "2":
-                handleBuyMembership(loggedInUser);
-                break;
-            case "3":
-                try {
-                    List<WorkoutClass> trainerClasses = workoutClassService.getWorkoutClassesByTrainerId(loggedInUser.getId());
-                    System.out.printf("%-5s %-25s %-30s %-12s %-10s %-10s %-12s %-8s %-18s %-10s%n",
-                            "ID", "Name", "Description", "Level", "Duration", "Capacity", "Date", "Time", "Location", "Done");
-                    System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------");
-                    for (WorkoutClass wc : trainerClasses) {
-                        String shortDesc = wc.getClassDescription().length() > 28
-                                ? wc.getClassDescription().substring(0, 25) + "..."
-                                : wc.getClassDescription();
-                        System.out.printf("%-5d %-25s %-30s %-12s %-10d %-10d %-12s %-8s %-18s %-10s%n",
-                                wc.getClassId(), wc.getClassName(), shortDesc, wc.getClassLevel(),
-                                wc.getClassDuration(), wc.getClassCapacity(), wc.getClassDate(),
-                                wc.getClassTime(), wc.getClassLocation(), wc.isCompleted() ? "Yes" : "No");
+    private static void showAdminMenu(User loggedInUser) {
+        boolean running = true;
+        while (running) {
+            System.out.println("\n=== Admin Menu ===");
+            System.out.println("1. View all users");
+            System.out.println("2. View all memberships and total revenue");
+            System.out.println("3. Delete user by ID");
+            System.out.println("0. Return to Main Menu");
+            System.out.println("9. Exit Program");
+            System.out.print("Select an option: ");
+    
+            String choice = scanner.next();
+            scanner.nextLine();
+    
+            switch (choice) {
+                case "1":
+                    List<User> users = userService.getAllUsers();
+                    System.out.printf("%-5s %-20s %-30s %-12s %-15s %-30s%n", "ID", "Username", "Email", "Role", "Phone", "Address");
+                    System.out.println("---------------------------------------------------------------------------------------------------------------");
+                    for (User user : users) {
+                        System.out.printf("%-5d %-20s %-30s %-12s %-15s %-30s%n",
+                                user.getId(),
+                                user.getUsername(),
+                                user.getEmail(),
+                                user.getRole(),
+                                user.getPhoneNumber() != null ? user.getPhoneNumber() : "N/A",
+                                user.getAddress() != null ? user.getAddress() : "N/A");
                     }
-                } catch (SQLException e) {
-                    System.out.println("Error loading classes: " + e.getMessage());
-                }
-                break;
-            case "4":
-                handleDeleteWorkoutClass();
-                break;
-            case "5":
-                handleUpdateWorkoutClass(loggedInUser);
-                break;
-            case "0":
-                running = false;
-                break;
-            default:
-                System.out.println("Invalid option.");
+                    promptToReturn();
+                    break;
+    
+                case "2":
+                    List<Membership> memberships = membershipService.getAllMemberships();
+                    System.out.println("\nMemberships:");
+                    System.out.printf("%-5s %-12s %-35s %-10s %-10s%n", "ID", "Type", "Description", "Cost", "Member ID");
+                    System.out.println("--------------------------------------------------------------------------------");
+                    for (Membership m : memberships) {
+                        System.out.printf("%-5d %-12s %-35s $%-9.2f %-10d%n",
+                                m.getMembershipId(), m.getMembershipType(), m.getMembershipDescription(),
+                                m.getMembershipCost(), m.getMemberId());
+                    }
+                    double total = membershipService.getTotalRevenue();
+                    System.out.println("--------------------------------------------------------------------------------");
+                    System.out.println("Total Revenue: $" + total);
+                    promptToReturn();
+                    break;
+    
+                case "3":
+                    System.out.print("Enter user ID to delete: ");
+                    int userIdToDelete = scanner.nextInt();
+                    boolean deleted = userService.deleteUser(userIdToDelete);
+                    System.out.println(deleted ? "User deleted successfully." : "Failed to delete user.");
+                    promptToReturn();
+                    break;
+    
+                case "0":
+                    System.out.println("Returning to main menu...");
+                    return;
+    
+                case "9":
+                    System.out.println("Exiting program. Goodbye!");
+                    System.exit(0);
+                    break;
+    
+                default:
+                    System.out.println("Invalid option.");
+            }
         }
     }
-}
+    
+
+    private static void showTrainerMenu(User loggedInUser) {
+        boolean running = true;
+        while (running) {
+            System.out.println("\n=== Trainer Menu ===");
+            System.out.println("1. Add workout class");
+            System.out.println("2. Buy membership");
+            System.out.println("3. View my workout classes");
+            System.out.println("4. Delete workout class");
+            System.out.println("5. Update workout class");
+            System.out.println("0. Return to Main Menu");
+            System.out.println("9. Exit Program");
+            System.out.print("Select an option: ");
+    
+            String choice = scanner.next();
+            scanner.nextLine();
+    
+            switch (choice) {
+                case "1":
+                    handleAddWorkoutClass(loggedInUser);
+                    promptToReturn();
+                    break;
+    
+                case "2":
+                    handleBuyMembership(loggedInUser);
+                    promptToReturn();
+                    break;
+    
+                case "3":
+                    try {
+                        List<WorkoutClass> trainerClasses = workoutClassService.getWorkoutClassesByTrainerId(loggedInUser.getId());
+                        System.out.printf("%-5s %-25s %-30s %-12s %-10s %-10s %-12s %-8s %-18s %-10s%n",
+                                "ID", "Name", "Description", "Level", "Duration", "Capacity", "Date", "Time", "Location", "Done");
+                        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------");
+                        for (WorkoutClass wc : trainerClasses) {
+                            String shortDesc = wc.getClassDescription().length() > 28
+                                    ? wc.getClassDescription().substring(0, 25) + "..."
+                                    : wc.getClassDescription();
+                            System.out.printf("%-5d %-25s %-30s %-12s %-10d %-10d %-12s %-8s %-18s %-10s%n",
+                                    wc.getClassId(), wc.getClassName(), shortDesc, wc.getClassLevel(),
+                                    wc.getClassDuration(), wc.getClassCapacity(), wc.getClassDate(),
+                                    wc.getClassTime(), wc.getClassLocation(), wc.isCompleted() ? "Yes" : "No");
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("Error loading classes: " + e.getMessage());
+                    }
+                    promptToReturn();
+                    break;
+    
+                case "4":
+                    handleDeleteWorkoutClass();
+                    promptToReturn();
+                    break;
+    
+                case "5":
+                    handleUpdateWorkoutClass(loggedInUser);
+                    promptToReturn();
+                    break;
+    
+                case "0":
+                    System.out.println("Returning to main menu...");
+                    return;
+    
+                case "9":
+                    System.out.println("Exiting program. Goodbye!");
+                    System.exit(0);
+                    break;
+    
+                default:
+                    System.out.println("Invalid option.");
+            }
+        }
+    }
+    
 
     /**
-     * Displays the Member dashboard with options to browse classes,
-     * purchase a membership, or view current memberships.
-     *
-     * @param loggedInUser the currently logged-in member
-     */
-    private static void showMemberMenu(User loggedInUser) {
+ * Displays the Member dashboard with options to browse classes,
+ * purchase a membership, or view current memberships.
+ *
+ * @param loggedInUser the currently logged-in member
+ */
+private static void showMemberMenu(User loggedInUser) {
+    boolean running = true;
+    while (running) {
         System.out.println("\n=== Member Menu ===");
         System.out.println("1. Browse workout classes");
         System.out.println("2. Buy membership");
         System.out.println("3. View my memberships");
-        System.out.println("0. Exit");
+        System.out.println("0. Return to Main Menu");
+        System.out.println("9. Exit Program");
         System.out.print("Select an option: ");
 
         String choice = scanner.next();
@@ -276,10 +296,14 @@ private static void showTrainerMenu(User loggedInUser) {
                 } catch (SQLException e) {
                     System.out.println("Error loading classes: " + e.getMessage());
                 }
+                promptToReturn();
                 break;
+
             case "2":
                 handleBuyMembership(loggedInUser);
+                promptToReturn();
                 break;
+
             case "3":
                 List<Membership> myMemberships = membershipService.getMembershipsByMemberId(loggedInUser.getId());
                 System.out.println("\nMy Memberships:");
@@ -294,13 +318,24 @@ private static void showTrainerMenu(User loggedInUser) {
                     System.out.println("On Hold       : " + (membership.isOnHold() ? "Yes" : "No"));
                     System.out.println("--------------------------------------------------");
                 }
+                promptToReturn();
                 break;
+
             case "0":
+                System.out.println("Returning to main menu...");
+                return;
+
+            case "9":
+                System.out.println("Exiting program. Goodbye!");
+                System.exit(0);
                 break;
+
             default:
                 System.out.println("Invalid option.");
         }
     }
+}
+
 
     /**
      * Handles the logic for purchasing a membership for a user.
@@ -490,7 +525,14 @@ private static void showTrainerMenu(User loggedInUser) {
         boolean success = workoutClassService.updateWorkoutClass(existing);
         System.out.println(success ? "\nClass updated successfully!" : "\nFailed to update class.");
     }
-    
+
+    /**
+ * Pauses and waits for the user to press Enter before returning to the menu.
+ */
+private static void promptToReturn() {
+    System.out.print("\nPress Enter to return to the menu...");
+    scanner.nextLine();
+}  
     
     
 }
