@@ -28,7 +28,7 @@ public void addWorkoutClass(WorkoutClass workoutClass) throws SQLException {
         stmt.setInt(2, workoutClass.getTrainerId());
         stmt.setString(3, workoutClass.getClassDescription());
         stmt.setString(4, workoutClass.getClassLevel());
-        stmt.setObject(5, workoutClass.getClassDuration(), java.sql.Types.OTHER);
+        stmt.setInt(5, workoutClass.getClassDuration());
         stmt.setInt(6, workoutClass.getClassCapacity());
         stmt.setDate(7, Date.valueOf(workoutClass.getClassDate()));
         stmt.setTime(8, Time.valueOf(workoutClass.getClassTime()));
@@ -103,6 +103,7 @@ public void addWorkoutClass(WorkoutClass workoutClass) throws SQLException {
         }
     }
 
+    
     /**
      * Builds a {@link WorkoutClass} object from a database result set.
      *
@@ -134,10 +135,11 @@ public void addWorkoutClass(WorkoutClass workoutClass) throws SQLException {
      */
     @Override
     public boolean updateWorkoutClass(WorkoutClass workoutClass) {
-     String sql = "UPDATE workoutclasses SET " +
-              "class_name = ?, class_description = ?, class_level = ?, class_duration = ?, " +
-               "class_capacity = ?, class_date = ?, class_time = ?, class_location = ?, is_completed = ? " +
-               "WHERE id = ?";
+        String sql = "UPDATE workoutclasses SET " +
+        "class_name = ?, class_description = ?, class_level = ?, class_duration = ?, " +
+        "class_capacity = ?, class_date = ?, class_time = ?, class_location = ?, is_completed = ? " +
+        "WHERE class_id = ?";
+    
 
         try (Connection conn = DatabaseConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)) {
