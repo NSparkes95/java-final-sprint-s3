@@ -76,7 +76,7 @@ CREATE TABLE workoutclasses (
     class_date DATE NOT NULL,
     class_time TIME NOT NULL,
     trainer_id INT REFERENCES users(user_id) ON DELETE SET NULL,  -- ← this comma was missing
-    class_duration INTERVAL NOT NULL,
+    class_duration INT NOT NULL,
     class_capacity INT NOT NULL,
     class_location VARCHAR(100) NOT NULL,
     class_level VARCHAR(50) NOT NULL,
