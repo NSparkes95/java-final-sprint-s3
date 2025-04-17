@@ -28,7 +28,7 @@ public void addWorkoutClass(WorkoutClass workoutClass) throws SQLException {
         stmt.setInt(2, workoutClass.getTrainerId());
         stmt.setString(3, workoutClass.getClassDescription());
         stmt.setString(4, workoutClass.getClassLevel());
-        stmt.setInt(5, workoutClass.getClassDuration());
+        stmt.setObject(5, workoutClass.getClassDuration(), java.sql.Types.OTHER);
         stmt.setInt(6, workoutClass.getClassCapacity());
         stmt.setDate(7, Date.valueOf(workoutClass.getClassDate()));
         stmt.setTime(8, Time.valueOf(workoutClass.getClassTime()));
